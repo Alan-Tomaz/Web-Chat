@@ -17,153 +17,607 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="overflow-hidden">
+    <div class="popup" id="popup">
+        <img src="../img/check.png">
+        <h2 id="popup-title">Thank You!</h2>
+        <p id="popup-text">Your Details Has Been Successfully Submitted. Thanks!</p>
+        <div class="confirmation-btn">
+            <button type="button" id="ok-btn" onclick="hideConfirmMessage()">Ok</button>
+        </div>
+    </div>
     <div class="blue-range"></div>
     <section class="chat-section section">
         <div class="chat-container container">
             <div class="chats-list">
-                <div class="user-content">
-                    <div class="user-img-box">
-                        <img src="../img/user.png" class="user-img">
+                <div class="user-content hide-user-profile">
+                    <div class="user-content-box">
+                        <div class="user-img-box open-user-profile">
+                            <img src="../img/user.png" class="user-img img-circle">
+                        </div>
+                        <div class="user-info">
+                            <h3 class="user-name open-user-profile">Alan Tomaz</h3>
+                            <h4 class="user-biography open-user-profile">Lorem ipsum dolor sit amet.</h4>
+                            <a class="logout" href=""><i class="uil uil-signout"></i>Logout</a>
+                        </div>
                     </div>
-                    <div class="user-info">
-                        <h3 class="user-name">Alan Tomaz</h3>
-                        <h4 class="user-biography">Lorem ipsum dolor sit amet.</h4>
-                        <a class="" href=""><i class="uil uil-signout"></i>Logout</a>
-                        <form class="search-chats">
-                            <input type="search">
-                            <i class="uil uil-search"></i>
-                        </form>
-                        <hr class="user-hr">
+                    <form class="search-chats">
+                        <i class="uil uil-search search-icon"></i>
+
+                        <input type="search" class="search-input">
+                    </form>
+                    <hr class="user-hr hr">
+                </div>
+
+                <div class="chats hide-user-profile">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
                     </div>
                 </div>
                 <div class="chats">
                     <div class="chats-img-box">
-                        <img src="../img/user.png" class="chats-img">
+                        <img src="../img/user.png" class="chats-img img-circle">
                     </div>
-                    <h4 class="chats-name"></h4>
-                    <hr class="chats-hr">
-                </div>
-            </div>
-            <div class="chat-content">
-                <div class="chat-header">
-                    <div class="header-vr vr"></div>
-                    <div class="chat-img-box">
-                        <img src="" alt="" class="chat-img">
-                    </div>
-                    <div class="chat-info">
-                        <h4 class="chat-name">
-                        </h4>
-                        <h5 class="chat-activity"></h5>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
                     </div>
                 </div>
-                <div class="chat-messages-box">
-                    <ul class="chat-messages">
-                        <li class="chat-message">
-                            <div class="message-img-box">
-                                <img src="../img/user.png" alt="" class="message-img">
-                            </div>
-                            <div class="message"></div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="chat-footer">
-                    <div class="footer-vr vr"></div>
-                    <i class="uil uil-smile emoji"></i>
-                    <i class="uil uil-paperclip clip"></i>
-                    <div class="message-field"></div>
-                    <div class="send-box">
-                        <i class="uil uil-message"></i>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
                     </div>
                 </div>
-            </div>
-            <div class="profile">
-                <div class="profile-img-box">
-                    <img src="../img/user.png" alt="" class="profile-img">
-                    <i class="uil uil-image"></i>
-                </div>
-                <div class="profile-infos-box">
-                    <div class="profile-infos">
-                        <div class="info-img">
-                            <i class="uil uil-user"></i>
-                        </div>
-                        <div class="profile-info">
-                            <h4 class="info-name"></h4>
-                            <h5 class="info"></h5>
-                        </div>
-                        <i class="uil uil-edit"></i>
-                        <hr class="profile-hr hr">
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
                     </div>
-                    <div class="profile-infos">
-                        <div class="info-img">
-                            <i class="uil uil-info-circle"></i>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
                         </div>
-                        <div class="profile-info">
-                            <h4 class="info-name"></h4>
-                            <h5 class="info"></h5>
-                        </div>
-                        <i class="uil uil-edit"></i>
-                        <hr class="profile-hr hr">
-                    </div>
-                    <div class="profile-infos">
-                        <div class="info-img">
-                            <i class="uil uil-calendar-alt"></i>
-                        </div>
-                        <div class="profile-info">
-                            <h4 class="info-name"></h4>
-                            <h5 class="info"></h5>
-                        </div>
-                        <i class="uil uil-edit"></i>
-                        <hr class="profile-hr hr">
-                    </div>
-                    <div class="profile-infos">
-                        <div class="info-img">
-                            <i class="uil uil-phone"></i>
-                        </div>
-                        <div class="profile-info">
-                            <h4 class="info-name"></h4>
-                            <h5 class="info"></h5>
-                        </div>
-                        <i class="uil uil-edit"></i>
-                        <hr class="profile-hr hr">
-                    </div>
-                    <div class="profile-infos">
-                        <div class="info-img">
-                            <i class="uil uil-envelope"></i>
-                        </div>
-                        <div class="profile-info">
-                            <h4 class="info-name"></h4>
-                            <h5 class="info"></h5>
-                        </div>
-                        <i class="uil uil-edit"></i>
-                        <hr class="profile-hr hr">
-                    </div>
-                    <div class="profile-infos">
-                        <div class="info-img">
-                            <i class="uil uil-location-point"></i>
-                        </div>
-                        <div class="profile-info">
-                            <h4 class="info-name"></h4>
-                            <h5 class="info"></h5>
-                        </div>
-                        <i class="uil uil-edit"></i>
-                        <hr class="profile-hr hr">
-                    </div>
-                    <div class="profile-infos">
-                        <div class="info-img">
-                            <i class="uil uil-key-skeleton"></i>
-                        </div>
-                        <div class="profile-info">
-                            <h4 class="info-name"></h4>
-                            <h5 class="info"></h5>
-                        </div>
-                        <i class="uil uil-edit"></i>
-                        <hr class="profile-hr hr">
+                        <hr class="chats-hr hr">
                     </div>
                 </div>
-                <a class="" href=""><i class="uil uil-signout"></i>Logout</a>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
+                <div class="chats">
+                    <div class="chats-img-box">
+                        <img src="../img/user.png" class="chats-img img-circle">
+                    </div>
+                    <div class="chats-info">
+                        <div class="chats-name-box">
+                            <h4 class="chats-name">Alan</h4>
+                        </div>
+                        <hr class="chats-hr hr">
+                    </div>
+                </div>
 
             </div>
+
+            <div class="chat-content">
+                <div class="chat-header open-user-profile">
+                    <div class="header-vr vr"></div>
+                    <div class="header-content">
+                        <div class="chat-img-box">
+                            <img src="../img/user.png" class="chat-img img-circle">
+                        </div>
+                        <div class="chat-info">
+                            <h4 class="chat-name">Alan</h4>
+                            <h5 class="chat-activity">Last ativity</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-messages-box hide-user-profile">
+                    <div class="chat-messages">
+                        <div class="chat-message">
+                            <div class="message-img-box open-user-profile">
+                                <img src="../img/user.png" alt="" class="message-img img-circle">
+                            </div>
+                            <div class="message">lorem500</div>
+                        </div>
+
+                    </div>
+
+                    <div class="chat-footer hide-user-profile">
+                        <div class="footer-vr vr"></div>
+                        <i class="uil uil-smile emoji">
+                            <ul>
+                                <li>😀</li>
+                                <li>😁</li>
+                                <li>😂</li>
+                                <li>😁</li>
+                                <li>😆</li>
+                                <li>😀</li>
+                                <li>😁</li>
+                                <li>😂</li>
+                                <li>😁</li>
+                                <li>😆</li>
+                                <li>😀</li>
+                                <li>😁</li>
+                                <li>😂</li>
+                                <li>😁</li>
+                                <li>😆</li>
+                                <li>😀</li>
+                                <li>😁</li>
+                                <li>😂</li>
+                                <li>😁</li>
+                                <li>😆</li>
+                                <li>😀</li>
+                                <li>😁</li>
+                                <li>😂</li>
+                                <li>😁</li>
+                                <li>😆</li>
+                                <li>😀</li>
+                                <li>😁</li>
+                                <li>😂</li>
+                                <li>😁</li>
+                                <li>😆</li>
+                                <li>😀</li>
+                                <li>😁</li>
+                                <li>😂</li>
+                                <li>😁</li>
+                                <li>😆</li>
+
+                            </ul>
+                            <img src="../img/down-arrow.png" alt="">
+                        </i>
+                        <i class="uil uil-paperclip clip"></i>
+                        <input type="text" class="message-field">
+                        <div class="send-box">
+                            <div>
+                                <i class="uil uil-message send"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile" id="profile-card">
+                    <div class="profile-img-box">
+                        <img src="../img/user.png" alt="" class="profile-img img-circle">
+                        <label for="upload-avatar">
+                            <img src="../img/9004736_image_photo_picture_gallery_icon (2).png" class="img"
+                                onclick="showInput()">
+                        </label>
+                    </div>
+                    <div class="update-img" id="update-img">
+                        <input type="file" name="update-avatar" id="upload-avatar" onchange="updateAvatarAlert()">
+                        <p class="avatar-alert">Are You Sure That You Want To Change Your Avatar To <span
+                                id="avatar-name">Chat</span>? </p>
+                        <div class="update-avatar-btns">
+                            <i class="uil uil-times close-btn" id="close-0" onclick="closeAll()"></i>
+                            <i class="uil uil-check-circle  check-btn" id="update-0" onclick="updateAvatar()"></i>
+                            <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-0">
+                        </div>
+                    </div>
+                    <h6 class="last-activity">Last activity</h6>
+                    <div class="profile-infos-box">
+                        <div class="profile-infos">
+                            <div class="profile-info">
+
+                                <div class="info-img">
+                                    <i class="uil uil-user info-icon"></i>
+                                </div>
+                                <div class="profile-info-content">
+                                    <h4 class="info-name">Name</h4>
+                                    <input type="text" class="inner-input" id="inner-input-1"
+                                        placeholder="Insert Your New Username">
+                                    <p class="info" id="info-1">Alan</p>
+                                </div>
+                            </div>
+                            <div class="update-btns">
+                                <i class="uil uil-edit edit-btn" id="edit-1" onclick="showInput(1)"></i>
+                                <i class="uil uil-check-circle check-btn" id="update-1" onclick="updateData(1)"></i>
+                                <i class="uil uil-times close-btn" id="close-1" onclick="closeAll()"></i>
+                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-1">
+                            </div>
+                        </div>
+                        <hr class="profile-hr hr">
+
+
+                        <div class="profile-infos">
+                            <div class="profile-info">
+                                <div class="info-img">
+                                    <i class="uil uil-info-circle info-icon"></i>
+                                </div>
+                                <div class="profile-info-content">
+                                    <h4 class="info-name">Biography</h4>
+                                    <input type="text" class="inner-input" id="inner-input-2"
+                                        placeholder="Insert Your New Biography">
+                                    <p class="info" id="info-2">Lorem ipsum dolor sit amet.</p>
+                                </div>
+                            </div>
+                            <div class="update-btns">
+                                <i class="uil uil-edit edit-btn" id="edit-2" onclick="showInput(2)"></i>
+                                <i class="uil uil-check-circle  check-btn" id="update-2" onclick="updateData(2)"></i>
+                                <i class="uil uil-times close-btn" id="close-2" onclick="closeAll()"></i>
+                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-2">
+                            </div>
+                        </div>
+                        <hr class="profile-hr hr">
+
+                        <div class="profile-infos">
+                            <div class="profile-info">
+
+                                <div class="info-img">
+                                    <i class="uil uil-calendar-alt info-icon"></i>
+                                </div>
+                                <div class="profile-info-content">
+                                    <h4 class="info-name">Birth Date</h4>
+                                    <input type="date" class="inner-input" id="inner-input-3"
+                                        placeholder="Insert Your Birth Date">
+                                    <p class="info" id="info-3">02/09/2004</p>
+                                </div>
+                            </div>
+                            <div class="update-btns">
+                                <i class="uil uil-edit edit-btn" id="edit-3" onclick="showInput(3)"></i>
+                                <i class="uil uil-check-circle  check-btn" id="update-3" onclick="updateData(3)"></i>
+                                <i class="uil uil-times close-btn" id="close-3" onclick="closeAll()"></i>
+                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-3">
+                            </div>
+                        </div>
+                        <hr class="profile-hr hr">
+
+                        <div class="profile-infos">
+                            <div class="profile-info">
+
+                                <div class="info-img">
+                                    <i class="uil uil-phone info-icon"></i>
+                                </div>
+                                <div class="profile-info-content">
+                                    <h4 class="info-name">Phone Number</h4>
+                                    <input type="tel" class="inner-input" id="inner-input-4"
+                                        placeholder="Insert Your New Phone Number">
+                                    <p class="info" id="info-4">9999-9999</p>
+                                </div>
+                            </div>
+                            <div class="update-btns">
+                                <i class="uil uil-edit edit-btn" id="edit-4" onclick="showInput(4)"></i>
+                                <i class="uil uil-check-circle  check-btn" id="update-4" onclick="updateData(4)"></i>
+                                <i class="uil uil-times close-btn" id="close-4" onclick="closeAll()"></i>
+                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-4">
+                            </div>
+                        </div>
+                        <hr class="profile-hr hr">
+
+                        <div class="profile-infos">
+                            <div class="profile-info">
+
+                                <div class="info-img">
+                                    <i class="uil uil-envelope info-icon"></i>
+                                </div>
+                                <div class="profile-info-content">
+                                    <h4 class="info-name" id="info-name-5">E-mail</h4>
+                                    <input type="email" class="inner-input" id="inner-input-5"
+                                        placeholder="Insert Your New E-mail">
+                                    <p class="info" id="info-5">alan4tomaz8@gmail.com</p>
+                                </div>
+                            </div>
+                            <div class="update-btns">
+
+                                <i class="uil uil-edit edit-btn" id="edit-5" onclick="showInput(5)"></i>
+                                <i class="uil uil-check-circle check-btn" id="update-5" onclick="updateData(5)"></i>
+                                <i class="uil uil-times close-btn" id="close-5" onclick="closeAll()"></i>
+                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-5">
+                            </div>
+                        </div>
+                        <hr class="profile-hr hr">
+
+                        <div class="profile-infos">
+                            <div class="profile-info">
+
+                                <div class="info-img">
+                                    <i class="uil uil-location-point info-icon"></i>
+                                </div>
+                                <div class="profile-info-content">
+                                    <h4 class="info-name">Location</h4>
+                                    <input type="text" class="inner-input" id="inner-input-6"
+                                        placeholder="Insert Your New Location">
+                                    <p class="info" id="info-6">Minas Gerais, Brasil</p>
+                                </div>
+                            </div>
+                            <div class="update-btns">
+
+                                <i class="uil uil-edit edit-btn" id="edit-6" onclick="showInput(6)"></i>
+                                <i class="uil uil-check-circle  check-btn" id="update-6" onclick="updateData(6)"></i>
+                                <i class="uil uil-times close-btn" id="close-6" onclick="closeAll()"></i>
+                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-6">
+                            </div>
+                        </div>
+                        <hr class="profile-hr hr">
+
+                        <div class="profile-infos">
+                            <div class="profile-info">
+                                <div class="info-img">
+                                    <i class="uil uil-key-skeleton info-icon"></i>
+                                </div>
+                                <div class="profile-info-content">
+                                    <h4 class="info-name">Password</h4>
+                                    <input type="password" class="inner-input" id="inner-input-7"
+                                        placeholder="Insert Your New Password">
+                                    <p class="info" id="info-7">**********</p>
+                                </div>
+                            </div>
+                            <div class="update-btns">
+                                <i class="uil uil-edit edit-btn" id="edit-7" onclick="showInput(7)"></i>
+                                <i class="uil uil-check-circle  check-btn" id="update-7" onclick="updateData(7)"></i>
+                                <i class="uil uil-times close-btn" id="close-7" onclick="closeAll()"></i>
+                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-7">
+                            </div>
+                        </div>
+                        <hr class="profile-hr hr">
+
+                    </div>
+                    <a class="logout-btn" href=""><i class="uil uil-signout "></i>Logout</a>
+
+                </div>
+            </div>
+
+        </div>
         </div>
     </section>
     <!--================================ GOOGLE FONTS ================================-->
