@@ -1,6 +1,6 @@
 //Global Variables
 let globalLoading = document.getElementById("global-loading");
-
+let k = 0;
 /* ==================== GET THE AVATAR NAME FILE AND PUT ON THE INPUT =================== */
 
 let avatarInput = document.getElementById('avatar'),
@@ -13,7 +13,7 @@ if (avatarInput) {
 }
 
 /* ==================== SCROLL THE CHAT TO THE END =================== */
-let chatBox = document.getElementById('chat-box');
+let chatBox = document.getElementById('chat-messages-box');
 if (chatBox) {
     chatBox.scrollTop = 9999999;
 }
@@ -27,7 +27,9 @@ let hideUserProfile = document.querySelectorAll(".hide-user-profile");
 
 hideUserProfile.forEach(n => n.addEventListener("click", () => {
     isShowing = false;
+    profileCard.classList.remove("profile-active-user");
     profileCard.classList.remove("profile-active");
+
 }));
 
 let showUserProfile = document.querySelectorAll(".open-user-profile");
@@ -67,6 +69,57 @@ function showUserProfileInnerEvent() {
         }, 100);
     }
 }
+
+function showOwnUserProfile() {
+    if (isShowing == true) {
+        profileCard.classList.remove("profile-active-user");
+        profileCard.classList.remove("profile-active");
+        globalLoading.classList.add("global-loading-show");
+        setTimeout(() => {
+            profileCard.classList.add("profile-active");
+            profileCard.classList.add("profile-active-user");
+            globalLoading.classList.remove("global-loading-show");
+        }, 100)
+    } else {
+        globalLoading.classList.add("global-loading-show");
+        setTimeout(() => {
+            isShowing = true;
+            profileCard.classList.add("profile-active");
+            profileCard.classList.add("profile-active-user");
+            globalLoading.classList.remove("global-loading-show");
+        }, 100);
+    }
+}
+
+//SHOW WHEN THE HEADER IS CLICKED
+let chatHeader = document.getElementById("chat-header")
+let isClickedInBackIcon = false;
+chatHeader.addEventListener("click", () => {
+    setTimeout(() => {
+        if (isClickedInBackIcon == false) {
+            chatHeader.classList.add("chat-header-show-profile");
+            setTimeout(() => {
+                chatHeader.classList.remove("chat-header-show-profile");
+            }, 100);
+            if (isShowing == true) {
+                profileCard.classList.remove("profile-active");
+                globalLoading.classList.add("global-loading-show");
+                setTimeout(() => {
+                    profileCard.classList.add("profile-active");
+                    globalLoading.classList.remove("global-loading-show");
+                }, 100)
+            } else {
+                globalLoading.classList.add("global-loading-show");
+                setTimeout(() => {
+                    isShowing = true;
+                    profileCard.classList.add("profile-active");
+                    globalLoading.classList.remove("global-loading-show");
+                }, 100);
+            }
+        }
+    }, 50);
+})
+
 
 /* ==================== SHOW AND HIDE THE INNER INPUT =================== */
 let isRunning = false;
@@ -299,25 +352,32 @@ function sendMessageOnEnter(event) {
         send.click();
     }
 }
+let isSending = false;
 
 function sendMessage() {
-    globalLoading.classList.add("global-loading-show");
-    setTimeout(() => {
-        message = document.getElementById("message-field");
-        let content = `<div class="chat-messages">    
+    if (message.value != "" && isSending == false) {
+        isSending = true;
+        globalLoading.classList.add("global-loading-show");
+        setTimeout(() => {
+            k++;
+            message = document.getElementById("message-field");
+            let content = `<div class="chat-messages">    
                     <div class="chat-message">
-                    <div class="message-img-box open-user-profile">
-                        <img src="../img/user.png" class="message-img img-circle" onclick="showUserProfileInnerEvent()">
+                    <div class = "message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile(${k})" onmouseout="hideMiniProfile()" >
+                    <img src = "../img/user.png" class = "message-img img-circle" onclick = "showUserProfileInnerEvent()" onmouseout = "hideMiniProfile()">
                     </div>
                     <div class="message">
                     ${message.value}
                     </div>
                     </div>
                     </div>`
-        chatMessages.innerHTML += content;
-        message.value = "";
-        globalLoading.classList.remove("global-loading-show");
-    }, 1000);
+            chatMessages.innerHTML += content;
+            message.value = "";
+            globalLoading.classList.remove("global-loading-show");
+            isSending = false;
+            chatBox.scrollTop = 9999999;
+        }, 1000);
+    }
 }
 
 /* ==================== SHOW EMOJIS =================== */
@@ -409,6 +469,7 @@ function insertTheVideoUrl() {
 /* ==================== SHOW CHAT when a conversation is opened  =================== */
 let chatBlank = document.getElementById("chat-blank");
 let chat = document.querySelectorAll(".chat-content-box");
+let chatContent = document.getElementById("chat-content");
 
 function showChat() {
 
@@ -416,6 +477,7 @@ function showChat() {
     chat.forEach(n => n.classList.remove("chat-content-box-show"));
     chatBlank.classList.remove("blank-content-hide");
     setTimeout(() => {
+        chatContent.classList.add("chat-content-show");
         chatBlank.classList.add("blank-content-hide");
         chat.forEach(n => n.classList.add("chat-content-box-show"));
         globalLoading.classList.remove("global-loading-show");
@@ -449,3 +511,64 @@ hideSearchResults.forEach(n => n.addEventListener("click", () => {
         isShowingResults = false;
     }
 }))
+
+/* ==================== Return to the previous page =================== */
+let backToThePreviousPage = document.getElementById("previous-page");
+let profileLoading = document.getElementById("profile-loading");
+
+function previousPage(page) {
+
+    if (page == 0) {
+        isClickedInBackIcon = true;
+        globalLoading.classList.add("global-loading-show");
+        setTimeout(() => {
+            chatContent.classList.remove("chat-content-show");
+            chat.forEach(n => n.classList.remove("chat-content-box-show"));
+            chatBlank.classList.remove("blank-content-hide");
+            globalLoading.classList.remove("global-loading-show");
+            isClickedInBackIcon = false;
+        }, 1000);
+    } else if (page == 1) {
+        isShowing = false;
+        profileLoading.classList.add("profile-loading-show");
+        setTimeout(() => {
+            profileLoading.classList.remove("profile-loading-show");
+            profileCard.classList.remove("profile-active");
+        }, 1000);
+    }
+}
+
+/* ==================== SHOW MINI PROFILE CARD WHEN THE IMG IS HOVERED =================== */
+
+
+let miniProfile = document.getElementById("mini-profile");
+let mustShowMiniProfile = true;
+
+function showMiniProfile(id) {
+    let targetElement = document.getElementById("message-img-box-" + id);
+    mustShowMiniProfile = true;
+
+    let elementPosition = miniProfile.getBoundingClientRect();
+    let targetElementPosition = targetElement.getBoundingClientRect();
+    console.log(elementPosition);
+
+    miniProfile.style.top = (targetElementPosition.top - 170) + "px";
+    miniProfile.style.left = (targetElementPosition.right) + "px";
+
+    /*
+     miniProfile.style.top = (targetElementPosition.top - 170) + "px";
+     miniProfile.style.right = (targetElementPosition.right + 550) + "px";
+     */
+
+    setTimeout(() => {
+        if (mustShowMiniProfile == true) {
+            miniProfile.classList.add("mini-profile-show");
+        }
+    }, 1000);
+}
+
+function hideMiniProfile() {
+    mustShowMiniProfile = false;
+
+    miniProfile.classList.remove("mini-profile-show");
+}

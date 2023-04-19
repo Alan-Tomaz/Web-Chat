@@ -1,3 +1,7 @@
+<?php
+require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,9 +13,9 @@
     <!--================================ Unicons ================================CDN -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
     <!--================================ FAVICON ================================-->
-    <link rel="shortcut icon" href="../img/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= ROOT_URL ?>img/favicon.svg" type="image/x-icon">
     <!--================================ CSS EXTERN ================================-->
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="<?= ROOT_URL ?>css/style.css">
     <!--================================ GOOGLE FONTS ================================-->
     <!-- Montserrat -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -22,7 +26,7 @@
     <section class="signup-section section">
         <div class="signup-container container">
             <div class="signup-img container-img">
-                <img src="../img/undraw_begin_chat_re_v0lw.svg" alt="">
+                <img src="<?= ROOT_URL ?>img/undraw_begin_chat_re_v0lw.svg" alt="">
             </div>
             <div class="signup-content container-content">
                 <h1 class="signup-title content-title">Sign Up</h1>
@@ -32,10 +36,8 @@
                     <input type="text" name="location" class="signup-input input" placeholder="Location:">
                     <input type="tel" name="telephone" class="signup-input input" placeholder="Telephone:">
                     <input type="password" name="create-password" class="signup-input input" placeholder="Password:">
-                    <input type="password" name="confirm-password" class="signup-input input"
-                        placeholder="Confirm Password:">
-                    <textarea name="biography" cols="30" placeholder="Biography:" class="signup-input input"
-                        id="bio-input"></textarea>
+                    <input type="password" name="confirm-password" class="signup-input input" placeholder="Confirm Password:">
+                    <textarea name="biography" cols="30" placeholder="Biography:" class="signup-input input" id="bio-input"></textarea>
                     <div class="birthdate-input">
                         <label for="birth-date" class="birthdate-label">Birth Date:</label>
                         <input type="date" name="birth-date" id="birth-date">
@@ -48,12 +50,12 @@
                     </div>
                 </form>
                 <button type="submit" class="btn signup-btn content-btn">Sign Up</button>
-                <span>Already Have An Account? <a href="../pages/signin.html">Login</a></span>
+                <span>Already Have An Account? <a href="<?= ROOT_URL ?>pages/signin.html">Login</a></span>
             </div>
         </div>
     </section>
     <!--================================ GOOGLE FONTS ================================-->
-    <script src="../js/main.js"></script>
+    <script src="<?= ROOT_URL ?>js/main.js"></script>
 </body>
 
 </html>

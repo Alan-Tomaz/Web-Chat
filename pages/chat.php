@@ -1,3 +1,7 @@
+<?php
+require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,17 +13,28 @@
     <!--================================ Unicons ================================CDN -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
     <!--================================ FAVICON ================================-->
-    <link rel="shortcut icon" href="../img/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= ROOT_URL ?>img/favicon.svg" type="image/x-icon">
     <!--================================ CSS EXTERN ================================-->
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="<?= ROOT_URL ?>css/style.css">
     <!--================================ GOOGLE FONTS ================================-->
     <!-- Montserrat -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="overflow-hidden">
+    <div class="mini-profile" id="mini-profile">
+        <div class="mini-profile-img">
+            <img src="<?= ROOT_URL ?>img/user.png">
+        </div>
+        <div class="mini-profile-info">
+            <h3 class="mini-profile-name">Alan</h3>
+            <p class="mini-profile-biography">Lorem ipsum dolor sit amet consectetur
+                adipisicing elit. Autem, officiis.</p>
+            <p class="mini-profile-activity">Last Activity</p>
+        </div>
+    </div>
     <div class="popup" id="popup">
-        <img src="../img/check.png">
+        <img src="<?= ROOT_URL ?>img/check.png">
         <h2 id="popup-title">Thank You!</h2>
         <p id="popup-text">Your Details Has Been Successfully Submitted. Thanks!</p>
         <div class="confirmation-btn">
@@ -29,29 +44,36 @@
     <div class="blue-range"></div>
     <section class="chat-section section">
         <div class="chat-container container">
-            <img src="../img/Rolling-1s-200px.svg" class="global-loading" id="global-loading">
+            <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="global-loading" id="global-loading">
             <div class="chats-list hide-user-profile hide-search-results">
-                <img src="../img/Rolling-1s-200px.svg" class="search-loading" id="search-loading">
+                <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="search-loading" id="search-loading">
 
                 <div class="user-content hide-user-profile hide-emojis-clips">
+                    <!-- <div class="user-content-box">
+                        <div class="login-box">
+                            <a href="<?= ROOT_URL ?>pages/signin.html"><i class="uil uil-sign-out-alt"></i></a>
+                            <h4>You're not logged. <a href="<?= ROOT_URL ?>pages/signin.html">Log in</a> To Send Messages</h4>
+                        </div>
+                    </div> -->
+
                     <div class="user-content-box">
-                        <div class="user-img-box open-user-profile">
-                            <img src="../img/user.png" class="user-img img-circle">
+                        <div class="user-img-box" onclick="showOwnUserProfile()">
+                            <img src="<?= ROOT_URL ?>img/user.png" class="user-img img-circle">
                         </div>
                         <div class="user-info">
-                            <h3 class="user-name open-user-profile">Alan Tomaz</h3>
-                            <p class="user-biography open-user-profile">Lorem ipsum dolor sit amet.</p>
+                            <h3 class="user-name" onclick="showOwnUserProfile()">Alan Tomaz</h3>
+                            <p class="user-biography" onclick="showOwnUserProfile()">Lorem ipsum dolor sit amet.</p>
                             <a class="logout" href=""><i class="uil uil-signout"></i>Logout</a>
                         </div>
                     </div>
                     <div class="search-chats">
                         <i class="uil uil-search search-icon"></i>
 
-                        <input type="search" class="search-input" id="search-input">
+                        <input type="search" class="search-input" id="search-input" placeholder="Search Chats">
                         <div class="search-result-box" id="search-result-box">
                             <div class="chats search-chat" onclick="showChat()">
                                 <div class="chats-img-box">
-                                    <img src="../img/user.png" class="chats-img img-circle">
+                                    <img src="<?= ROOT_URL ?>img/user.png" class="chats-img img-circle">
                                 </div>
                                 <div class="chats-info">
                                     <div class="chats-name-box">
@@ -63,7 +85,7 @@
                             </div>
                             <div class="chats search-chat" onclick="showChat()">
                                 <div class="chats-img-box">
-                                    <img src="../img/user.png" class="chats-img img-circle">
+                                    <img src="<?= ROOT_URL ?>img/user.png" class="chats-img img-circle">
                                 </div>
                                 <div class="chats-info">
                                     <div class="chats-name-box">
@@ -80,7 +102,7 @@
 
                 <div class="chats" onclick="showChat()">
                     <div class="chats-img-box">
-                        <img src="../img/user.png" class="chats-img img-circle">
+                        <img src="<?= ROOT_URL ?>img/user.png" class="chats-img img-circle">
                     </div>
                     <div class="chats-info">
                         <div class="chats-name-box">
@@ -95,16 +117,19 @@
             <div class="chat-content" id="chat-content">
                 <div class="blank-content hide-user-profile hide-search-results" id="chat-blank">
                     <div class="chat-blank-img">
-                        <img src="../img/undraw_online_messaging_re_qft3.svg">
+                        <img src="<?= ROOT_URL ?>img/undraw_online_messaging_re_qft3.svg">
                     </div>
                     <h1 class="chat-blank-title">Hi! Welcome To Web Chat!</h1>
                     <p class="chat-blank-paragraph">Select a group and start chatting.</p>
                 </div>
-                <div class="chat-header chat-content-box open-user-profile hide-emojis-clips hide-search-results">
+                <div class="chat-header chat-content-box hide-emojis-clips hide-search-results" id="chat-header">
                     <div class="header-vr vr"></div>
+                    <div class="back-box" id="previous-page" onclick="previousPage(0)">
+                        <i class="uil uil-arrow-left back"></i>
+                    </div>
                     <div class="header-content">
                         <div class="chat-img-box">
-                            <img src="../img/user.png" class="chat-img img-circle">
+                            <img src="<?= ROOT_URL ?>img/user.png" class="chat-img img-circle">
                         </div>
                         <div class="chat-info">
                             <h4 class="chat-name">Alan</h4>
@@ -112,13 +137,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="chat-messages-box hide-user-profile hide-emojis-clips chat-content-box"
-                    id="chat-messages-box">
+                <div class="chat-messages-box hide-user-profile hide-emojis-clips hide-search-results chat-content-box" id="chat-messages-box">
                     <div class="chat-messages">
                         <div class="chat-message">
-                            <div class="message-img-box open-user-profile">
-                                <img src="../img/user.png" alt="" class="message-img img-circle"
-                                    onclick="showUserProfileInnerEvent()">
+                            <div class="message-img-box open-user-profile" id="message-img-box-0" onmouseover="showMiniProfile(0)" onmouseout="hideMiniProfile()">
+                                <img src="<?= ROOT_URL ?>img/user.png" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent()">
                             </div>
                             <div class="message">lorem500</div>
                         </div>
@@ -127,7 +150,7 @@
 
 
                 </div>
-                <div class="chat-footer hide-user-profile chat-content-box">
+                <div class="chat-footer hide-user-profile hide-search-results chat-content-box">
                     <div class="file-send-content" id="file-send-content">
 
                         <div class="file-send-box">
@@ -141,9 +164,10 @@
                             <p class="file-alert" id="file-alert-2">Upload a Video</p>
                             <input type="file" id="file-input">
                             <input type="submit" class="input-submit" value="Submit" id="submit-3"></input>
-                            <i class="uil uil-times close-file" id="close-file-box" onclick="closeFileSendBox()"></i>
-                            <img src="../img/Rolling-1s-200px.svg" class="file-send-loading" id="file-box-loading">
+                            <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="file-send-loading" id="file-box-loading">
                         </form>
+                        <i class="uil uil-times close-file" id="close-file-box" onclick="closeFileSendBox()"></i>
+
                     </div>
                     <div class="footer-vr vr"></div>
                     <div class="emoji-content">
@@ -152,20 +176,19 @@
                         <div class="emoji-box" id="emoji-box">
                             <ul id="emoji-list">
                             </ul>
-                            <img src="../img/down-arrow.png" alt="">
+                            <img src="<?= ROOT_URL ?>img/down-arrow.png" alt="">
                         </div>
                     </div>
                     <div class="clip-content">
                         <i class="uil uil-paperclip clip" id="clip-btn"></i>
                         <div class="clip-box" id="clip-box">
                             <ul id="clip-list">
-                                <li id="img-btn"><img src="../img/1591850_instagram_photo_icon.png"></li>
-                                <li id="video-btn"><img src="../img/2530844_video_movie_play_button_clip_icon.png"></li>
+                                <li id="img-btn"><img src="<?= ROOT_URL ?>img/1591850_instagram_photo_icon.png"></li>
+                                <li id="video-btn"><img src="<?= ROOT_URL ?>img/2530844_video_movie_play_button_clip_icon.png"></li>
                             </ul>
                         </div>
                     </div>
-                    <input type="text" class="message-field" id="message-field" autocomplete="off"
-                        onkeypress="sendMessageOnEnter(event)">
+                    <input type="text" class="message-field" id="message-field" autocomplete="off" onkeypress="sendMessageOnEnter(event)" placeholder="Show us what you have to say">
                     <div class="send-box" id="send" onclick="sendMessage()">
                         <div>
                             <i class="uil uil-message send"></i>
@@ -173,21 +196,23 @@
                     </div>
                 </div>
                 <div class="profile hide-emojis-clips hide-search-results" id="profile-card">
+                    <div class="back-box back-box-profile" id="previous-page" onclick="previousPage(1)">
+                        <i class="uil uil-arrow-left back"></i>
+                    </div>
+                    <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="profile-loading" id="profile-loading">
                     <div class="profile-img-box">
-                        <img src="../img/user.png" alt="" class="profile-img img-circle">
+                        <img src="<?= ROOT_URL ?>img/user.png" alt="" class="profile-img img-circle">
                         <label for="upload-avatar">
-                            <img src="../img/9004736_image_photo_picture_gallery_icon (2).png" class="img"
-                                onclick="showInput()">
+                            <img src="<?= ROOT_URL ?>img/9004736_image_photo_picture_gallery_icon (2).png" class="img" onclick="showInput()">
                         </label>
                     </div>
                     <div class="update-img" id="update-img">
                         <input type="file" name="update-avatar" id="upload-avatar" onchange="updateAvatarAlert()">
-                        <p class="avatar-alert">Are You Sure That You Want To Change Your Avatar To <span
-                                id="avatar-name">Chat</span>? </p>
+                        <p class="avatar-alert">Are You Sure That You Want To Change Your Avatar To <span id="avatar-name">Chat</span>? </p>
                         <div class="update-avatar-btns">
                             <i class="uil uil-times close-btn" id="close-0" onclick="closeAll()"></i>
                             <i class="uil uil-check-circle  check-btn" id="update-0" onclick="updateAvatar()"></i>
-                            <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-0">
+                            <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-0">
                         </div>
                     </div>
                     <h6 class="last-activity">Last activity</h6>
@@ -200,8 +225,7 @@
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name">Name</h4>
-                                    <input type="text" class="inner-input" id="inner-input-1"
-                                        placeholder="Insert Your New Username">
+                                    <input type="text" class="inner-input" id="inner-input-1" placeholder="Insert Your New Username">
                                     <p class="info" id="info-1">Alan</p>
                                 </div>
                             </div>
@@ -209,7 +233,7 @@
                                 <i class="uil uil-edit edit-btn" id="edit-1" onclick="showInput(1)"></i>
                                 <i class="uil uil-check-circle check-btn" id="update-1" onclick="updateData(1)"></i>
                                 <i class="uil uil-times close-btn" id="close-1" onclick="closeAll()"></i>
-                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-1">
+                                <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-1">
                             </div>
                         </div>
                         <hr class="profile-hr hr">
@@ -222,8 +246,7 @@
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name">Biography</h4>
-                                    <input type="text" class="inner-input" id="inner-input-2"
-                                        placeholder="Insert Your New Biography">
+                                    <input type="text" class="inner-input" id="inner-input-2" placeholder="Insert Your New Biography">
                                     <p class="info" id="info-2">Lorem ipsum dolor sit amet.</p>
                                 </div>
                             </div>
@@ -231,7 +254,7 @@
                                 <i class="uil uil-edit edit-btn" id="edit-2" onclick="showInput(2)"></i>
                                 <i class="uil uil-check-circle  check-btn" id="update-2" onclick="updateData(2)"></i>
                                 <i class="uil uil-times close-btn" id="close-2" onclick="closeAll()"></i>
-                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-2">
+                                <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-2">
                             </div>
                         </div>
                         <hr class="profile-hr hr">
@@ -244,8 +267,7 @@
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name">Birth Date</h4>
-                                    <input type="date" class="inner-input" id="inner-input-3"
-                                        placeholder="Insert Your Birth Date">
+                                    <input type="date" class="inner-input" id="inner-input-3" placeholder="Insert Your Birth Date">
                                     <p class="info" id="info-3">02/09/2004</p>
                                 </div>
                             </div>
@@ -253,7 +275,7 @@
                                 <i class="uil uil-edit edit-btn" id="edit-3" onclick="showInput(3)"></i>
                                 <i class="uil uil-check-circle  check-btn" id="update-3" onclick="updateData(3)"></i>
                                 <i class="uil uil-times close-btn" id="close-3" onclick="closeAll()"></i>
-                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-3">
+                                <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-3">
                             </div>
                         </div>
                         <hr class="profile-hr hr">
@@ -266,8 +288,7 @@
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name">Phone Number</h4>
-                                    <input type="tel" class="inner-input" id="inner-input-4"
-                                        placeholder="Insert Your New Phone Number">
+                                    <input type="tel" class="inner-input" id="inner-input-4" placeholder="Insert Your New Phone Number">
                                     <p class="info" id="info-4">9999-9999</p>
                                 </div>
                             </div>
@@ -275,7 +296,7 @@
                                 <i class="uil uil-edit edit-btn" id="edit-4" onclick="showInput(4)"></i>
                                 <i class="uil uil-check-circle  check-btn" id="update-4" onclick="updateData(4)"></i>
                                 <i class="uil uil-times close-btn" id="close-4" onclick="closeAll()"></i>
-                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-4">
+                                <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-4">
                             </div>
                         </div>
                         <hr class="profile-hr hr">
@@ -288,8 +309,7 @@
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name" id="info-name-5">E-mail</h4>
-                                    <input type="email" class="inner-input" id="inner-input-5"
-                                        placeholder="Insert Your New E-mail">
+                                    <input type="email" class="inner-input" id="inner-input-5" placeholder="Insert Your New E-mail">
                                     <p class="info" id="info-5">alan4tomaz8@gmail.com</p>
                                 </div>
                             </div>
@@ -298,7 +318,7 @@
                                 <i class="uil uil-edit edit-btn" id="edit-5" onclick="showInput(5)"></i>
                                 <i class="uil uil-check-circle check-btn" id="update-5" onclick="updateData(5)"></i>
                                 <i class="uil uil-times close-btn" id="close-5" onclick="closeAll()"></i>
-                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-5">
+                                <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-5">
                             </div>
                         </div>
                         <hr class="profile-hr hr">
@@ -311,8 +331,7 @@
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name">Location</h4>
-                                    <input type="text" class="inner-input" id="inner-input-6"
-                                        placeholder="Insert Your New Location">
+                                    <input type="text" class="inner-input" id="inner-input-6" placeholder="Insert Your New Location">
                                     <p class="info" id="info-6">Minas Gerais, Brasil</p>
                                 </div>
                             </div>
@@ -321,7 +340,7 @@
                                 <i class="uil uil-edit edit-btn" id="edit-6" onclick="showInput(6)"></i>
                                 <i class="uil uil-check-circle  check-btn" id="update-6" onclick="updateData(6)"></i>
                                 <i class="uil uil-times close-btn" id="close-6" onclick="closeAll()"></i>
-                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-6">
+                                <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-6">
                             </div>
                         </div>
                         <hr class="profile-hr hr">
@@ -333,8 +352,7 @@
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name">Password</h4>
-                                    <input type="password" class="inner-input" id="inner-input-7"
-                                        placeholder="Insert Your New Password">
+                                    <input type="password" class="inner-input" id="inner-input-7" placeholder="Insert Your New Password">
                                     <p class="info" id="info-7">**********</p>
                                 </div>
                             </div>
@@ -342,7 +360,7 @@
                                 <i class="uil uil-edit edit-btn" id="edit-7" onclick="showInput(7)"></i>
                                 <i class="uil uil-check-circle  check-btn" id="update-7" onclick="updateData(7)"></i>
                                 <i class="uil uil-times close-btn" id="close-7" onclick="closeAll()"></i>
-                                <img src="../img/Rolling-1s-200px.svg" class="loading" id="loading-7">
+                                <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-7">
                             </div>
                         </div>
                         <hr class="profile-hr hr">
@@ -357,7 +375,7 @@
         </div>
     </section>
     <!--================================ GOOGLE FONTS ================================-->
-    <script src="../js/main.js"></script>
+    <script src="<?= ROOT_URL ?>js/main.js"></script>
 </body>
 
 </html>

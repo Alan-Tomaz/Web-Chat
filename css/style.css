@@ -101,6 +101,7 @@ a {
 img {
     max-width: 100%;
     height: auto;
+    object-fit: cover;
 }
 
 /* ============== LAYOUT ================  */
@@ -432,7 +433,7 @@ input[type=file] {
     justify-content: center;
     align-items: center;
     gap: 0.5rem;
-    z-index: 5;
+    z-index: 100;
     visibility: hidden;
     transition: transform 0.4s;
 }
@@ -493,6 +494,8 @@ input[type=file] {
 
 .overflow-hidden {
     overflow: hidden;
+    width: 100vw;
+    height: 100vh;
 }
 
 .blue-range {
@@ -501,6 +504,10 @@ input[type=file] {
     background-color: var(--primary-color);
     z-index: var(--z-under);
     position: absolute;
+}
+
+.chat-section {
+    overflow: hidden;
 }
 
 .chat-container {
@@ -515,9 +522,9 @@ input[type=file] {
 
 .chats-list {
     position: relative;
-    min-width: 350px;
-    width: 35vw;
-    max-width: 350px;
+    min-width: 300px;
+    width: 25vw;
+    max-width: 325px;
     background-color: var(--grey-bg);
     overflow-y: auto;
 }
@@ -525,8 +532,41 @@ input[type=file] {
 .user-content-box {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
 
+}
+
+.login-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    gap: .5rem;
+}
+
+.login-box>a i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    transition: var(--transition);
+}
+
+.login-box>a i:hover {
+    color: var(--primary-color-variant);
+}
+
+.login-box>h4 {
+    font-size: var(--small-font-size);
+}
+
+.login-box>h4 a {
+    color: var(--primary-color);
+    transition: var(--transition);
+}
+
+.login-box>h4 a:hover {
+    color: var(--primary-color-variant);
+    text-decoration: underline;
 }
 
 .open-user-profile {
@@ -574,6 +614,12 @@ input[type=file] {
     font-size: var(--small-font-size);
     font-weight: var(--font-medium);
     width: fit-content;
+}
+
+.user-biography:hover,
+.user-name:hover,
+.user-img-box:hover {
+    cursor: pointer;
 }
 
 .logout {
@@ -696,11 +742,12 @@ input[type=file] {
 .chat-content {
     width: 70vw;
     min-width: 800px;
-    max-width: 1400px;
+    max-width: 1200px;
     background-color: white;
     position: relative;
     height: 100%;
 }
+
 
 .chat-content-box {
     transform: scale(1);
@@ -738,6 +785,7 @@ input[type=file] {
 
 .chat-blank-title {
     font-size: 2rem;
+    text-align: center;
 }
 
 .chat-blank-paragraph {
@@ -755,7 +803,11 @@ input[type=file] {
     z-index: 3;
 }
 
-.chat-header:active {
+.chat-header:hover {
+    cursor: pointer;
+}
+
+.chat-header-show-profile {
     background-color: var(--dark-grey-bg);
 }
 
@@ -763,6 +815,28 @@ input[type=file] {
     height: 100%;
     border-left: 2px solid var(--white-bg);
 }
+
+.back-box {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.back-box:hover {
+    cursor: pointer;
+}
+
+.back-box:active {
+    border-radius: 5rem;
+    background-color: var(--dark-grey-bg);
+}
+
+.back {
+    font-size: 2.5rem;
+}
+
 
 .header-content {
     display: flex;
@@ -798,6 +872,7 @@ input[type=file] {
 
 .chat-messages {
     padding: 0 2rem;
+    z-index: 60;
 }
 
 .chat-message {
@@ -825,7 +900,8 @@ input[type=file] {
 .message-img-box {
     max-width: 2.5rem;
     max-height: 2.5rem;
-
+    position: relative;
+    z-index: 60;
 }
 
 .message {
@@ -860,6 +936,60 @@ input[type=file] {
     max-height: 315px;
     border-radius: 1rem;
     object-fit: cover;
+}
+
+.mini-profile {
+    padding: 1rem .5rem;
+    position: fixed;
+    background-color: var(--dark-grey-bg);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    transition: opacity .3s ease;
+    z-index: 60;
+    opacity: 0;
+    border-radius: .3rem;
+    width: 250px;
+    visibility: hidden;
+}
+
+.mini-profile-show {
+    opacity: .9;
+    visibility: visible;
+}
+
+.mini-profile-img {
+    width: 6rem;
+    height: 6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mini-profile-img>img {
+    border-radius: 50%;
+}
+
+.mini-profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    width: fit-content;
+}
+
+.mini-profile-name {
+    font-size: var(--small-font-size);
+    font-weight: var(--font-semi-bold);
+}
+
+.mini-profile-biography {
+    font-size: var(--smaller-font-size);
+    font-weight: var(--font-medium);
+}
+
+.mini-profile-activity {
+    font-size: var(--smaller-font-size);
+    font-weight: var(--font-semi-bold);
 }
 
 .chat-footer {
@@ -1105,7 +1235,25 @@ input[type=file] {
     background-color: var(--grey-bg);
     display: flex;
     transition: var(--transition);
-    right: -500px;
+    right: -1200px;
+}
+
+.back-box-profile {
+    position: absolute;
+    left: 1%;
+}
+
+.profile-loading {
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    right: 1%;
+    transition: var(--transition);
+    opacity: 0;
+}
+
+.profile-loading-show {
+    opacity: 1;
 }
 
 .profile-active {
@@ -1187,8 +1335,8 @@ input[type=file] {
 .profile-info {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 1rem;
+    width: 90%;
 }
 
 .profile-info-content {
@@ -1196,6 +1344,7 @@ input[type=file] {
     flex-direction: column;
     justify-content: space-between;
     gap: .5rem;
+    overflow-x: hidden;
 }
 
 .info-name {
@@ -1362,6 +1511,71 @@ input[type=file] {
     .signin-container {
         width: 70%;
     }
+
+    /* ============== CHAT PAGE ================  */
+
+
+    .chat-container {
+        position: initial;
+        width: 99%;
+    }
+
+    .chats-list {
+        min-width: 220px;
+        width: 25%;
+    }
+
+    .chat-content {
+        min-width: 360px;
+        width: 75%;
+        max-width: 1000px;
+    }
+
+    .profile {
+        min-width: 300px;
+    }
+
+    .inner-input {
+        min-width: 150px;
+    }
+
+    .file-send-content {
+        flex-direction: column;
+        top: -130px;
+        height: fit-content;
+        padding: .5rem .2rem;
+        gap: .5rem;
+    }
+
+    .file-send-box {
+        gap: 0.3rem;
+    }
+
+    .file-alert {
+        font-size: 10px;
+    }
+
+    #file-input {
+        min-width: 100px;
+        width: 50%;
+    }
+
+    .message {
+        max-width: 100%;
+    }
+
+    .message>iframe {
+        min-width: 500px;
+        width: 100%;
+    }
+
+    .global-loading {
+        top: 6%;
+    }
+
+    .user-biography {
+        font-size: var(--smaller-font-size);
+    }
 }
 
 /* Small Devices */
@@ -1435,6 +1649,101 @@ input[type=file] {
 
     .signin-content {
         justify-content: flex-start;
+    }
+
+    /* ============== CHAT PAGE ================  */
+    .blue-range {
+        display: none;
+    }
+
+    .overflow-hidden {
+        width: 100%;
+    }
+
+    .back-box {
+        display: flex;
+    }
+
+    .chat-section {
+        width: 100%;
+
+    }
+
+    .chat-container {
+        height: 100%;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+    }
+
+    .chat-content {
+        min-width: 220px;
+        overflow: hidden;
+        width: 100%;
+        max-width: initial;
+    }
+
+    .blank-content {
+        display: none;
+    }
+
+    .chats-list {
+
+        width: 100%;
+        max-width: initial;
+    }
+
+    .chat-content-show {
+        right: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: inline-block;
+    }
+
+    .chat-messages {
+        padding: 0 1rem;
+    }
+
+    .message>iframe {
+        max-width: 300px;
+        height: auto;
+        min-width: initial;
+        object-fit: contain;
+    }
+
+    .popup {
+        max-width: 300px;
+    }
+
+    .confirmation-btn {
+        margin-top: 10px;
+    }
+
+    .popup h2 {
+        margin-top: 5px;
+    }
+
+    .global-loading {
+        top: 1%;
+    }
+
+    .profile {
+        min-width: 260px;
+    }
+
+
+    .inner-input {
+        min-width: 120px;
+    }
+
+    .profile-active-user {
+        position: fixed;
+        right: 0px;
+        top: 0px;
+        z-index: 200;
+        overflow-y: scroll;
     }
 
 }
