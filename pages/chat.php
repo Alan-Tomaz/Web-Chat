@@ -63,7 +63,7 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
                         <div class="user-info">
                             <h3 class="user-name" onclick="showOwnUserProfile()">Alan Tomaz</h3>
                             <p class="user-biography" onclick="showOwnUserProfile()">Lorem ipsum dolor sit amet.</p>
-                            <a class="logout" href=""><i class="uil uil-signout"></i>Logout</a>
+                            <a id="logout-button" class="logout" onclick="Logout();"><i class="uil uil-signout"></i>Logout</a>
                         </div>
                     </div>
                     <div class="search-chats">
@@ -376,6 +376,26 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
     </section>
     <!--================================ GOOGLE FONTS ================================-->
     <script src="<?= ROOT_URL ?>js/main.js"></script>
+    <script src="<?= ROOT_URL ?>js/ajax-lib.js"></script>
+    <script type="text/javascript">
+        function Logout() {
+            //Change the UI
+            document.getElementById("logout-button").setAttribute("style", "display: hidden;");
+            document.getElementById("logout-button").removeAttribute("onclick");
+            //Do the request
+            EasyHttpRequest.StartAsyncGetRequest("<?= ROOT_URL ?>apis/logout.php", null,
+                function() {
+
+                },
+                function(textResult, jsonResult) {
+                    //Redirect to home
+                    window.location.href = "<?= ROOT_URL ?>index.php";
+                },
+                function() {
+                    //ao dar erro
+                });
+        }
+    </script>
 </body>
 
 </html>

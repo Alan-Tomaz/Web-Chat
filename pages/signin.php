@@ -35,7 +35,7 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
                     <input type="password" name="password" class="signin-input input" placeholder="Password:">
                 </form>
                 <button type="submit" class="btn signin-btn content-btn">Sign In</button>
-                <span>Don't Have An Account? <a href="<?= ROOT_URL ?>pages/signup.html">Sign Up</a></span>
+                <span>Don't Have An Account? <a href="<?= ROOT_URL ?>pages/signup.php">Sign Up</a></span>
             </div>
         </div>
     </section>
