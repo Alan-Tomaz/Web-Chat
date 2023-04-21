@@ -121,6 +121,94 @@ class EasyHttpRequest {
         }, initialDelay);
     }
 
+    /*
+     * StartAsyncFileUpload();        Do a Async HTTP file upload.
+     * 
+     * phpApiPath (string):           The path to PHP API file.
+     * fileInputId (string):          The ID of "input type="file"" element present on your page.
+     * fileIndex (int):               The index of the file to upload, inside the "input type="file"".
+     * filePostName (string):         The "name" that representes this file upload in the PHP API.
+     * rawFormData (FormData):        The FormData builded with the methods"InstantiateFormData()" and
+     *                                "AddField();" only. Without build with "BuildFormData();".
+     * doneCallback (function):       The callback that will run if the request is finished.
+     * progressCallback (function):   The callback that will run when the progress is updated. 
+     *                                    - The function passed to this parameter must have the
+     *                                      parameters "currentProgress", "totalProgress".
+     * successCallback (function):    The callback that will run if the request is successfully.
+     *                                    - The function passed to this parameter must have the
+     *                                      parameters "textResult", "jsonResult".
+     * errorCallback (function):      The callback that will run if the request is failed.
+     */
+    static StartAsyncFileUpload(phpApiPath, fileInputId, fileIndex, filePostName, rawFormData, doneCallback, progressCallback, successCallback, errorCallback) {
+        //Get the file reference
+        var fileInput = document.getElementById(fileInputId);
+        var fileToUpload = fileInput.files[fileIndex];
+
+        //Do a initial report to progress callback
+        progressCallback(0.0, 100.0);
+
+        //If raw form data is empty or null, set a empty array to variable
+        if (!rawFormData)
+            rawFormData = [];
+
+        //Set up the initial delay
+        window.setTimeout(function () {
+            //...
+
+            //Instantiate the xml http request
+            var httpRequest = new XMLHttpRequest();
+
+            //Create the event
+            httpRequest.onreadystatechange = function () {
+                //If error
+                if (httpRequest.readyState == 4 && httpRequest.status != 200) {
+                    //Show the status code of error and send callback
+                    console.log("Error on Do File Upload: " + httpRequest.status);
+                    errorCallback();
+                }
+                //If success
+                if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+                    //Do a final report to progress callback
+                    progressCallback(100.0, 100.0);
+                    //Try to get a JSON, if fails, send a null string to callback
+                    try {
+                        successCallback(httpRequest.responseText, JSON.parse(httpRequest.responseText));
+                    } catch (e) {
+                        successCallback(httpRequest.responseText, null);
+                    }
+                }
+                //If done
+                if (httpRequest.readyState == 4)
+                    doneCallback();
+            };
+
+            //Create the progress event
+            httpRequest.upload.addEventListener("progress", function (evnt) {
+                //Get the upload info
+                var totalSize = evnt.total;
+                var uploadedSie = evnt.loaded;
+                //Report the progress in percentage
+                progressCallback(Math.round(((uploadedSie / totalSize) * 100.0)), 100.0);
+            }, false);
+
+            //Prepare the JavaScript FormData to pack the file reference, and possible RawFormData of this library together
+            var formData = new FormData();
+            //Add all possible fields of Raw FormData to the JavaScript FormData
+            for (var i = 0; i < rawFormData.length; i++) {
+                var thisField = JSON.parse(rawFormData[i]);
+                formData.append(thisField.name, thisField.value);
+            }
+            //Add the file reference to the JavaScript FormData to send on the request
+            formData.append(filePostName, fileToUpload, fileToUpload.name);
+
+            //Open the request
+            httpRequest.open("POST", phpApiPath, true);
+            httpRequest.send(formData);
+
+            //...
+        }, initialDelay);
+    }
+
     //========================================= TOOLS =========================================//
 
     /*

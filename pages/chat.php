@@ -376,6 +376,7 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
     </section>
     <!--================================ GOOGLE FONTS ================================-->
     <script src="<?= ROOT_URL ?>js/main.js"></script>
+    <script src="<?= ROOT_URL ?>js/chat.js"></script>
     <script src="<?= ROOT_URL ?>js/ajax-lib.js"></script>
     <script type="text/javascript">
         function Logout() {

@@ -41,7 +41,7 @@ include $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/partials/header.php";
                     <input type="text" id="nick" name="username" class="signup-input input" placeholder="Username:">
                     <input type="email" id="email" name="email" class="signup-input input" placeholder="Email:">
                     <input type="tel" id="phone" name="telephone" class="signup-input input" placeholder="Phone Number:">
-                    <input type=" text" id="birth-date-impostor" class="signup-input input" placeholder="Birth Date:" onclick="OnClickBirthField();" autocomplete="off">
+                    <input type="text" id="birth-date-impostor" class="signup-input input" placeholder="Birth Date:" onclick="OnClickBirthField();" autocomplete="off">
                     <input type="text" id="location" name="location" class="signup-input input" placeholder="Location:">
                     <textarea cols="30" id="bio-input" placeholder="Biography:" class="signup-input input"></textarea>
                     <input type="password" id="password" name="create-password" class="signup-input input" placeholder="Password:">

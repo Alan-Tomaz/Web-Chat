@@ -392,11 +392,13 @@ input[type=file] {
     top: 50%;
     transform: translate(-50%, -50%);
     opacity: 0;
-    transition: 1s ease;
+    display: none;
+    transition: opacity 1s ease;
 }
 
 .form-loading-show {
     opacity: 1;
+    display: inline-block;
 }
 
 .container-content>span {
