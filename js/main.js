@@ -2,13 +2,13 @@
 function ShowPopUpDialog(id, title, message) {
     //Get elements of popup
     var popupElement = document.getElementById(id);
-    var titleElement = document.getElementById("popup-title");
-    var messageElement = document.getElementById("popup-text");
-    var buttonElement = document.getElementById("ok-btn");
+    var titleElement = document.querySelectorAll("#popup-title");
+    var messageElement = document.querySelectorAll("#popup-text");
+    var buttonElement = document.querySelectorAll("#ok-btn");
 
     //Build the popup
-    titleElement.innerHTML = title;
-    messageElement.innerHTML = message;
+    titleElement.forEach(n => n.innerHTML = title);
+    messageElement.forEach(n => n.innerHTML = message);
 
     //Show the popup
     popupElement.classList.add("open-popup");

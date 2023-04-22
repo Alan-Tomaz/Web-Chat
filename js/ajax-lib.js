@@ -186,9 +186,9 @@ class EasyHttpRequest {
             httpRequest.upload.addEventListener("progress", function (evnt) {
                 //Get the upload info
                 var totalSize = evnt.total;
-                var uploadedSie = evnt.loaded;
+                var uploadedSize = evnt.loaded;
                 //Report the progress in percentage
-                progressCallback(Math.round(((uploadedSie / totalSize) * 100.0)), 100.0);
+                progressCallback(Math.round(((uploadedSize / totalSize) * 100.0)), 100.0);
             }, false);
 
             //Prepare the JavaScript FormData to pack the file reference, and possible RawFormData of this library together

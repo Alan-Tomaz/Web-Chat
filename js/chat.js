@@ -19,17 +19,19 @@ if (chatBox) {
 }
 
 /* ==================== SHOW AND HIDE THE PROFILE CARD =================== */
+let userProfileId;
 let profileCard = document.getElementById("profile-card");
 
-let isShowing = true;
+let isShowing = false;
 
 let hideUserProfile = document.querySelectorAll(".hide-user-profile");
 
 hideUserProfile.forEach(n => n.addEventListener("click", () => {
     isShowing = false;
-    profileCard.classList.remove("profile-active-user");
-    profileCard.classList.remove("profile-active");
-
+    setTimeout(() => {
+        profileCard.classList.remove("profile-active-user");
+        profileCard.classList.remove("profile-active");
+    }, 50);
 }));
 
 let showUserProfile = document.querySelectorAll(".open-user-profile");
@@ -70,24 +72,160 @@ function showUserProfileInnerEvent() {
     }
 }
 
-function showOwnUserProfile() {
-    if (isShowing == true) {
-        profileCard.classList.remove("profile-active-user");
-        profileCard.classList.remove("profile-active");
-        globalLoading.classList.add("global-loading-show");
-        setTimeout(() => {
-            profileCard.classList.add("profile-active");
-            profileCard.classList.add("profile-active-user");
-            globalLoading.classList.remove("global-loading-show");
-        }, 100)
-    } else {
-        globalLoading.classList.add("global-loading-show");
-        setTimeout(() => {
-            isShowing = true;
-            profileCard.classList.add("profile-active");
-            profileCard.classList.add("profile-active-user");
-            globalLoading.classList.remove("global-loading-show");
-        }, 100);
+function showOwnUserProfile(rootUrl, userId) {
+    let isRequesting = false;
+    if (isRequesting == false) {
+        userProfileId = userId;
+        if (isShowing == true) {
+
+            setTimeout(() => {
+                isShowing = true;
+            }, 40);
+            //Create the FormData
+            var formData = EasyHttpRequest.InstantiateFormData();
+            EasyHttpRequest.AddField(formData, "user-id", userId);
+            var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+
+            profileCard.classList.remove("profile-active-user");
+            profileCard.classList.remove("profile-active");
+            globalLoading.classList.add("global-loading-show");
+
+            isRequesting = true;
+            setTimeout(() => {
+                EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/show-user-profile-api.php", formDataCompiled,
+                    function () {
+                        isRequesting = false;
+                        profileCard.classList.add("profile-active");
+                        profileCard.classList.add("profile-active-user");
+                        globalLoading.classList.remove("global-loading-show");
+                    },
+                    function (textResult, jsonResult) {
+                        console.log(textResult);
+                        //If error
+                        if (jsonResult.showUserStatus != 0) {
+
+                            switch (jsonResult.showUserStatus) {
+                                case 1:
+                                case 2:
+                                    ShowPopUpDialog("popup-error", "Error!", "User Don't Exists");
+                                    break;
+                            }
+                        }
+                        //If success
+                        else {
+                            /* Get the user data and put on the elements */
+                            let userInfo1 = document.getElementById("info-1");
+                            userInfo1.innerHTML = jsonResult.name;
+                            let userInfo2 = document.getElementById("info-2");
+                            userInfo2.innerHTML = jsonResult.biography;
+                            let userInfo3 = document.getElementById("info-3");
+                            userInfo3.innerHTML = jsonResult.birthDate;
+                            let userInfo4 = document.getElementById("info-4");
+                            userInfo4.innerHTML = jsonResult.phoneNumber;
+                            let userInfo5 = document.getElementById("info-5");
+                            userInfo5.innerHTML = jsonResult.email;
+                            let userInfo6 = document.getElementById("info-6");
+                            userInfo6.innerHTML = jsonResult.location;
+                            let profileImg = document.getElementById("profile-img");
+                            /* put a common avatar img for users that don't have a specified avatar*/
+                            if (jsonResult.avatar == "") {
+                                profileImg.src = rootUrl + "img/403024_avatar_boy_male_user_young_icon.png";
+                            } else {
+                                profileImg.src = rootUrl + "admin/received-files/avatars/" + jsonResult.avatar;
+                            }
+                            let lastActivity = document.getElementById("last-activity");
+                            lastActivity.innerHTML = jsonResult.lastActivity;
+                            /* Format the last activity */
+
+                            const logoutBtn = document.getElementById("logout-profile");
+                            logoutBtn.style.display = "inline-block";
+
+                            const editBtns = document.querySelectorAll(".edit-btn");
+                            editBtns.forEach(n => n.style.display = "inline-block");
+
+                            const profileNewImg = document.getElementById("upload-avatar");
+                            profileNewImg.style.display = "inline-block";
+                        }
+                    },
+                    function () {
+                        ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                    });
+
+            }, 100)
+        } else {
+            /* A request can only be done if is not a pending request */
+            //Create the FormData
+            var formData = EasyHttpRequest.InstantiateFormData();
+            EasyHttpRequest.AddField(formData, "user-id", userId);
+            var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+
+            //Change the UI
+            globalLoading.classList.add("global-loading-show");
+
+            isRequesting = true;
+            setTimeout(() => {
+                EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/show-user-profile-api.php", formDataCompiled,
+                    function () {
+                        isRequesting = false;
+                        isShowing = true;
+                        profileCard.classList.add("profile-active");
+                        profileCard.classList.add("profile-active-user");
+                        globalLoading.classList.remove("global-loading-show");
+                    },
+                    function (textResult, jsonResult) {
+                        console.log(textResult);
+                        //If error
+                        if (jsonResult.showUserStatus != 0) {
+
+                            switch (jsonResult.showUserStatus) {
+                                case 1:
+                                case 2:
+                                    ShowPopUpDialog("popup-error", "Error!", "User Don't Exists");
+                                    break;
+                            }
+                        }
+                        //If success
+                        else {
+                            /* Get the user data and put on the elements */
+                            let userInfo1 = document.getElementById("info-1");
+                            userInfo1.innerHTML = jsonResult.name;
+                            let userInfo2 = document.getElementById("info-2");
+                            userInfo2.innerHTML = jsonResult.biography;
+                            let userInfo3 = document.getElementById("info-3");
+                            userInfo3.innerHTML = jsonResult.birthDate;
+                            let userInfo4 = document.getElementById("info-4");
+                            userInfo4.innerHTML = jsonResult.phoneNumber;
+                            let userInfo5 = document.getElementById("info-5");
+                            userInfo5.innerHTML = jsonResult.email;
+                            let userInfo6 = document.getElementById("info-6");
+                            userInfo6.innerHTML = jsonResult.location;
+                            let profileImg = document.getElementById("profile-img");
+                            /* put a common avatar img for users that don't have a specified avatar*/
+                            if (jsonResult.avatar == "") {
+                                profileImg.src = rootUrl + "img/403024_avatar_boy_male_user_young_icon.png";
+                            } else {
+                                profileImg.src = rootUrl + "admin/received-files/avatars/" + jsonResult.avatar;
+                            }
+                            let lastActivity = document.getElementById("last-activity");
+                            lastActivity.innerHTML = jsonResult.lastActivity;
+                            /* Format the last activity */
+
+                            const logoutBtn = document.getElementById("logout-profile");
+                            logoutBtn.style.display = "inline-block";
+
+                            const editBtns = document.querySelectorAll(".edit-btn");
+                            editBtns.forEach(n => n.style.display = "inline-block");
+
+                            const profileNewImg = document.getElementById("upload-avatar");
+                            profileNewImg.style.display = "inline-block";
+                        }
+                    },
+                    function () {
+                        ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                    });
+            }, 100);
+
+        }
     }
 }
 
@@ -156,7 +294,7 @@ function showInput(id) {
 }
 
 /* ==================== UPDATE AVATAR ALERT=================== */
-let updateInput = document.getElementById('upload-avatar');
+let updateInput = document.getElementById('update-avatar');
 
 function updateAvatarAlert() {
     if (updateInput.value != "" && isRunning == false) {
@@ -174,33 +312,108 @@ function updateAvatarAlert() {
 
 /* ==================== UPDATE AVATAR =================== */
 
-function updateAvatar() {
+function updateAvatar(rootUrl, userId, isAdmin) {
     if (updateInput.value != "") {
         let closeBtn = document.getElementById("close-0");
         let updateImg = document.getElementById("update-img")
         let checkBtn = document.getElementById("update-0");
         let loading = document.getElementById("loading-0");
-        let popup = document.getElementById("popup");
-        let popupTitle = document.getElementById("popup-title");
-        let popupText = document.getElementById("popup-text");
-        let input = document.getElementById("upload-avatar");
+        let progressBar = document.getElementById("progress-bar");
+        let actualProgress = document.getElementById("progress");
+        actualProgress.style.width = "0%";
         checkBtn.style.display = "none";
         closeBtn.style.display = "none";
         loading.style.display = "inline-block";
         isRunning = true;
-        setTimeout(() => {
-            popup.classList.add("open-popup");
-            popupTitle.innerHTML = "Update Avatar"
-            popupText.innerHTML = "Avatar Successfully Updated"
-            updateImg.style.display = "none";
-            loading.style.display = "none";
-            isRunning = false;
-        }, 5000);
+        if (userProfileId == userId || isAdmin != undefined) {
+            setTimeout(() => {
+                let avatarName;
+                progressBar.classList.add("progress-bar-active");
+
+                var formData = EasyHttpRequest.InstantiateFormData();
+                EasyHttpRequest.AddField(formData, "user-id", userProfileId);
+                /*                 var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+                 */
+                EasyHttpRequest.StartAsyncFileUpload(rootUrl + "apis/edit-user-api.php", "update-avatar", 0, "avatar", formData,
+                    function () {
+                        setTimeout(() => {
+                            updateImg.style.display = "none";
+                            loading.style.display = "none";
+                            isRunning = false;
+                            progressBar.classList.remove("progress-bar-active");
+                            updateImgs(avatarName, rootUrl);
+                        }, 1000);
+                    },
+                    /* Progress Back */
+                    function (progress, totalProgress) {
+                        actualProgress.style.width = progress + "%";
+                    },
+                    function (textResult, jsonResult) {
+                        console.log(textResult);
+                        //If error
+                        if (jsonResult.editUserStatus != 0) {
+                            switch (jsonResult.editUserStatus) {
+                                case 1:
+                                    ShowPopUpDialog("popup-error", "Error!", "The formulary have empty fields. Please, fill all fields of formulary!");
+                                    break;
+                                case 2:
+                                    ShowPopUpDialog("popup-error", "Error!", "The Email Format Is Wrong!");
+                                    break;
+                                case 3:
+                                    ShowPopUpDialog("popup-error", "Error!", "The Phone Number Format Is Wrong!");
+                                    break;
+                                case 4:
+                                    ShowPopUpDialog("popup-error", "Error!", "Your Birth Date Format is Wrong!");
+                                    break;
+                                case 5:
+                                    ShowPopUpDialog("popup-error", "Error!", "Your Password is Too Short!");
+                                    break;
+                                case 6:
+                                    ShowPopUpDialog("popup-error", "Error!", "Your password does not meet our complexity requirements. The password must have at least 8 characters, and at least one lowercase letter, one uppercase letter, one number and one special character");
+                                    break;
+                                case 7:
+                                    ShowPopUpDialog("popup-error", "Error!", "This Email Already Exists!");
+                                    break;
+                                case 8:
+                                    ShowPopUpDialog("popup-error", "Error!", "You Don't have permission to do this");
+                                    break;
+                                case 9:
+                                    ShowPopUpDialog("popup-error", "Error!", "This User Don't Exists");
+                                    break;
+                                case 10:
+                                    ShowPopUpDialog("popup-error", "Error!", "File Too Big");
+                                    break;
+                                case 11:
+                                    ShowPopUpDialog("popup-error", "Error!", "Extension Not Supported");
+                                    break;
+                            }
+                        }
+                        //If success
+                        else {
+                            ShowPopUpDialog("popup", "Update Avatar", "Avatar Succesfully Updated");
+                            avatarName = jsonResult.avatarName;
+                        }
+                    },
+                    function () {
+                        ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                    });
+            }, 1000);
+        } else {
+            ShowPopUpDialog("popup-error", "Error", "You don't have permission for this")
+        }
     }
 }
 
+/* UPDATE IMAGES FUNCTION */
+function updateImgs(avatarName, rootUrl) {
+    let profileImg = document.getElementById("profile-img");
+    let userImg = document.getElementById("user-img");
+    profileImg.src = rootUrl + "admin/received-files/avatars/" + avatarName;
+    userImg.src = rootUrl + "admin/received-files/avatars/" + avatarName;
+}
+
 /* ==================== UPDATE DATA =================== */
-function updateData(id) {
+function updateData(id, rootUrl, userId, isAdmin) {
     let input = document.getElementById("inner-input-" + id);
     let editBtn = document.getElementById("edit-" + id);
     let info = document.getElementById("info-" + id);
@@ -209,24 +422,87 @@ function updateData(id) {
     let hideCloseBtns = document.querySelectorAll(".close-btn");
     hideCloseBtns.forEach(n => n.style.display = "none");
     checkBtn.style.display = "none";
-    let popup = document.getElementById("popup");
-    let popupTitle = document.getElementById("popup-title");
-    let popupText = document.getElementById("popup-text");
-    input.disabled = "true";
+    input.disabled = true;
     loading.style.display = "inline-block";
     isRunning = true;
-    setTimeout(() => {
-        popup.classList.add("open-popup");
-        popupTitle.innerHTML = "Update Data"
-        popupText.innerHTML = "Data Successfully Updated"
-        info.style.display = "inline-block";
-        input.disabled = "false";
-        input.style.display = "none";
-        editBtn.style.display = "inline-block";
-        loading.style.display = "none";
-        isRunning = false;
+    if (userProfileId == userId || isAdmin != undefined) {
+        var formData = EasyHttpRequest.InstantiateFormData();
+        EasyHttpRequest.AddField(formData, "user-id", userProfileId);
+        EasyHttpRequest.AddField(formData, `${input.name}`, input.value);
+        var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
 
-    }, 5000);
+        isRequesting = true;
+        setTimeout(() => {
+            EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/edit-user-api.php", formDataCompiled,
+                function () {
+                    info.style.display = "inline-block";
+                    input.disabled = false;
+                    input.style.display = "none";
+                    editBtn.style.display = "inline-block";
+                    loading.style.display = "none";
+                    isRunning = false;
+                },
+                function (textResult, jsonResult) {
+                    console.log(textResult);
+                    //If error
+                    if (jsonResult.editUserStatus != 0) {
+                        switch (jsonResult.editUserStatus) {
+                            case 1:
+                                ShowPopUpDialog("popup-error", "Error!", "The formulary have empty fields. Please, fill all fields of formulary!");
+                                break;
+                            case 2:
+                                ShowPopUpDialog("popup-error", "Error!", "The Email Format Is Wrong!");
+                                break;
+                            case 3:
+                                ShowPopUpDialog("popup-error", "Error!", "The Phone Number Format Is Wrong!");
+                                break;
+                            case 4:
+                                ShowPopUpDialog("popup-error", "Error!", "Your Birth Date Format is Wrong!");
+                                break;
+                            case 5:
+                                ShowPopUpDialog("popup-error", "Error!", "Your Password is Too Short!");
+                                break;
+                            case 6:
+                                ShowPopUpDialog("popup-error", "Error!", "Your password does not meet our complexity requirements. The password must have at least 8 characters, and at least one lowercase letter, one uppercase letter, one number and one special character");
+                                break;
+                            case 7:
+                                ShowPopUpDialog("popup-error", "Error!", "This Email Already Exists!");
+                                break;
+                            case 8:
+                                ShowPopUpDialog("popup-error", "Error!", "You Don't have permission to do this");
+                                break;
+                            case 9:
+                                ShowPopUpDialog("popup-error", "Error!", "This User Don't Exists");
+                                break;
+                            case 10:
+                                ShowPopUpDialog("popup-error", "Error!", "File Too Big");
+                                break;
+                            case 11:
+                                ShowPopUpDialog("popup-error", "Error!", "Extension Not Supported");
+                                break;
+                        }
+                    }
+                    //If success
+                    else {
+                        ShowPopUpDialog("popup", "Update Data", "Data Succesfully Updated");
+                        if (info != document.getElementById("info-" + 7)) {
+                            info.innerHTML = input.value;
+                        }
+                        if (info == document.getElementById("info-" + 3)) {
+                            newBirthInputValue = input.value.split("-")
+                            newBirthInputValue = newBirthInputValue[2] + "/" + newBirthInputValue[1] + "/" + newBirthInputValue[0];
+                            info.innerHTML = newBirthInputValue;
+                        }
+                    }
+                },
+                function () {
+                    ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                });
+        }, 1000);
+    } else {
+        ShowPopUpDialog("popup-error", "Error", "You don't have permission for this")
+    }
+
 }
 
 /* ==================== CLOSE BTN =================== */
@@ -250,7 +526,37 @@ function closeAll() {
     }
 }
 
+/* ==================== PHONE NUMBER IMPUT FORMATATION =================== */
+const phoneNumberInput = document.getElementById("inner-input-4");
 
+/*  
+ * Phone number formatting when the key is pressioned on the imput
+ */
+phoneNumberInput.addEventListener("keydown", () => {
+    // phone number input
+
+    /* 
+     * assoc the formatting function to a const and later define the value of input as this const
+     */
+    const formattedInputValue = formatPhoneNumber(phoneNumberInput.value);
+    phoneNumberInput.value = formattedInputValue;
+})
+
+function formatPhoneNumber(value) {
+    if (!value)
+        return value;
+    const phoneNumberInput = value.replace(/[^\d]/g, ''),
+        phoneNumberLength = phoneNumberInput.length;
+    if (phoneNumberLength < 3)
+        return phoneNumberInput;
+    if (phoneNumberLength < 4) {
+        return `(${phoneNumberInput.slice(0, 2)}) ${phoneNumberInput.slice(2,3)}`;
+    }
+    if (phoneNumberLength < 8) {
+        return `(${phoneNumberInput.slice(0, 2)}) ${phoneNumberInput.slice(2,3)} ${phoneNumberInput.slice(3)}`;
+    }
+    return `(${phoneNumberInput.slice(0,2)}) ${phoneNumberInput.slice(2,3)} ${phoneNumberInput.slice(3,7)}-${phoneNumberInput.slice(7,10)}`
+}
 
 /* ==================== SHOW AND HIDE EMOJIS BOX=================== */
 let emoji = document.getElementById("emoji-btn");
@@ -282,7 +588,7 @@ emojiList.addEventListener("click", () => {
     setTimeout(() => {
         notHideEmoji = false;
     }, 50);
-})
+});
 emoji.addEventListener("click", () => {
     if (emojiBox.className == "emoji-box emoji-box-show") {
         emojiBox.classList.remove("emoji-box-show");
@@ -308,7 +614,7 @@ clipList.addEventListener("click", () => {
     setTimeout(() => {
         notHideClip = false;
     }, 50);
-})
+});
 clip.addEventListener("click", () => {
     if (clipBox.className == "clip-box clip-box-show") {
         clipBox.classList.remove("clip-box-show");
@@ -528,6 +834,7 @@ function previousPage(page) {
         setTimeout(() => {
             profileLoading.classList.remove("profile-loading-show");
             profileCard.classList.remove("profile-active");
+            profileCard.classList.remove("profile-active-user");
         }, 1000);
     }
 }
@@ -565,4 +872,31 @@ function hideMiniProfile() {
     mustShowMiniProfile = false;
 
     miniProfile.classList.remove("mini-profile-show");
+}
+
+/* ==================== Make the User Logout ===================  */
+function Logout(rootUrl) {
+    //Change the UI
+    searchLoading.classList.add("search-loading-show");
+    /* Prevents too many requests from being made */
+    let requestedLogout = false;
+    //Do the request
+    if (requestedLogout == false) {
+        requestedLogout = true;
+        EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/logout-api.php", null,
+            function () {
+                //when the request is done
+                searchLoading.classList.remove("search-loading-show");
+                requestedLogout = false;
+            },
+            function (textResult, jsonResult) {
+                //when the request is successfully
+                //Redirect to home
+                window.location.href = rootUrl + "index.php";
+            },
+            function () {
+                //when the request is failure
+                ShowPopUpDialog("popup-error", "Error!", "Something is wrong right now, please try again later");
+            });
+    }
 }

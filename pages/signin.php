@@ -1,5 +1,5 @@
 <?php
-require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
+require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/partials/header.php";
 ?>
 
 <!DOCTYPE html>
@@ -22,7 +22,14 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
 </head>
 
 <body class="body-blue">
-
+    <div class="popup" id="popup">
+        <img src="<?= ROOT_URL ?>img/299045_sign_error_icon.png">
+        <h2 id="popup-title">Thank You!</h2>
+        <p id="popup-text">Your Details Has Been Successfully Submitted. Thanks!</p>
+        <div class="confirmation-btn">
+            <button type="button" id="ok-btn" onclick="hideConfirmMessage()">Ok</button>
+        </div>
+    </div>
     <section class="signin-section section">
         <div class="signin-container container">
             <div class="signin-img container-img">
@@ -30,17 +37,25 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
             </div>
             <div class="signin-content container-content">
                 <h1 class="signin-title content-title">Sign In</h1>
-                <form class="signin-form content-form" action="" method="POST" enctype="multipart/form-data">
-                    <input type="email" name="email" class="signin-input input" placeholder="Email:">
-                    <input type="password" name="password" class="signin-input input" placeholder="Password:">
-                </form>
-                <button type="submit" class="btn signin-btn content-btn">Sign In</button>
+                <div class="signin-form content-form">
+                    <input type="email" id="email" class="signin-input input" placeholder="Email:">
+                    <input type="password" id="password" class="signin-input input" placeholder="Password:">
+                </div>
+                <div class="form-footer">
+                    <button id="sign-in-button" class="btn signup-btn content-btn" onclick="OnClickSignIn('<?= ROOT_URL ?>')">Sign In</button>
+                    <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="form-loading" id="form-loading">
+                </div>
                 <span>Don't Have An Account? <a href="<?= ROOT_URL ?>pages/signup.php">Sign Up</a></span>
             </div>
         </div>
     </section>
-    <!--================================ GOOGLE FONTS ================================-->
+    <!--================================ JS SCRIPTS ================================-->
+    <!-- GENERAL JS SCRIPT -->
     <script src="<?= ROOT_URL ?>js/main.js"></script>
+    <!-- SIGN IN PAGE SCRIPT -->
+    <script src="<?= ROOT_URL ?>js/signin.js"></script>
+    <!-- AJAX LIBRARY -->
+    <script src="<?= ROOT_URL ?>js/ajax-lib.js"></script>
 </body>
 
 </html>

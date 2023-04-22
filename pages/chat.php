@@ -1,5 +1,17 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
+
+
+$isLogged = isset($_SESSION["user-id"]);
+$isAdmin = isset($_SESSION["user-is-admin"]);
+
+if ($isLogged) {
+    $userId = $_SESSION['user-id'];
+    /* GET THE USER DATA FROM THE DATABASE */
+    $userQuery = "SELECT * FROM users WHERE user_id = $userId";
+    $userQueryResult = mysqli_query($connection, $userQuery);
+    $user = mysqli_fetch_assoc($userQueryResult);
+}
 ?>
 
 <!DOCTYPE html>
@@ -41,6 +53,14 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
             <button type="button" id="ok-btn" onclick="hideConfirmMessage()">Ok</button>
         </div>
     </div>
+    <div class="popup popup-error" id="popup-error">
+        <img src="<?= ROOT_URL ?>img/299045_sign_error_icon.png">
+        <h2 id="popup-title" class="popup-title">Thank You!</h2>
+        <p id="popup-text" class="popup-text">Your Details Has Been Successfully Submitted. Thanks!</p>
+        <div class="confirmation-btn">
+            <button type="button" id="ok-btn" onclick="hideConfirmMessage()">Ok</button>
+        </div>
+    </div>
     <div class="blue-range"></div>
     <section class="chat-section section">
         <div class="chat-container container">
@@ -49,23 +69,35 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="search-loading" id="search-loading">
 
                 <div class="user-content hide-user-profile hide-emojis-clips">
-                    <!-- <div class="user-content-box">
-                        <div class="login-box">
-                            <a href="<?= ROOT_URL ?>pages/signin.html"><i class="uil uil-sign-out-alt"></i></a>
-                            <h4>You're not logged. <a href="<?= ROOT_URL ?>pages/signin.html">Log in</a> To Send Messages</h4>
+                    <?php if (!$isLogged) : ?>
+                        <div class="user-content-box">
+                            <div class="login-box">
+                                <a href="<?= ROOT_URL ?>pages/signin.php"><i class="uil uil-sign-out-alt"></i></a>
+                                <h4>You're not logged. <a href="<?= ROOT_URL ?>pages/signin.php">Log in</a> To Send Messages</h4>
+                            </div>
                         </div>
-                    </div> -->
-
-                    <div class="user-content-box">
-                        <div class="user-img-box" onclick="showOwnUserProfile()">
-                            <img src="<?= ROOT_URL ?>img/user.png" class="user-img img-circle">
+                    <?php else : ?>
+                        <div class="user-content-box">
+                            <div class="user-img-box" onclick="showOwnUserProfile('<?= ROOT_URL ?>',<?= $userId ?>)">
+                                <?php if ($user["avatar"] == "") : ?>
+                                    <img src="<?= ROOT_URL ?>img/403024_avatar_boy_male_user_young_icon.png" class="user-img img-circle" id="user-img">
+                                <?php else : ?>
+                                    <img src="<?= ROOT_URL ?>admin/received-files/avatars/<?= $user["avatar"] ?>" class="user-img img-circle" id="user-img">
+                                <?php endif ?>
+                            </div>
+                            <div class="user-info">
+                                <h3 class="user-name" onclick="showOwnUserProfile('<?= ROOT_URL ?>',<?= $userId + 1 ?>)"><?= $user["name"] ?></h3>
+                                <p class="user-biography" onclick="showOwnUserProfile('<?= ROOT_URL ?>',<?= $userId ?>)">
+                                    <?php if (strlen($user["biography"]) > 50) : ?>
+                                        <?= substr($user["biography"], 0, 50) ?>...
+                                    <?php else : ?>
+                                        <?= $user["biography"] ?>
+                                    <?php endif ?>
+                                </p>
+                                <a id="logout-button" class="logout" onclick="Logout('<?= ROOT_URL ?>')"><i class="uil uil-signout"></i>Logout</a>
+                            </div>
                         </div>
-                        <div class="user-info">
-                            <h3 class="user-name" onclick="showOwnUserProfile()">Alan Tomaz</h3>
-                            <p class="user-biography" onclick="showOwnUserProfile()">Lorem ipsum dolor sit amet.</p>
-                            <a id="logout-button" class="logout" onclick="Logout();"><i class="uil uil-signout"></i>Logout</a>
-                        </div>
-                    </div>
+                    <?php endif ?>
                     <div class="search-chats">
                         <i class="uil uil-search search-icon"></i>
 
@@ -147,8 +179,6 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
                         </div>
 
                     </div>
-
-
                 </div>
                 <div class="chat-footer hide-user-profile hide-search-results chat-content-box">
                     <div class="file-send-content" id="file-send-content">
@@ -201,21 +231,24 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
                     </div>
                     <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="profile-loading" id="profile-loading">
                     <div class="profile-img-box">
-                        <img src="<?= ROOT_URL ?>img/user.png" alt="" class="profile-img img-circle">
-                        <label for="upload-avatar">
-                            <img src="<?= ROOT_URL ?>img/9004736_image_photo_picture_gallery_icon (2).png" class="img" onclick="showInput()">
+                        <img src="<?= ROOT_URL ?>img/user.png" alt="" class="profile-img img-circle" id="profile-img">
+                        <label for="update-avatar">
+                            <img src="<?= ROOT_URL ?>img/9004736_image_photo_picture_gallery_icon (2).png" class="img" onclick="showInput()" id="upload-avatar">
                         </label>
                     </div>
                     <div class="update-img" id="update-img">
-                        <input type="file" name="update-avatar" id="upload-avatar" onchange="updateAvatarAlert()">
+                        <input type="file" name="update-avatar" id="update-avatar" onchange="updateAvatarAlert()">
                         <p class="avatar-alert">Are You Sure That You Want To Change Your Avatar To <span id="avatar-name">Chat</span>? </p>
                         <div class="update-avatar-btns">
                             <i class="uil uil-times close-btn" id="close-0" onclick="closeAll()"></i>
-                            <i class="uil uil-check-circle  check-btn" id="update-0" onclick="updateAvatar()"></i>
+                            <i class="uil uil-check-circle  check-btn" id="update-0" onclick="updateAvatar('<?= ROOT_URL ?>',<?= $userId ?>, <?= $isAdmin ?>)"></i>
                             <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-0">
                         </div>
+                        <div class="progress-bar" id="progress-bar">
+                            <div class="progress" id="progress"></div>
+                        </div>
                     </div>
-                    <h6 class="last-activity">Last activity</h6>
+                    <h6 class="last-activity" id="last-activity">Last activity</h6>
                     <div class="profile-infos-box">
                         <div class="profile-infos">
                             <div class="profile-info">
@@ -225,13 +258,13 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name">Name</h4>
-                                    <input type="text" class="inner-input" id="inner-input-1" placeholder="Insert Your New Username">
+                                    <input type="text" class="inner-input" id="inner-input-1" name="username" placeholder="Insert Your New Username">
                                     <p class="info" id="info-1">Alan</p>
                                 </div>
                             </div>
                             <div class="update-btns">
                                 <i class="uil uil-edit edit-btn" id="edit-1" onclick="showInput(1)"></i>
-                                <i class="uil uil-check-circle check-btn" id="update-1" onclick="updateData(1)"></i>
+                                <i class="uil uil-check-circle check-btn" id="update-1" onclick="updateData(1, '<?= ROOT_URL ?>',<?= $userId ?>, <?= $isAdmin ?>)"></i>
                                 <i class="uil uil-times close-btn" id="close-1" onclick="closeAll()"></i>
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-1">
                             </div>
@@ -246,14 +279,14 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name">Biography</h4>
-                                    <input type="text" class="inner-input" id="inner-input-2" placeholder="Insert Your New Biography">
+                                    <input type="text" class="inner-input" id="inner-input-2" name="biography" placeholder="Insert Your New Biography">
                                     <p class="info" id="info-2">Lorem ipsum dolor sit amet.</p>
                                 </div>
                             </div>
                             <div class="update-btns">
                                 <i class="uil uil-edit edit-btn" id="edit-2" onclick="showInput(2)"></i>
-                                <i class="uil uil-check-circle  check-btn" id="update-2" onclick="updateData(2)"></i>
-                                <i class="uil uil-times close-btn" id="close-2" onclick="closeAll()"></i>
+                                <i class="uil uil-check-circle  check-btn" id="update-2" onclick="updateData(2, '<?= ROOT_URL ?>',<?= $userId ?>, <?= $isAdmin ?>)""></i>
+                                <i class=" uil uil-times close-btn" id="close-2" onclick="closeAll()"></i>
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-2">
                             </div>
                         </div>
@@ -267,14 +300,14 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name">Birth Date</h4>
-                                    <input type="date" class="inner-input" id="inner-input-3" placeholder="Insert Your Birth Date">
+                                    <input type="date" class="inner-input" id="inner-input-3" name="birth-date" placeholder="Insert Your Birth Date">
                                     <p class="info" id="info-3">02/09/2004</p>
                                 </div>
                             </div>
                             <div class="update-btns">
                                 <i class="uil uil-edit edit-btn" id="edit-3" onclick="showInput(3)"></i>
-                                <i class="uil uil-check-circle  check-btn" id="update-3" onclick="updateData(3)"></i>
-                                <i class="uil uil-times close-btn" id="close-3" onclick="closeAll()"></i>
+                                <i class="uil uil-check-circle  check-btn" id="update-3" onclick="updateData(3, '<?= ROOT_URL ?>',<?= $userId ?>, <?= $isAdmin ?>)""></i>
+                                <i class=" uil uil-times close-btn" id="close-3" onclick="closeAll()"></i>
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-3">
                             </div>
                         </div>
@@ -288,14 +321,14 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name">Phone Number</h4>
-                                    <input type="tel" class="inner-input" id="inner-input-4" placeholder="Insert Your New Phone Number">
+                                    <input type="tel" class="inner-input" id="inner-input-4" name="phone-number" placeholder="Insert Your New Phone Number">
                                     <p class="info" id="info-4">9999-9999</p>
                                 </div>
                             </div>
                             <div class="update-btns">
                                 <i class="uil uil-edit edit-btn" id="edit-4" onclick="showInput(4)"></i>
-                                <i class="uil uil-check-circle  check-btn" id="update-4" onclick="updateData(4)"></i>
-                                <i class="uil uil-times close-btn" id="close-4" onclick="closeAll()"></i>
+                                <i class="uil uil-check-circle  check-btn" id="update-4" onclick="updateData(4, '<?= ROOT_URL ?>',<?= $userId ?>, <?= $isAdmin ?>)""></i>
+                                <i class=" uil uil-times close-btn" id="close-4" onclick="closeAll()"></i>
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-4">
                             </div>
                         </div>
@@ -309,15 +342,15 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name" id="info-name-5">E-mail</h4>
-                                    <input type="email" class="inner-input" id="inner-input-5" placeholder="Insert Your New E-mail">
+                                    <input type="email" class="inner-input" id="inner-input-5" name="email" placeholder="Insert Your New E-mail">
                                     <p class="info" id="info-5">alan4tomaz8@gmail.com</p>
                                 </div>
                             </div>
                             <div class="update-btns">
 
                                 <i class="uil uil-edit edit-btn" id="edit-5" onclick="showInput(5)"></i>
-                                <i class="uil uil-check-circle check-btn" id="update-5" onclick="updateData(5)"></i>
-                                <i class="uil uil-times close-btn" id="close-5" onclick="closeAll()"></i>
+                                <i class="uil uil-check-circle check-btn" id="update-5" onclick="updateData(5, '<?= ROOT_URL ?>',<?= $userId ?>, <?= $isAdmin ?>)""></i>
+                                <i class=" uil uil-times close-btn" id="close-5" onclick="closeAll()"></i>
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-5">
                             </div>
                         </div>
@@ -331,14 +364,14 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name">Location</h4>
-                                    <input type="text" class="inner-input" id="inner-input-6" placeholder="Insert Your New Location">
+                                    <input type="text" class="inner-input" id="inner-input-6" name="location" placeholder="Insert Your New Location">
                                     <p class="info" id="info-6">Minas Gerais, Brasil</p>
                                 </div>
                             </div>
                             <div class="update-btns">
 
                                 <i class="uil uil-edit edit-btn" id="edit-6" onclick="showInput(6)"></i>
-                                <i class="uil uil-check-circle  check-btn" id="update-6" onclick="updateData(6)"></i>
+                                <i class="uil uil-check-circle  check-btn" id="update-6" onclick="updateData(6, '<?= ROOT_URL ?>',<?= $userId ?>, <?= $isAdmin ?>)"></i>
                                 <i class="uil uil-times close-btn" id="close-6" onclick="closeAll()"></i>
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-6">
                             </div>
@@ -352,21 +385,21 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name">Password</h4>
-                                    <input type="password" class="inner-input" id="inner-input-7" placeholder="Insert Your New Password">
+                                    <input type="password" class="inner-input" id="inner-input-7" name="password" placeholder="Insert Your New Password">
                                     <p class="info" id="info-7">**********</p>
                                 </div>
                             </div>
                             <div class="update-btns">
                                 <i class="uil uil-edit edit-btn" id="edit-7" onclick="showInput(7)"></i>
-                                <i class="uil uil-check-circle  check-btn" id="update-7" onclick="updateData(7)"></i>
-                                <i class="uil uil-times close-btn" id="close-7" onclick="closeAll()"></i>
+                                <i class="uil uil-check-circle  check-btn" id="update-7" onclick="updateData(7, '<?= ROOT_URL ?>',<?= $userId ?>, <?= $isAdmin ?>)"></i>
+                                <i class=" uil uil-times close-btn" id="close-7" onclick="closeAll()"></i>
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-7">
                             </div>
                         </div>
                         <hr class="profile-hr hr">
 
                     </div>
-                    <a class="logout-btn" href=""><i class="uil uil-signout "></i>Logout</a>
+                    <a class="logout-btn" id="logout-profile" onclick="Logout('<?= ROOT_URL ?>')"><i class="uil uil-signout "></i>Logout</a>
 
                 </div>
             </div>
@@ -378,25 +411,6 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
     <script src="<?= ROOT_URL ?>js/main.js"></script>
     <script src="<?= ROOT_URL ?>js/chat.js"></script>
     <script src="<?= ROOT_URL ?>js/ajax-lib.js"></script>
-    <script type="text/javascript">
-        function Logout() {
-            //Change the UI
-            document.getElementById("logout-button").setAttribute("style", "display: hidden;");
-            document.getElementById("logout-button").removeAttribute("onclick");
-            //Do the request
-            EasyHttpRequest.StartAsyncGetRequest("<?= ROOT_URL ?>apis/logout.php", null,
-                function() {
-
-                },
-                function(textResult, jsonResult) {
-                    //Redirect to home
-                    window.location.href = "<?= ROOT_URL ?>index.php";
-                },
-                function() {
-                    //ao dar erro
-                });
-        }
-    </script>
 </body>
 
 </html>

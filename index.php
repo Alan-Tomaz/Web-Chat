@@ -1,6 +1,7 @@
 <?php
-require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
+include $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/partials/header.php";
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

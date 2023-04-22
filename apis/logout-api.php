@@ -1,10 +1,10 @@
 <?php
+require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
 
 //Prepare the response
 $isLogOutSuccessfully = true;
 
 //Exclude the session
-session_start();
 session_destroy();
 
 //Pack the response into a object

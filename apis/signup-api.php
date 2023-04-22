@@ -25,8 +25,10 @@ function validatePassword($password)
     $numberPasswordRegex = "/(?=.*[0-9])/";
     $specialPasswordRegex = "/(?=.*[!@#\$%\^&\*])/";
 
-    if (preg_match($lowerPasswordRegex, $password) || preg_match($upperPasswordRegex, $password) || preg_match($numberPasswordRegex, $password) || preg_match($specialPasswordRegex, $password)) {
+    if (preg_match($lowerPasswordRegex, $password) && preg_match($upperPasswordRegex, $password) && preg_match($numberPasswordRegex, $password) && preg_match($specialPasswordRegex, $password)) {
         return 1;
+    } else {
+        return 0;
     }
 }
 
