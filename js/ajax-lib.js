@@ -98,7 +98,7 @@ class EasyHttpRequest {
                     console.log("Error on Do HTTP Request: " + httpRequest.status);
                     errorCallback();
                 }
-                //If success
+                //If success 
                 if (httpRequest.readyState == 4 && httpRequest.status == 200) {
                     //Try to get a JSON, if fails, send a null string to callback
                     try {

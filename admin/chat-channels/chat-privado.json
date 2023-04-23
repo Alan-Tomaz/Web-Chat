@@ -1,0 +1,16 @@
+{
+    "chatInfo": [{
+        "chatId": 1,
+        "name": "Private Chat",
+        "description": "Private Chat",
+        "creationDate": "27/12/2004",
+        "img": ""
+    }],
+    "messages": [{
+            "userId": "7",
+            "nickname": "Marcos",
+            "message": "Aoba"
+        }
+
+    ]
+}

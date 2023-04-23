@@ -1,6 +1,5 @@
 <?php
-require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
-
+require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/partials/header.php";
 
 $isLogged = isset($_SESSION["user-id"]);
 $isAdmin = isset($_SESSION["user-is-admin"]);
@@ -33,7 +32,7 @@ if ($isLogged) {
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="overflow-hidden">
+<body class="overflow-hidden" onload="loadChats('<?= ROOT_URL ?>')">
     <div class="mini-profile" id="mini-profile">
         <div class="mini-profile-img">
             <img src="<?= ROOT_URL ?>img/user.png">
@@ -65,7 +64,7 @@ if ($isLogged) {
     <section class="chat-section section">
         <div class="chat-container container">
             <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="global-loading" id="global-loading">
-            <div class="chats-list hide-user-profile hide-search-results">
+            <div class="chats-list hide-user-profile hide-search-results" id="chats-list">
                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="search-loading" id="search-loading">
 
                 <div class="user-content hide-user-profile hide-emojis-clips">
@@ -101,7 +100,7 @@ if ($isLogged) {
                     <div class="search-chats">
                         <i class="uil uil-search search-icon"></i>
 
-                        <input type="search" class="search-input" id="search-input" placeholder="Search Chats">
+                        <input type="search" class="search-input" id="search-input" placeholder="Search Chats" onkeypress="searchChats('<?= ROOT_URL ?>')">
                         <div class="search-result-box" id="search-result-box">
                             <div class="chats search-chat" onclick="showChat()">
                                 <div class="chats-img-box">
@@ -132,17 +131,7 @@ if ($isLogged) {
                     <hr class="user-hr hr">
                 </div>
 
-                <div class="chats" onclick="showChat()">
-                    <div class="chats-img-box">
-                        <img src="<?= ROOT_URL ?>img/user.png" class="chats-img img-circle">
-                    </div>
-                    <div class="chats-info">
-                        <div class="chats-name-box">
-                            <h4 class="chats-name">Alan</h4>
-                        </div>
-                        <hr class="chats-hr hr">
-                    </div>
-                </div>
+
 
             </div>
 

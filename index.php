@@ -1,5 +1,5 @@
 <?php
-include $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/partials/header.php";
+require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/partials/header.php";
 ?>
 
 

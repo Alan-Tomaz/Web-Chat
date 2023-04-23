@@ -1,6 +1,77 @@
 //Global Variables
 let globalLoading = document.getElementById("global-loading");
 let k = 0;
+
+
+/* ==================== LOAD THE CHATS =================== */
+
+function loadChats(rootUrl) {
+    const chatList = document.getElementById("chats-list");
+    let chats = "";
+    let chatsDiv;
+    searchLoading.classList.add("search-loading-show");
+
+
+
+    EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", "",
+        function () {
+            /* When The Request Is Done */
+
+            /* Create The Chats */
+            function loadChat(n, index) {
+                if (n.chatInfo[0].img == "") {
+                    var img = "chat-generic-img.png";
+                } else {
+                    var img = n.chatInfo[0].img;
+                }
+                newChat =
+                    `
+                    <div class = "chats channels" onclick = "showChat(${index})" >
+                    <div class = "chats-img-box">
+                    <img src = "${rootUrl}img/${img}" class = "chats-img img-circle" >
+                    </div> 
+                    <div class = "chats-info" >
+                    <div class = "chats-name-box" >
+                    <h4 class = "chats-name">${n.chatInfo[0].name}</h4> 
+                    </div> 
+                    <hr class = "chats-hr hr">
+                    </div> 
+                    </div>
+                    `
+                chatList.innerHTML += newChat;
+            }
+
+            chats.forEach(loadChat);
+
+            setTimeout(() => {
+                chatsDiv = document.querySelectorAll(".channels");
+                chatsDiv.forEach(n => n.classList.add("chats-show"));
+                let searchLoading = document.getElementById("search-loading");
+                searchLoading.classList.remove("search-loading-show");
+            }, 500);
+        },
+
+
+        function (textResult, jsonResult) {
+            console.log(textResult);
+            //If error
+            if (jsonResult.readChatStatus != 0) {
+                switch (jsonResult.readChatStatus) {
+                    case 1:
+                        ShowPopUpDialog("popup-error", "Error!", "Non-existent directory");
+                }
+            }
+            //If success
+            else {
+                chats = jsonResult.allChats;
+            }
+        },
+        function () {
+            /* Case The Request can't be done */
+            ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+        });
+}
+
 /* ==================== GET THE AVATAR NAME FILE AND PUT ON THE INPUT =================== */
 
 let avatarInput = document.getElementById('avatar'),
@@ -789,27 +860,105 @@ let searchInput = document.getElementById("search-input");
 let searchResultBox = document.getElementById("search-result-box");
 let searchLoading = document.getElementById("search-loading")
 let isShowingResults = false;
-searchInput.addEventListener("keypress", (event) => {
-    searchResultBox.classList.remove("search-result-box-show");
-    searchLoading.classList.add("search-loading-show");
-    setTimeout(() => {
-        console.log(searchInput == document.activeElement);
-        if (searchInput == document.activeElement) {
-            searchResultBox.classList.add("search-result-box-show");
-            searchLoading.classList.remove("search-loading-show");
-            isShowingResults = true;
-        } else {
-            searchLoading.classList.remove("search-loading-show");
-        }
-    }, 1000);
-})
+let isSearching = false;
+
+function searchChats(rootUrl) {
+
+    if (isSearching == false) {
+        isSearching = true;
+
+        searchResultBox = document.getElementById("search-result-box");
+        searchResultBox.innerHTML = "";
+        searchResultBox.classList.remove("search-result-box-show");
+        searchLoading = document.getElementById("search-loading");
+        searchLoading.classList.add("search-loading-show");
+        let chats = "";
+        let chatsDiv;
+        setTimeout(() => {
+            if (isSearching == true) {
+                var formData = EasyHttpRequest.InstantiateFormData();
+                EasyHttpRequest.AddField(formData, "chat-name", searchInput.value);
+                var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+                EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", formDataCompiled,
+                    function () {
+                        if (isSearching == true) {
+                            /* When The Request Is Done */
+                            isSearching = false;
+
+                            /* Create The Chats */
+                            function loadChat(n, index) {
+                                if (n.chatInfo[0].img == "") {
+                                    var img = "chat-generic-img.png";
+                                } else {
+                                    var img = n.chatInfo[0].img;
+                                }
+                                newChat =
+                                    `
+                    <div class = "chats search-chat" onclick = "showChat(${index})" >
+                    <div class = "chats-img-box">
+                    <img src = "${rootUrl}img/${img}" class = "chats-img img-circle" >
+                    </div> 
+                    <div class = "chats-info" >
+                    <div class = "chats-name-box" >
+                    <h4 class = "chats-name">${n.chatInfo[0].name}</h4> 
+                    </div> 
+                    <hr class = "search-chats-hr hr">
+                    </div> 
+                    </div>
+                    `
+                                searchResultBox.innerHTML += newChat;
+                            }
+
+                            setTimeout(() => {
+                                chats.forEach(loadChat);
+
+                                chatsDiv = document.querySelectorAll(".search-chat");
+                                chatsDiv.forEach(n => n.classList.add("chats-show"));
+                                let searchLoading = document.getElementById("search-loading");
+
+
+                                searchLoading.classList.remove("search-loading-show");
+
+                            }, 100);
+                        }
+                    },
+                    function (textResult, jsonResult) {
+                        console.log(textResult);
+                        //If error
+                        if (jsonResult.readChatStatus != 0) {
+                            switch (jsonResult.readChatStatus) {
+                                case 1:
+                                    ShowPopUpDialog("popup-error", "Error!", "Non-existent directory");
+                            }
+                        }
+                        //If success
+                        else {
+                            if (isSearching == true) {
+                                chats = jsonResult.allChats;
+                                searchResultBox.classList.add("search-result-box-show");
+                                isShowingResults = true;
+                            }
+                        }
+                    },
+                    function () {
+                        /* Case The Request can't be done */
+                        ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                    });
+
+            }
+        }, 10);
+
+    }
+}
 
 let hideSearchResults = document.querySelectorAll(".hide-search-results");
 hideSearchResults.forEach(n => n.addEventListener("click", () => {
-    if (isShowingResults == true) {
-        searchResultBox.classList.remove("search-result-box-show");
-        isShowingResults = false;
-    }
+    searchResultBox.innerHTML = "";
+    searchResultBox.classList.remove("search-result-box-show");
+    searchLoading.classList.remove("search-loading-show");
+    isShowingResults = false;
+    isSearching = false;
+
 }))
 
 /* ==================== Return to the previous page =================== */
