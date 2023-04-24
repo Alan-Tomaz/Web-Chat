@@ -179,6 +179,12 @@ function showOwnUserProfile(rootUrl, userId) {
                         document.querySelectorAll(".profile-info-3").forEach(n => n.classList.remove("profile-hide"));
                         document.querySelectorAll(".profile-info-4").forEach(n => n.classList.remove("profile-hide"));
                         document.querySelectorAll(".profile-info-7").forEach(n => n.classList.remove("profile-hide"));
+
+                        document.getElementById("info-icon-5").className = "uil uil-envelope info-icon";
+                        document.getElementById("info-name-5").innerHTML = "Email:";
+
+                        document.getElementById("info-icon-6").className = "uil uil-location-point info-icon";
+                        document.getElementById("info-name-6").innerHTML = "Location:";
                     },
                     function (textResult, jsonResult) {
                         console.log(textResult);
@@ -257,6 +263,12 @@ function showOwnUserProfile(rootUrl, userId) {
                         document.querySelectorAll(".profile-info-3").forEach(n => n.classList.remove("profile-hide"));
                         document.querySelectorAll(".profile-info-4").forEach(n => n.classList.remove("profile-hide"));
                         document.querySelectorAll(".profile-info-7").forEach(n => n.classList.remove("profile-hide"));
+
+                        document.getElementById("info-icon-5").className = "uil uil-envelope info-icon";
+                        document.getElementById("info-name-5").innerHTML = "Email:";
+
+                        document.getElementById("info-icon-6").className = "uil uil-location-point info-icon";
+                        document.getElementById("info-name-6").innerHTML = "Location:";
                     },
                     function (textResult, jsonResult) {
                         console.log(textResult);
