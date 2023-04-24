@@ -9,7 +9,8 @@
     "messages": [{
             "userId": "7",
             "nickname": "Marcos",
-            "message": "Aoba"
+            "message": "Aoba",
+            "img": ""
         }
 
     ]

@@ -2,6 +2,10 @@
 let globalLoading = document.getElementById("global-loading");
 let k = 0;
 
+function loadPage(id) {
+    localStorage.setItem("userId", id);
+}
+
 
 /* ==================== LOAD THE CHATS =================== */
 
@@ -26,7 +30,7 @@ function loadChats(rootUrl) {
                 }
                 newChat =
                     `
-                    <div class = "chats channels" onclick = "showChat(${index})" >
+                    <div class = "chats channels" onclick = "showChat('${rootUrl}',${index})" >
                     <div class = "chats-img-box">
                     <img src = "${rootUrl}img/${img}" class = "chats-img img-circle" >
                     </div> 
@@ -169,6 +173,12 @@ function showOwnUserProfile(rootUrl, userId) {
                         profileCard.classList.add("profile-active");
                         profileCard.classList.add("profile-active-user");
                         globalLoading.classList.remove("global-loading-show");
+
+                        document.querySelectorAll(".profile-info-1").forEach(n => n.classList.remove("profile-hide"));
+                        document.querySelectorAll(".profile-info-2").forEach(n => n.classList.remove("profile-hide"));
+                        document.querySelectorAll(".profile-info-3").forEach(n => n.classList.remove("profile-hide"));
+                        document.querySelectorAll(".profile-info-4").forEach(n => n.classList.remove("profile-hide"));
+                        document.querySelectorAll(".profile-info-7").forEach(n => n.classList.remove("profile-hide"));
                     },
                     function (textResult, jsonResult) {
                         console.log(textResult);
@@ -242,6 +252,11 @@ function showOwnUserProfile(rootUrl, userId) {
                         profileCard.classList.add("profile-active");
                         profileCard.classList.add("profile-active-user");
                         globalLoading.classList.remove("global-loading-show");
+                        document.querySelectorAll(".profile-info-1").forEach(n => n.classList.remove("profile-hide"));
+                        document.querySelectorAll(".profile-info-2").forEach(n => n.classList.remove("profile-hide"));
+                        document.querySelectorAll(".profile-info-3").forEach(n => n.classList.remove("profile-hide"));
+                        document.querySelectorAll(".profile-info-4").forEach(n => n.classList.remove("profile-hide"));
+                        document.querySelectorAll(".profile-info-7").forEach(n => n.classList.remove("profile-hide"));
                     },
                     function (textResult, jsonResult) {
                         console.log(textResult);
@@ -303,7 +318,8 @@ function showOwnUserProfile(rootUrl, userId) {
 //SHOW WHEN THE HEADER IS CLICKED
 let chatHeader = document.getElementById("chat-header")
 let isClickedInBackIcon = false;
-chatHeader.addEventListener("click", () => {
+
+function showChatInfo(rootUrl, chatId) {
     setTimeout(() => {
         if (isClickedInBackIcon == false) {
             chatHeader.classList.add("chat-header-show-profile");
@@ -314,20 +330,154 @@ chatHeader.addEventListener("click", () => {
                 profileCard.classList.remove("profile-active");
                 globalLoading.classList.add("global-loading-show");
                 setTimeout(() => {
-                    profileCard.classList.add("profile-active");
-                    globalLoading.classList.remove("global-loading-show");
+                    EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", "",
+                        function () {
+
+                            /* When The Request Is Done */
+
+
+                            /* Create The Chats */
+
+                            document.querySelectorAll(".profile-info-1").forEach(n => n.classList.add("profile-hide"));
+                            document.querySelectorAll(".profile-info-2").forEach(n => n.classList.add("profile-hide"));
+                            document.querySelectorAll(".profile-info-3").forEach(n => n.classList.add("profile-hide"));
+                            document.querySelectorAll(".profile-info-4").forEach(n => n.classList.add("profile-hide"));
+                            document.querySelectorAll(".profile-info-7").forEach(n => n.classList.add("profile-hide"));
+                            if (chats.chatInfo[0].img == "") {
+                                document.getElementById("profile-img").src = rootUrl + "img/" + "chat-generic-img.png";
+                            } else {
+                                document.getElementById("profile-img").src = rootUrl + "admin/received-files/avatars/" + chats.chatInfo[0].img;
+                            }
+
+
+                            document.getElementById("last-activity").innerHTML = "Created In " + chats.chatInfo[0].creationDate;
+                            document.getElementById("info-icon-5").className = "uil uil-chat info-icon";
+                            document.getElementById("info-name-5").innerHTML = "Chat Name:";
+                            document.getElementById("info-5").innerHTML = chats.chatInfo[0].name;
+                            document.getElementById("info-icon-6").className = "uil uil-file-alt info-icon";
+                            document.getElementById("info-name-6").innerHTML = "Description:";
+                            document.getElementById("info-6").innerHTML = chats.chatInfo[0].description;
+
+
+                            document.getElementById("logout-profile").style.display = "none";
+
+                            document.querySelectorAll(".edit-btn").forEach(n => n.style.display = "none");
+
+                            document.getElementById("upload-avatar").style.display = "none";
+
+                            setTimeout(() => {
+
+
+                                isShowing = true;
+                                profileCard.classList.add("profile-active");
+                                globalLoading.classList.remove("global-loading-show");
+
+
+
+                            }, 100);
+                        },
+                        function (textResult, jsonResult) {
+
+                            console.log(textResult);
+
+                            //If error
+                            if (jsonResult.readChatStatus != 0) {
+                                switch (jsonResult.readChatStatus) {
+                                    case 1:
+                                        ShowPopUpDialog("popup-error", "Error!", "Non-existent directory");
+                                }
+                            }
+                            //If success
+                            else {
+
+                                chats = jsonResult.allChats[chatId];
+
+
+                            }
+                        },
+                        function () {
+                            /* Case The Request can't be done */
+                            ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                        });
+
                 }, 100)
             } else {
                 globalLoading.classList.add("global-loading-show");
                 setTimeout(() => {
-                    isShowing = true;
-                    profileCard.classList.add("profile-active");
-                    globalLoading.classList.remove("global-loading-show");
+
+                    EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", "",
+                        function () {
+
+                            /* When The Request Is Done */
+
+
+                            /* Create The Chats */
+
+                            document.querySelectorAll(".profile-info-1").forEach(n => n.classList.add("profile-hide"));
+                            document.querySelectorAll(".profile-info-2").forEach(n => n.classList.add("profile-hide"));
+                            document.querySelectorAll(".profile-info-3").forEach(n => n.classList.add("profile-hide"));
+                            document.querySelectorAll(".profile-info-4").forEach(n => n.classList.add("profile-hide"));
+                            document.querySelectorAll(".profile-info-7").forEach(n => n.classList.add("profile-hide"));
+                            if (chats.chatInfo[0].img == "") {
+                                document.getElementById("profile-img").src = rootUrl + "img/" + "chat-generic-img.png";
+                            } else {
+                                document.getElementById("profile-img").src = rootUrl + "admin/received-files/avatars/" + chats.chatInfo[0].img;
+                            }
+
+
+                            document.getElementById("last-activity").innerHTML = "Created In " + chats.chatInfo[0].creationDate;
+                            document.getElementById("info-icon-5").className = "uil uil-chat info-icon";
+                            document.getElementById("info-name-5").innerHTML = "Chat Name:";
+                            document.getElementById("info-5").innerHTML = chats.chatInfo[0].name;
+                            document.getElementById("info-icon-6").className = "uil uil-file-alt info-icon";
+                            document.getElementById("info-name-6").innerHTML = "Description:";
+                            document.getElementById("info-6").innerHTML = chats.chatInfo[0].description;
+
+                            document.getElementById("logout-profile").style.display = "none";
+
+                            document.querySelectorAll(".edit-btn").forEach(n => n.style.display = "none");
+
+                            document.getElementById("upload-avatar").style.display = "none";
+
+                            setTimeout(() => {
+
+
+                                isShowing = true;
+                                profileCard.classList.add("profile-active");
+                                globalLoading.classList.remove("global-loading-show");
+
+
+
+                            }, 100);
+                        },
+                        function (textResult, jsonResult) {
+
+                            console.log(textResult);
+
+                            //If error
+                            if (jsonResult.readChatStatus != 0) {
+                                switch (jsonResult.readChatStatus) {
+                                    case 1:
+                                        ShowPopUpDialog("popup-error", "Error!", "Non-existent directory");
+                                }
+                            }
+                            //If success
+                            else {
+
+                                chats = jsonResult.allChats[chatId];
+
+
+                            }
+                        },
+                        function () {
+                            /* Case The Request can't be done */
+                            ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                        });
                 }, 100);
             }
         }
     }, 50);
-})
+}
 
 
 /* ==================== SHOW AND HIDE THE INNER INPUT =================== */
@@ -842,17 +992,83 @@ let chatBlank = document.getElementById("chat-blank");
 let chat = document.querySelectorAll(".chat-content-box");
 let chatContent = document.getElementById("chat-content");
 
-function showChat() {
-
+function showChat(rootUrl, id) {
     globalLoading.classList.add("global-loading-show");
     chat.forEach(n => n.classList.remove("chat-content-box-show"));
     chatBlank.classList.remove("blank-content-hide");
-    setTimeout(() => {
-        chatContent.classList.add("chat-content-show");
-        chatBlank.classList.add("blank-content-hide");
-        chat.forEach(n => n.classList.add("chat-content-box-show"));
-        globalLoading.classList.remove("global-loading-show");
-    }, 1000);
+
+
+    EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", "",
+        function () {
+            /* When The Request Is Done */
+            document.getElementById("chat-messages-box").innerHTML = "";
+
+            /* Create The Chats */
+
+            groupImg = rootUrl + "img/chat-generic-img.png";
+            if (chats.chatInfo[0].img != "") {
+                groupImg = rootUrl + "admin/received-files/chat-img/" + chat.chatInfo[0].img;
+            }
+            document.getElementById("chat-img").src = groupImg;
+            document.getElementById("chat-name").innerHTML = chats.chatInfo[0].name;
+            document.getElementById("chat-desc").innerHTML = chats.chatInfo[0].description;
+            let i = 0
+
+            function showMessages(n, index) {
+                i++;
+                userImg = rootUrl + "img/" + "403024_avatar_boy_male_user_young_icon.png"
+                if (n.img != "") {
+                    userImg = rootUrl + "admin/received-files/avatars" + n.img;
+                }
+                userClass = "";
+                if (localStorage.getItem("userId") == n.userId) {
+                    userClass = "chat-our-message"
+                }
+                let message =
+                    `
+                <div class="chat-messages">
+                        <div class="chat-message ${userClass}">
+                            <div class="message-img-box open-user-profile" id="message-img-box-${n.userId}" onmouseover="showMiniProfile(${n.userId})" onmouseout="hideMiniProfile()">
+                                <img src="${userImg}" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent()">
+                            </div>
+                            <div class="message">${n.message}</div>
+                        </div>
+                    </div>
+                `
+
+                document.getElementById("chat-messages-box").innerHTML += message;
+            }
+
+            chats.chatMessage.forEach(showMessages)
+
+            setTimeout(() => {
+                document.getElementById("chat-header").setAttribute("onclick", `showChatInfo('${rootUrl}', ${id})`);
+                chatContent.classList.add("chat-content-show");
+                chatBlank.classList.add("blank-content-hide");
+                chat.forEach(n => n.classList.add("chat-content-box-show"));
+                globalLoading.classList.remove("global-loading-show");
+            }, 500);
+        },
+
+
+        function (textResult, jsonResult) {
+            console.log(textResult);
+            //If error
+            if (jsonResult.readChatStatus != 0) {
+                switch (jsonResult.readChatStatus) {
+                    case 1:
+                        ShowPopUpDialog("popup-error", "Error!", "Non-existent directory");
+                }
+            }
+            //If success
+            else {
+                chats = jsonResult.allChats[id];
+            }
+        },
+        function () {
+            /* Case The Request can't be done */
+            ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+        });
 }
 
 /* ==================== SEARCH RESULTS  =================== */
@@ -860,70 +1076,78 @@ let searchInput = document.getElementById("search-input");
 let searchResultBox = document.getElementById("search-result-box");
 let searchLoading = document.getElementById("search-loading")
 let isShowingResults = false;
-let isSearching = false;
+let isSearching = [];
+let isSearchIndex;
+let milliseconds = new Date();
+/* milliseconds = milliseconds.setTime(date.getTime()); */
 
-function searchChats(rootUrl) {
-
-    if (isSearching == false) {
-        isSearching = true;
-
+function searchChats(rootUrl, date, randomNumber) {
+    isSearching.forEach(n => n = false);
+    date = new Date();
+    randomNumber = Math.random() * ((milliseconds.setTime(date.getTime())) - 0) + 0
+    isSearching[randomNumber] = false;
+    if (isSearching[randomNumber] == false) {
+        isSearching[randomNumber] = true;
+        searchInput = document.getElementById("search-input");
         searchResultBox = document.getElementById("search-result-box");
         searchResultBox.innerHTML = "";
         searchResultBox.classList.remove("search-result-box-show");
         searchLoading = document.getElementById("search-loading");
         searchLoading.classList.add("search-loading-show");
-        let chats = "";
+        let chats = [];
         let chatsDiv;
-        setTimeout(() => {
-            if (isSearching == true) {
-                var formData = EasyHttpRequest.InstantiateFormData();
-                EasyHttpRequest.AddField(formData, "chat-name", searchInput.value);
-                var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
-                EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", formDataCompiled,
-                    function () {
-                        if (isSearching == true) {
-                            /* When The Request Is Done */
-                            isSearching = false;
 
-                            /* Create The Chats */
-                            function loadChat(n, index) {
-                                if (n.chatInfo[0].img == "") {
-                                    var img = "chat-generic-img.png";
-                                } else {
-                                    var img = n.chatInfo[0].img;
-                                }
-                                newChat =
-                                    `
-                    <div class = "chats search-chat" onclick = "showChat(${index})" >
-                    <div class = "chats-img-box">
-                    <img src = "${rootUrl}img/${img}" class = "chats-img img-circle" >
-                    </div> 
-                    <div class = "chats-info" >
-                    <div class = "chats-name-box" >
-                    <h4 class = "chats-name">${n.chatInfo[0].name}</h4> 
-                    </div> 
-                    <hr class = "search-chats-hr hr">
-                    </div> 
-                    </div>
-                    `
-                                searchResultBox.innerHTML += newChat;
+        if (isSearching[randomNumber] == true) {
+            var formData = EasyHttpRequest.InstantiateFormData();
+            EasyHttpRequest.AddField(formData, "chat-name", searchInput.value);
+            var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+            EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", formDataCompiled,
+                function () {
+                    if (isSearching[randomNumber] == true) {
+                        /* When The Request Is Done */
+                        isSearching[randomNumber] = false;
+
+                        /* Create The Chats */
+                        function loadChat(n, index) {
+                            if (n.chatInfo[0].img == "") {
+                                var img = "chat-generic-img.png";
+                            } else {
+                                var img = n.chatInfo[0].img;
                             }
-
-                            setTimeout(() => {
-                                chats.forEach(loadChat);
-
-                                chatsDiv = document.querySelectorAll(".search-chat");
-                                chatsDiv.forEach(n => n.classList.add("chats-show"));
-                                let searchLoading = document.getElementById("search-loading");
-
-
-                                searchLoading.classList.remove("search-loading-show");
-
-                            }, 100);
+                            newChat =
+                                `
+                                <div class = "chats search-chat" onclick = "showChat(${index})" >
+                                <div class = "chats-img-box">
+                                <img src = "${rootUrl}img/${img}" class = "chats-img img-circle" >
+                                </div> 
+                                <div class = "chats-info" >
+                                <div class = "chats-name-box" >
+                                <h4 class = "chats-name">${n.chatInfo[0].name}</h4> 
+                                </div> 
+                                <hr class = "search-chats-hr hr">
+                                </div> 
+                                </div>
+                                `
+                            searchResultBox.innerHTML += newChat;
                         }
-                    },
-                    function (textResult, jsonResult) {
+
+                        setTimeout(() => {
+                            searchResultBox.innerHTML = "";
+
+                            chats.forEach(loadChat);
+
+                            chatsDiv = document.querySelectorAll(".search-chat");
+                            chatsDiv.forEach(n => n.classList.add("chats-show"));
+                            let searchLoading = document.getElementById("search-loading");
+                            searchLoading.classList.remove("search-loading-show");
+
+                        }, 100);
+                    }
+                },
+                function (textResult, jsonResult) {
+                    if (isSearching[randomNumber] == true) {
                         console.log(textResult);
+
                         //If error
                         if (jsonResult.readChatStatus != 0) {
                             switch (jsonResult.readChatStatus) {
@@ -933,33 +1157,33 @@ function searchChats(rootUrl) {
                         }
                         //If success
                         else {
-                            if (isSearching == true) {
-                                chats = jsonResult.allChats;
-                                searchResultBox.classList.add("search-result-box-show");
-                                isShowingResults = true;
-                            }
-                        }
-                    },
-                    function () {
-                        /* Case The Request can't be done */
-                        ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
-                    });
 
-            }
-        }, 10);
+                            chats = jsonResult.allChats;
+                            searchResultBox.classList.add("search-result-box-show");
+                            isShowingResults = true;
+
+                        }
+                    }
+                },
+                function () {
+                    /* Case The Request can't be done */
+                    ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                });
+
+        }
 
     }
 }
 
-let hideSearchResults = document.querySelectorAll(".hide-search-results");
+/* let hideSearchResults = document.querySelectorAll(".hide-search-results");
 hideSearchResults.forEach(n => n.addEventListener("click", () => {
     searchResultBox.innerHTML = "";
     searchResultBox.classList.remove("search-result-box-show");
     searchLoading.classList.remove("search-loading-show");
     isShowingResults = false;
-    isSearching = false;
+    isSearching.forEach(n => n = false);
 
-}))
+})) */
 
 /* ==================== Return to the previous page =================== */
 let backToThePreviousPage = document.getElementById("previous-page");

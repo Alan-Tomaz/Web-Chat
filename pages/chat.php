@@ -32,7 +32,7 @@ if ($isLogged) {
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="overflow-hidden" onload="loadChats('<?= ROOT_URL ?>')">
+<body class="overflow-hidden" onload="loadChats('<?= ROOT_URL ?>'), loadPage( <?= $_SESSION['user-id'] ?>)">
     <div class="mini-profile" id="mini-profile">
         <div class="mini-profile-img">
             <img src="<?= ROOT_URL ?>img/user.png">
@@ -97,10 +97,10 @@ if ($isLogged) {
                             </div>
                         </div>
                     <?php endif ?>
-                    <div class="search-chats">
+                    <!-- <div class="search-chats">
                         <i class="uil uil-search search-icon"></i>
 
-                        <input type="search" class="search-input" id="search-input" placeholder="Search Chats" onkeypress="searchChats('<?= ROOT_URL ?>')">
+                        <input type="search" class="search-input" id="search-input" placeholder="Search Chats" onkeypress="searchChats('<?= ROOT_URL ?>', event)">
                         <div class="search-result-box" id="search-result-box">
                             <div class="chats search-chat" onclick="showChat()">
                                 <div class="chats-img-box">
@@ -127,7 +127,7 @@ if ($isLogged) {
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <hr class="user-hr hr">
                 </div>
 
@@ -143,18 +143,18 @@ if ($isLogged) {
                     <h1 class="chat-blank-title">Hi! Welcome To Web Chat!</h1>
                     <p class="chat-blank-paragraph">Select a group and start chatting.</p>
                 </div>
-                <div class="chat-header chat-content-box hide-emojis-clips hide-search-results" id="chat-header">
+                <div class="chat-header chat-content-box hide-emojis-clips hide-search-results" id="chat-header" onclick="showChatInfo()">
                     <div class="header-vr vr"></div>
                     <div class="back-box" id="previous-page" onclick="previousPage(0)">
                         <i class="uil uil-arrow-left back"></i>
                     </div>
                     <div class="header-content">
                         <div class="chat-img-box">
-                            <img src="<?= ROOT_URL ?>img/user.png" class="chat-img img-circle">
+                            <img src="<?= ROOT_URL ?>img/user.png" class="chat-img img-circle" id="chat-img">
                         </div>
                         <div class="chat-info">
-                            <h4 class="chat-name">Alan</h4>
-                            <h5 class="chat-activity">Last ativity</h5>
+                            <h4 class="chat-name" id="chat-name">Alan</h4>
+                            <h5 class="chat-activity" id="chat-desc">Last ativity</h5>
                         </div>
                     </div>
                 </div>
@@ -239,7 +239,7 @@ if ($isLogged) {
                     </div>
                     <h6 class="last-activity" id="last-activity">Last activity</h6>
                     <div class="profile-infos-box">
-                        <div class="profile-infos">
+                        <div class="profile-infos profile-info-1">
                             <div class="profile-info">
 
                                 <div class="info-img">
@@ -258,10 +258,10 @@ if ($isLogged) {
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-1">
                             </div>
                         </div>
-                        <hr class="profile-hr hr">
+                        <hr class="profile-hr hr profile-info-1">
 
 
-                        <div class="profile-infos">
+                        <div class="profile-infos profile-info-2">
                             <div class="profile-info">
                                 <div class="info-img">
                                     <i class="uil uil-info-circle info-icon"></i>
@@ -279,9 +279,9 @@ if ($isLogged) {
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-2">
                             </div>
                         </div>
-                        <hr class="profile-hr hr">
+                        <hr class="profile-hr hr profile-info-2">
 
-                        <div class="profile-infos">
+                        <div class="profile-infos profile-info-3">
                             <div class="profile-info">
 
                                 <div class="info-img">
@@ -300,9 +300,9 @@ if ($isLogged) {
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-3">
                             </div>
                         </div>
-                        <hr class="profile-hr hr">
+                        <hr class="profile-hr hr profile-info-3">
 
-                        <div class="profile-infos">
+                        <div class="profile-infos profile-info-4">
                             <div class="profile-info">
 
                                 <div class="info-img">
@@ -321,13 +321,13 @@ if ($isLogged) {
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-4">
                             </div>
                         </div>
-                        <hr class="profile-hr hr">
+                        <hr class="profile-hr hr profile-info-4">
 
-                        <div class="profile-infos">
+                        <div class="profile-infos profile-info-5">
                             <div class="profile-info">
 
                                 <div class="info-img">
-                                    <i class="uil uil-envelope info-icon"></i>
+                                    <i class="uil uil-envelope info-icon" id="info-icon-5"></i>
                                 </div>
                                 <div class="profile-info-content">
                                     <h4 class="info-name" id="info-name-5">E-mail</h4>
@@ -343,16 +343,16 @@ if ($isLogged) {
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-5">
                             </div>
                         </div>
-                        <hr class="profile-hr hr">
+                        <hr class="profile-hr hr profile-info-5">
 
-                        <div class="profile-infos">
+                        <div class="profile-infos profile-info-6">
                             <div class="profile-info">
 
                                 <div class="info-img">
-                                    <i class="uil uil-location-point info-icon"></i>
+                                    <i class="uil uil-location-point info-icon" id="info-icon-6"></i>
                                 </div>
                                 <div class="profile-info-content">
-                                    <h4 class="info-name">Location</h4>
+                                    <h4 class="info-name" id="info-name-6">Location</h4>
                                     <input type="text" class="inner-input" id="inner-input-6" name="location" placeholder="Insert Your New Location">
                                     <p class="info" id="info-6">Minas Gerais, Brasil</p>
                                 </div>
@@ -365,9 +365,9 @@ if ($isLogged) {
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-6">
                             </div>
                         </div>
-                        <hr class="profile-hr hr">
+                        <hr class="profile-hr hr profile-info-6">
 
-                        <div class="profile-infos">
+                        <div class="profile-infos profile-info-7">
                             <div class="profile-info">
                                 <div class="info-img">
                                     <i class="uil uil-key-skeleton info-icon"></i>
@@ -385,7 +385,7 @@ if ($isLogged) {
                                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="loading" id="loading-7">
                             </div>
                         </div>
-                        <hr class="profile-hr hr">
+                        <hr class="profile-hr hr profile-info-7">
 
                     </div>
                     <a class="logout-btn" id="logout-profile" onclick="Logout('<?= ROOT_URL ?>')"><i class="uil uil-signout "></i>Logout</a>

@@ -907,6 +907,9 @@ input[type=file] {
 .chat-img-box {
     max-width: 3rem;
     max-height: 3rem;
+    border-radius: 5rem;
+    overflow: hidden;
+    min-width: 3rem;
 }
 
 .chat-info {
@@ -963,6 +966,9 @@ input[type=file] {
     max-height: 2.5rem;
     position: relative;
     z-index: 60;
+    border-radius: 5rem;
+    overflow: hidden;
+    min-width: 2rem;
 }
 
 .message {
@@ -1414,6 +1420,7 @@ input[type=file] {
     flex-direction: column;
 }
 
+
 .profile-infos-box hr:last-child {
     display: none;
 }
@@ -1427,6 +1434,10 @@ input[type=file] {
     align-items: center;
     justify-content: space-between;
     padding: 1rem 2rem;
+}
+
+.profile-hide {
+    display: none;
 }
 
 .profile-info {

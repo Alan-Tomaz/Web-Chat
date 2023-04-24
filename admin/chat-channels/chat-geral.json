@@ -7,29 +7,18 @@
         "img": ""
     }],
     "messages": [{
-            "userId": "7",
+            "userId": "9",
             "nickname": "Killow",
-            "message": "Sim, tudo bem!"
+            "message": "Sim, tudo bem!",
+            "img": ""
         },
+
         {
             "userId": "7",
             "nickname": "Killow",
-            "message": "Sim, tudo bem!"
-        },
-        {
-            "userId": "7",
-            "nickname": "Killow",
-            "message": "Sim, tudo bem!"
-        },
-        {
-            "userId": "7",
-            "nickname": "Killow",
-            "message": ":)"
-        },
-        {
-            "userId": "7",
-            "nickname": "Killow",
-            "message": ":)"
+            "message": ":)",
+            "img": ""
         }
     ]
+
 }

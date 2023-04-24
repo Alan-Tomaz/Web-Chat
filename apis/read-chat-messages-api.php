@@ -13,6 +13,8 @@ if (isset($_GET["chat-name"])) {
 }
 
 
+
+
 //Pack the response into a object
 $result = new stdClass();
 
@@ -26,14 +28,13 @@ if (is_dir($chatsPath)) {
     if ($isSearching == true) {
         /* $ocurrences = $array_keys($chatsArray, "/$searchingName(.*?)/"); */
         foreach ($chatsArray as $arr) {
-            if (preg_match($searchingNamePattern, $arr, $ocurrences)) {
+            if (preg_match($searchingNamePattern, $arr) == 1) {
                 $match = 1;
             } else {
                 $match = 0;
             }
 
 
-            echo $match;
             if ($match == 1) {
                 array_push($chats, $arr);
             }
