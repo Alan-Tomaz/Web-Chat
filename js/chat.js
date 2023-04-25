@@ -2,8 +2,15 @@
 let globalLoading = document.getElementById("global-loading");
 let k = 0;
 
-function loadPage(id) {
+let messageId = 0;
+
+function loadPage(id, isAdmin) {
     localStorage.setItem("userId", id);
+    if (isAdmin == 1) {
+        localStorage.setItem("isAdmin", isAdmin);
+    } else {
+        localStorage.setItem("isAdmin", undefined);
+    }
 }
 
 
@@ -129,20 +136,312 @@ showUserProfile.forEach(n => n.addEventListener("click", () => {
     }
 }));
 
-function showUserProfileInnerEvent() {
+function showUserProfileInnerEvent(rootUrl, id) {
+    let user = 0;
     if (isShowing == true) {
         profileCard.classList.remove("profile-active");
         globalLoading.classList.add("global-loading-show");
         setTimeout(() => {
-            profileCard.classList.add("profile-active");
-            globalLoading.classList.remove("global-loading-show");
+
+            var formData = EasyHttpRequest.InstantiateFormData();
+            EasyHttpRequest.AddField(formData, "user-id", id);
+            var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+
+            apiPath = rootUrl + "apis/show-user-api.php";
+
+            /* if (localStorage.getItem("isAdmin") != null || localStorage.getItem("userId") == id) {
+                apiPath = rootUrl + "apis/show-user-profile-api.php";
+            } */
+            EasyHttpRequest.StartAsyncPostRequest(apiPath, formDataCompiled,
+                function () {
+                    /* When The Request Is Done */
+
+                    /* Create The Chats */
+
+                    profileCard.classList.add("profile-active");
+                    globalLoading.classList.remove("global-loading-show");
+
+                    if (localStorage.getItem("isAdmin") != 1 && localStorage.getItem("userId") != id) {
+                        let logoutBtn = document.getElementById("logout-profile");
+                        logoutBtn.style.display = "none";
+
+                        let editBtns = document.querySelectorAll(".edit-btn");
+                        editBtns.forEach(n => n.style.display = "none");
+
+                        let profileNewImg = document.getElementById("upload-avatar");
+                        profileNewImg.style.display = "none";
+
+
+                    } else {
+                        let logoutBtn = document.getElementById("logout-profile");
+                        logoutBtn.style.display = "inline-block";
+
+                        let editBtns = document.querySelectorAll(".edit-btn");
+                        editBtns.forEach(n => n.style.display = "inline-block");
+
+                        let profileNewImg = document.getElementById("upload-avatar");
+                        profileNewImg.style.display = "inline-block";
+
+                        let checkBtns = document.querySelectorAll(".check-btn");
+                        checkBtns.forEach(changeUpdateData);
+
+                        function changeUpdateData(n, index) {
+                            n.setAttribute("onclick", `updateData(${index}, '${rootUrl}', ${id}, ${localStorage.getItem("isAdmin")})`);
+                        }
+                        if (localStorage.getItem("isAdmin") == 1) {
+                            document.getElementById("update-0").setAttribute("onclick", `updateAvatar('${rootUrl}',${id}, ${localStorage.getItem("isAdmin")})`)
+                        } else {
+                            document.getElementById("update-0").setAttribute("onclick", `updateAvatar('${rootUrl}',${id})`)
+                        }
+                    }
+
+                    if (localStorage.getItem("userId") != id) {
+                        let logoutBtn = document.getElementById("logout-profile");
+                        logoutBtn.style.display = "none";
+                    }
+
+
+
+
+                    document.querySelectorAll(".profile-info-1").forEach(n => n.classList.remove("profile-hide"));
+                    document.querySelectorAll(".profile-info-2").forEach(n => n.classList.remove("profile-hide"));
+                    document.querySelectorAll(".profile-info-3").forEach(n => n.classList.remove("profile-hide"));
+                    document.querySelectorAll(".profile-info-4").forEach(n => n.classList.remove("profile-hide"));
+                    if (localStorage.getItem("isAdmin") != 1 && localStorage.getItem("userId") != id) {
+                        document.querySelectorAll(".profile-info-7").forEach(n => n.classList.add("profile-hide"));
+                    } else {
+                        document.querySelectorAll(".profile-info-7").forEach(n => n.classList.remove("profile-hide"));
+                    }
+
+                    document.getElementById("info-icon-5").className = "uil uil-envelope info-icon";
+                    document.getElementById("info-name-5").innerHTML = "Email:";
+
+                    document.getElementById("info-icon-6").className = "uil uil-location-point info-icon";
+                    document.getElementById("info-name-6").innerHTML = "Location:";
+
+
+
+                },
+
+
+                function (textResult, jsonResult) {
+                    console.log(textResult);
+                    //If error
+                    if (jsonResult.showUserStatus != 0) {
+                        switch (jsonResult.showUserStatus) {
+                            case 1:
+                            case 2:
+                                ShowPopUpDialog("popup-error", "Error!", "User Don't Exists");
+
+                                let userInfo1 = document.getElementById("info-1");
+                                userInfo1.innerHTML = "None";
+                                let userInfo2 = document.getElementById("info-2");
+                                userInfo2.innerHTML = "None";
+                                let userInfo3 = document.getElementById("info-3");
+                                userInfo3.innerHTML = "None";
+                                let userInfo4 = document.getElementById("info-4");
+                                userInfo4.innerHTML = "None";
+                                let userInfo5 = document.getElementById("info-5");
+                                userInfo5.innerHTML = "None";
+                                let userInfo6 = document.getElementById("info-6");
+                                userInfo6.innerHTML = "None";
+                                let profileImg = document.getElementById("profile-img");
+                                /* put a common avatar img for users that don't have a specified avatar*/
+                                profileImg.src = rootUrl + "img/403024_avatar_boy_male_user_young_icon.png";
+
+
+
+                                let lastActivity = document.getElementById("last-activity");
+                                lastActivity.innerHTML = "None";
+
+                                break;
+                        }
+                    }
+                    //If success
+                    else {
+                        user = jsonResult;
+                        /* Get the user data and put on the elements */
+                        let userInfo1 = document.getElementById("info-1");
+                        userInfo1.innerHTML = jsonResult.name;
+                        let userInfo2 = document.getElementById("info-2");
+                        userInfo2.innerHTML = jsonResult.biography;
+                        let userInfo3 = document.getElementById("info-3");
+                        userInfo3.innerHTML = jsonResult.birthDate;
+                        let userInfo4 = document.getElementById("info-4");
+                        userInfo4.innerHTML = jsonResult.phoneNumber;
+                        let userInfo5 = document.getElementById("info-5");
+                        userInfo5.innerHTML = jsonResult.email;
+                        let userInfo6 = document.getElementById("info-6");
+                        userInfo6.innerHTML = jsonResult.location;
+                        let profileImg = document.getElementById("profile-img");
+                        /* put a common avatar img for users that don't have a specified avatar*/
+                        if (jsonResult.avatar == "") {
+                            profileImg.src = rootUrl + "img/403024_avatar_boy_male_user_young_icon.png";
+                        } else {
+                            profileImg.src = rootUrl + "admin/received-files/avatars/" + jsonResult.avatar;
+                        }
+                        let lastActivity = document.getElementById("last-activity");
+                        lastActivity.innerHTML = jsonResult.lastActivity;
+                        /* Format the last activity */
+
+                    }
+                },
+                function () {
+                    /* Case The Request can't be done */
+                    ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                });
         }, 100)
     } else {
         globalLoading.classList.add("global-loading-show");
         setTimeout(() => {
-            isShowing = true;
-            profileCard.classList.add("profile-active");
-            globalLoading.classList.remove("global-loading-show");
+            var formData = EasyHttpRequest.InstantiateFormData();
+            EasyHttpRequest.AddField(formData, "user-id", id);
+            var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+
+            apiPath = rootUrl + "apis/show-user-api.php";
+
+            /* if (localStorage.getItem("isAdmin") != null || localStorage.getItem("userId") == id) {
+                apiPath = rootUrl + "apis/show-user-profile-api.php";
+            } */
+            EasyHttpRequest.StartAsyncPostRequest(apiPath, formDataCompiled,
+                function () {
+                    /* When The Request Is Done */
+
+                    /* Create The Chats */
+
+                    isShowing = true;
+                    profileCard.classList.add("profile-active");
+                    globalLoading.classList.remove("global-loading-show");
+
+                    if (localStorage.getItem("isAdmin") != 1 && localStorage.getItem("userId") != id) {
+                        let logoutBtn = document.getElementById("logout-profile");
+                        logoutBtn.style.display = "none";
+
+                        let editBtns = document.querySelectorAll(".edit-btn");
+                        editBtns.forEach(n => n.style.display = "none");
+
+                        let profileNewImg = document.getElementById("upload-avatar");
+                        profileNewImg.style.display = "none";
+
+
+                    } else {
+                        let logoutBtn = document.getElementById("logout-profile");
+                        logoutBtn.style.display = "inline-block";
+
+                        let editBtns = document.querySelectorAll(".edit-btn");
+                        editBtns.forEach(n => n.style.display = "inline-block");
+
+                        let profileNewImg = document.getElementById("upload-avatar");
+                        profileNewImg.style.display = "inline-block";
+
+                        let checkBtns = document.querySelectorAll(".check-btn");
+                        checkBtns.forEach(changeUpdateData);
+
+                        function changeUpdateData(n, index) {
+                            n.setAttribute("onclick", `updateData(${index}, '${rootUrl}', ${id}, ${localStorage.getItem("isAdmin")})`);
+                        }
+                        if (localStorage.getItem("isAdmin") == 1) {
+                            document.getElementById("update-0").setAttribute("onclick", `updateAvatar('${rootUrl}',${id}, ${localStorage.getItem("isAdmin")})`)
+                        } else {
+                            document.getElementById("update-0").setAttribute("onclick", `updateAvatar('${rootUrl}',${id})`)
+                        }
+                    }
+
+                    if (localStorage.getItem("userId") != id) {
+                        let logoutBtn = document.getElementById("logout-profile");
+                        logoutBtn.style.display = "none";
+                    }
+
+
+
+
+                    document.querySelectorAll(".profile-info-1").forEach(n => n.classList.remove("profile-hide"));
+                    document.querySelectorAll(".profile-info-2").forEach(n => n.classList.remove("profile-hide"));
+                    document.querySelectorAll(".profile-info-3").forEach(n => n.classList.remove("profile-hide"));
+                    document.querySelectorAll(".profile-info-4").forEach(n => n.classList.remove("profile-hide"));
+                    if (localStorage.getItem("isAdmin") != 1 && localStorage.getItem("userId") != id) {
+                        document.querySelectorAll(".profile-info-7").forEach(n => n.classList.add("profile-hide"));
+                    } else {
+                        document.querySelectorAll(".profile-info-7").forEach(n => n.classList.remove("profile-hide"));
+                    }
+
+                    document.getElementById("info-icon-5").className = "uil uil-envelope info-icon";
+                    document.getElementById("info-name-5").innerHTML = "Email:";
+
+                    document.getElementById("info-icon-6").className = "uil uil-location-point info-icon";
+                    document.getElementById("info-name-6").innerHTML = "Location:";
+
+
+
+                },
+
+
+                function (textResult, jsonResult) {
+                    console.log(textResult);
+                    //If error
+                    if (jsonResult.showUserStatus != 0) {
+                        switch (jsonResult.showUserStatus) {
+                            case 1:
+                            case 2:
+                                ShowPopUpDialog("popup-error", "Error!", "User Don't Exists");
+
+                                let userInfo1 = document.getElementById("info-1");
+                                userInfo1.innerHTML = "None";
+                                let userInfo2 = document.getElementById("info-2");
+                                userInfo2.innerHTML = "None";
+                                let userInfo3 = document.getElementById("info-3");
+                                userInfo3.innerHTML = "None";
+                                let userInfo4 = document.getElementById("info-4");
+                                userInfo4.innerHTML = "None";
+                                let userInfo5 = document.getElementById("info-5");
+                                userInfo5.innerHTML = "None";
+                                let userInfo6 = document.getElementById("info-6");
+                                userInfo6.innerHTML = "None";
+                                let profileImg = document.getElementById("profile-img");
+                                /* put a common avatar img for users that don't have a specified avatar*/
+                                profileImg.src = rootUrl + "img/403024_avatar_boy_male_user_young_icon.png";
+
+
+
+                                let lastActivity = document.getElementById("last-activity");
+                                lastActivity.innerHTML = "None";
+
+                                break;
+                        }
+                    }
+                    //If success
+                    else {
+                        user = jsonResult;
+                        /* Get the user data and put on the elements */
+                        let userInfo1 = document.getElementById("info-1");
+                        userInfo1.innerHTML = jsonResult.name;
+                        let userInfo2 = document.getElementById("info-2");
+                        userInfo2.innerHTML = jsonResult.biography;
+                        let userInfo3 = document.getElementById("info-3");
+                        userInfo3.innerHTML = jsonResult.birthDate;
+                        let userInfo4 = document.getElementById("info-4");
+                        userInfo4.innerHTML = jsonResult.phoneNumber;
+                        let userInfo5 = document.getElementById("info-5");
+                        userInfo5.innerHTML = jsonResult.email;
+                        let userInfo6 = document.getElementById("info-6");
+                        userInfo6.innerHTML = jsonResult.location;
+                        let profileImg = document.getElementById("profile-img");
+                        /* put a common avatar img for users that don't have a specified avatar*/
+                        if (jsonResult.avatar == "") {
+                            profileImg.src = rootUrl + "img/403024_avatar_boy_male_user_young_icon.png";
+                        } else {
+                            profileImg.src = rootUrl + "admin/received-files/avatars/" + jsonResult.avatar;
+                        }
+                        let lastActivity = document.getElementById("last-activity");
+                        lastActivity.innerHTML = jsonResult.lastActivity;
+                        /* Format the last activity */
+
+                    }
+                },
+                function () {
+                    /* Case The Request can't be done */
+                    ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                });
         }, 100);
     }
 }
@@ -558,13 +857,14 @@ function updateAvatar(rootUrl, userId, isAdmin) {
         closeBtn.style.display = "none";
         loading.style.display = "inline-block";
         isRunning = true;
+        console.log(isAdmin);
         if (userProfileId == userId || isAdmin != undefined) {
             setTimeout(() => {
                 let avatarName;
                 progressBar.classList.add("progress-bar-active");
 
                 var formData = EasyHttpRequest.InstantiateFormData();
-                EasyHttpRequest.AddField(formData, "user-id", userProfileId);
+                EasyHttpRequest.AddField(formData, "user-id", userId);
                 /*                 var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
                  */
                 EasyHttpRequest.StartAsyncFileUpload(rootUrl + "apis/edit-user-api.php", "update-avatar", 0, "avatar", formData,
@@ -660,7 +960,7 @@ function updateData(id, rootUrl, userId, isAdmin) {
     isRunning = true;
     if (userProfileId == userId || isAdmin != undefined) {
         var formData = EasyHttpRequest.InstantiateFormData();
-        EasyHttpRequest.AddField(formData, "user-id", userProfileId);
+        EasyHttpRequest.AddField(formData, "user-id", userId);
         EasyHttpRequest.AddField(formData, `${input.name}`, input.value);
         var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
 
@@ -879,6 +1179,8 @@ hideEmojisClipes.forEach(n => n.addEventListener("click", () => {
 let send = document.getElementById("send");
 let chatMessages = document.getElementById("chat-messages-box");
 let message = document.getElementById("message-field");
+let messageLoading = document.getElementById("send-message-loading");
+let sendMessageIcon = document.getElementById("send-message-icon");
 
 function sendMessageOnEnter(event) {
     if (event.key === "Enter") {
@@ -887,28 +1189,80 @@ function sendMessageOnEnter(event) {
 }
 let isSending = false;
 
-function sendMessage() {
+function sendMessage(rootUrl, chatId) {
     if (message.value != "" && isSending == false) {
         isSending = true;
-        globalLoading.classList.add("global-loading-show");
+        message = document.getElementById("message-field");
+        sendMessageIcon.classList.add("send-hide");
+        messageLoading.classList.add("send-message-loading-show");
         setTimeout(() => {
-            k++;
-            message = document.getElementById("message-field");
-            let content = `<div class="chat-messages">    
-                    <div class="chat-message">
-                    <div class = "message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile(${k})" onmouseout="hideMiniProfile()" >
-                    <img src = "../img/user.png" class = "message-img img-circle" onclick = "showUserProfileInnerEvent()" onmouseout = "hideMiniProfile()">
+
+            var formData = EasyHttpRequest.InstantiateFormData();
+            EasyHttpRequest.AddField(formData, "chat", chatId);
+            EasyHttpRequest.AddField(formData, "message", message.value);
+            EasyHttpRequest.AddField(formData, "userId", localStorage.getItem("userId"));
+            var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+
+            EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/post-message-api.php", formDataCompiled,
+                function () {
+                    /* When The Request Is Done */
+                    /* Create The Chats */
+
+
+
+                },
+
+
+                function (textResult, jsonResult) {
+                    console.log(textResult);
+                    //If error
+                    if (jsonResult.postMessageStatus != 0) {
+                        switch (jsonResult.postMessageStatus) {
+                            case 1:
+                                ShowPopUpDialog("popup-error", "Error!", "Non-existent Directory");
+
+                                message.value = "";
+                                messageLoading.classList.remove("send-message-loading-show");
+                                sendMessageIcon.classList.remove("send-hide");
+                                isSending = false;
+                                break;
+                            case 2:
+                                ShowPopUpDialog("popup-error", "Error!", "You're Not Logged");
+
+                                message.value = "";
+                                messageLoading.classList.remove("send-message-loading-show");
+                                sendMessageIcon.classList.remove("send-hide");
+                                isSending = false;
+                                break;
+                        }
+                    }
+                    //If success
+                    else {
+
+                        message = document.getElementById("message-field");
+                        let content = `<div class="chat-messages">    
+                    <div class="chat-message chat-our-message">
+                    <div class = "message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${localStorage.getItem("userId")}, ${k})" onmouseout="hideMiniProfile()" >
+                    <img src="${rootUrl}${jsonResult.avatar}" class = "message-img img-circle" onclick = "showUserProfileInnerEvent('${rootUrl}', ${localStorage.getItem("userId")})" onmouseout = "hideMiniProfile()" id="message-id-${k}">
                     </div>
                     <div class="message">
                     ${message.value}
                     </div>
                     </div>
                     </div>`
-            chatMessages.innerHTML += content;
-            message.value = "";
-            globalLoading.classList.remove("global-loading-show");
-            isSending = false;
-            chatBox.scrollTop = 9999999;
+                        k++;
+                        chatMessages.innerHTML += content;
+                        message.value = "";
+                        messageLoading.classList.remove("send-message-loading-show");
+                        sendMessageIcon.classList.remove("send-hide");
+                        isSending = false;
+                        chatBox.scrollTop = 9999999;
+                    }
+                },
+                function () {
+                    /* Case The Request can't be done */
+                    ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                });
         }, 1000);
     }
 }
@@ -1024,13 +1378,13 @@ function showChat(rootUrl, id) {
             document.getElementById("chat-img").src = groupImg;
             document.getElementById("chat-name").innerHTML = chats.chatInfo[0].name;
             document.getElementById("chat-desc").innerHTML = chats.chatInfo[0].description;
-            let i = 0
+
 
             function showMessages(n, index) {
-                i++;
+
                 userImg = rootUrl + "img/" + "403024_avatar_boy_male_user_young_icon.png"
                 if (n.img != "") {
-                    userImg = rootUrl + "admin/received-files/avatars" + n.img;
+                    userImg = rootUrl + "admin/received-files/avatars/" + n.img;
                 }
                 userClass = "";
                 if (localStorage.getItem("userId") == n.userId) {
@@ -1040,20 +1394,21 @@ function showChat(rootUrl, id) {
                     `
                 <div class="chat-messages">
                         <div class="chat-message ${userClass}">
-                            <div class="message-img-box open-user-profile" id="message-img-box-${n.userId}" onmouseover="showMiniProfile(${n.userId})" onmouseout="hideMiniProfile()">
-                                <img src="${userImg}" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent()">
+                            <div class="message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${n.userId}, ${k})" onmouseout="hideMiniProfile()">
+                                <img src="${userImg}" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent('${rootUrl}',${n.userId})" id="message-id-${k}">
                             </div>
                             <div class="message">${n.message}</div>
                         </div>
                     </div>
                 `
-
+                k++;
                 document.getElementById("chat-messages-box").innerHTML += message;
             }
 
             chats.chatMessage.forEach(showMessages)
 
             setTimeout(() => {
+                document.getElementById("send").setAttribute("onclick", `sendMessage('${rootUrl}', ${id})`)
                 document.getElementById("chat-header").setAttribute("onclick", `showChatInfo('${rootUrl}', ${id})`);
                 chatContent.classList.add("chat-content-show");
                 chatBlank.classList.add("blank-content-hide");
@@ -1228,18 +1583,20 @@ function previousPage(page) {
 
 
 let miniProfile = document.getElementById("mini-profile");
-let mustShowMiniProfile = true;
+let mustShowMiniProfile;
 
-function showMiniProfile(id) {
-    let targetElement = document.getElementById("message-img-box-" + id);
+
+function showMiniProfile(rootUrl, userId, id) {
+
     mustShowMiniProfile = true;
+
+    let targetElement = document.getElementById("message-img-box-" + id);
 
     let elementPosition = miniProfile.getBoundingClientRect();
     let targetElementPosition = targetElement.getBoundingClientRect();
-    console.log(elementPosition);
 
-    miniProfile.style.top = (targetElementPosition.top - 170) + "px";
-    miniProfile.style.left = (targetElementPosition.right) + "px";
+    miniProfile.style.top = (targetElementPosition.top - 140) + "px";
+    miniProfile.style.left = (targetElementPosition.right - 40) + "px";
 
     /*
      miniProfile.style.top = (targetElementPosition.top - 170) + "px";
@@ -1248,13 +1605,88 @@ function showMiniProfile(id) {
 
     setTimeout(() => {
         if (mustShowMiniProfile == true) {
-            miniProfile.classList.add("mini-profile-show");
+
+
+
+            var formData = EasyHttpRequest.InstantiateFormData();
+            EasyHttpRequest.AddField(formData, "user-id", userId);
+            var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+
+            /* if (localStorage.getItem("isAdmin") != null || localStorage.getItem("userId") == id) {
+                apiPath = rootUrl + "apis/show-user-profile-api.php";
+            } */
+            EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/show-user-api.php", formDataCompiled,
+                function () {
+                    /* When The Request Is Done */
+                    if (mustShowMiniProfile == true) {
+                        /* Create The Chats */
+
+                        miniProfile.classList.add("mini-profile-show");
+                    }
+                },
+
+
+                function (textResult, jsonResult) {
+                    console.log(textResult);
+                    //If error
+                    if (jsonResult.showUserStatus != 0) {
+                        switch (jsonResult.showUserStatus) {
+                            case 1:
+                            case 2:
+                                ShowPopUpDialog("popup-error", "Error!", "User Don't Exists");
+
+                                let miniProfileName = document.getElementById("mini-profile-name");
+                                miniProfileName.innerHTML = "None";
+                                let miniProfileBio = document.getElementById("mini-profile-bio");
+                                miniProfileBio.innerHTML = "None";
+                                let miniProfileActivity = document.getElementById("mini-profile-activity");
+                                miniProfileActivity.innerHTML = "None";
+                                let miniProfileImg = document.getElementById("mini-profile-img");
+                                miniProfileImg.src = rootUrl + "img/403024_avatar_boy_male_user_young_icon.png";
+
+
+                                break;
+                        }
+                    }
+                    //If success
+                    else {
+                        let miniProfileName = document.getElementById("mini-profile-name");
+                        if (jsonResult.name.length > 30) {
+                            miniProfileName.innerHTML = jsonResult.name.slice(0, 30) + "...";
+                        } else {
+                            miniProfileName.innerHTML = jsonResult.name;
+                        }
+                        let miniProfileBio = document.getElementById("mini-profile-bio");
+
+                        if (jsonResult.biography.length > 40) {
+                            miniProfileBio.innerHTML = jsonResult.biography.slice(0, 40) + "...";
+                        } else {
+                            miniProfileBio.innerHTML = jsonResult.biography;
+                        }
+                        let miniProfileActivity = document.getElementById("mini-profile-activity");
+                        miniProfileActivity.innerHTML = jsonResult.lastActivity;
+                        let miniProfileImg = document.getElementById("mini-profile-img");
+
+                        if (jsonResult.avatar == "") {
+                            miniProfileImg.src = rootUrl + "img/403024_avatar_boy_male_user_young_icon.png";
+                        } else {
+                            miniProfileImg.src = rootUrl + "admin/received-files/avatars/" + jsonResult.avatar;
+                        }
+
+                    }
+                },
+                function () {
+                    /* Case The Request can't be done */
+                    ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                });
         }
     }, 1000);
 }
 
 function hideMiniProfile() {
     mustShowMiniProfile = false;
+
+
 
     miniProfile.classList.remove("mini-profile-show");
 }

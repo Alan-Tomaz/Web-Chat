@@ -116,7 +116,6 @@ class EasyHttpRequest {
             httpRequest.open("POST", phpApiPath, true);
             httpRequest.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             httpRequest.send(formData);
-
             //...
         }, initialDelay);
     }

@@ -2,7 +2,11 @@
 require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/partials/header.php";
 
 $isLogged = isset($_SESSION["user-id"]);
-$isAdmin = isset($_SESSION["user-is-admin"]);
+if (isset($_SESSION["user-is-admin"])) {
+    $isAdmin = isset($_SESSION["user-is-admin"]);
+} else {
+    $isAdmin = null;
+}
 
 if ($isLogged) {
     $userId = $_SESSION['user-id'];
@@ -10,6 +14,8 @@ if ($isLogged) {
     $userQuery = "SELECT * FROM users WHERE user_id = $userId";
     $userQueryResult = mysqli_query($connection, $userQuery);
     $user = mysqli_fetch_assoc($userQueryResult);
+} else {
+    $userId = 0;
 }
 ?>
 
@@ -23,7 +29,7 @@ if ($isLogged) {
     <title>Web Chat</title>
     <!--================================ Unicons ================================CDN -->
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css">
-    <!--================================ FAVICON ================================-->
+    <!--================================ FAVCON ================================-->
     <link rel="shortcut icon" href="<?= ROOT_URL ?>img/favicon.svg" type="image/x-icon">
     <!--================================ CSS EXTERN ================================-->
     <link rel="stylesheet" href="<?= ROOT_URL ?>css/style.css">
@@ -32,16 +38,16 @@ if ($isLogged) {
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="overflow-hidden" onload="loadChats('<?= ROOT_URL ?>'), loadPage( <?= $_SESSION['user-id'] ?>)">
+<body class="overflow-hidden" onload="loadChats('<?= ROOT_URL ?>'), loadPage(<?= $userId ?>, <?= $isAdmin ?>)">
     <div class="mini-profile" id="mini-profile">
         <div class="mini-profile-img">
-            <img src="<?= ROOT_URL ?>img/user.png">
+            <img src="<?= ROOT_URL ?>img/user.png" id="mini-profile-img">
         </div>
         <div class="mini-profile-info">
-            <h3 class="mini-profile-name">Alan</h3>
-            <p class="mini-profile-biography">Lorem ipsum dolor sit amet consectetur
+            <h3 class="mini-profile-name" id="mini-profile-name">Alan</h3>
+            <p class="mini-profile-biography" id="mini-profile-bio">Lorem ipsum dolor sit amet consectetur
                 adipisicing elit. Autem, officiis.</p>
-            <p class="mini-profile-activity">Last Activity</p>
+            <p class=" mini-profile-activity" id="mini-profile-activity">Last Activity</p>
         </div>
     </div>
     <div class="popup" id="popup">
@@ -208,9 +214,10 @@ if ($isLogged) {
                         </div>
                     </div>
                     <input type="text" class="message-field" id="message-field" autocomplete="off" onkeypress="sendMessageOnEnter(event)" placeholder="Show us what you have to say">
-                    <div class="send-box" id="send" onclick="sendMessage()">
+                    <div class="send-box" id="send" onclick="sendMessage('<?= ROOT_URL ?>')">
                         <div>
-                            <i class="uil uil-message send"></i>
+                            <img src="<?= ROOT_URL ?>img/Rolling-alt.svg" class="send-message-loading" id="send-message-loading">
+                            <i class="uil uil-message send" id="send-message-icon"></i>
                         </div>
                     </div>
                 </div>

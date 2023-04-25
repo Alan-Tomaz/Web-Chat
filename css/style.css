@@ -954,7 +954,7 @@ input[type=file] {
     background-color: var(--primary-color);
     color: white;
     order: 0;
-    border-radius: 5rem 0rem 5rem 5rem;
+    border-radius: 3rem 0rem 3rem 3rem;
 }
 
 .chat-our-message>.message-img-box {
@@ -977,7 +977,7 @@ input[type=file] {
     max-width: 70%;
     min-height: 2.5rem;
     border-radius: 0rem 3rem 3rem 3rem;
-    padding: 0.6rem 1rem;
+    padding: 0.6rem 1.4rem 0.6rem 1.4rem;
     line-height: 1.3rem;
     display: flex;
     flex-direction: column;
@@ -1031,6 +1031,9 @@ input[type=file] {
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 5rem;
+    overflow: hidden;
+    min-width: 6rem;
 }
 
 .mini-profile-img>img {
@@ -1280,6 +1283,19 @@ input[type=file] {
     align-items: center;
 }
 
+.send-message-loading {
+    opacity: 0;
+    width: 24px;
+    height: 24px;
+    display: none;
+    transition: opacity .3s ease, display .1s ease;
+}
+
+.send-message-loading-show {
+    opacity: 1;
+    display: inline-block;
+}
+
 .send-box:hover {
     cursor: pointer;
 }
@@ -1287,6 +1303,14 @@ input[type=file] {
 .send {
     font-size: 1.5rem;
     color: var(--text-white);
+    opacity: 1;
+    transition: opacity .1s ease, display .1s ease;
+    display: inline-block;
+}
+
+.send-hide {
+    opacity: 0;
+    display: none;
 }
 
 .profile {

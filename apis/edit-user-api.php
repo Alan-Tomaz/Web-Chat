@@ -11,7 +11,7 @@ if (isset($_SESSION["user-id"]) && isset($_POST["user-id"])) {
     $userId = $_SESSION["user-id"];
     $targetUserId = $_POST["user-id"];
 
-    $userQuery = "SELECT * FROM users WHERE user_id = $userId";
+    $userQuery = "SELECT * FROM users WHERE user_id = $targetUserId";
     $userQueryResult = mysqli_query($connection, $userQuery);
 
 
