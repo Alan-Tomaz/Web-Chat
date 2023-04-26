@@ -66,62 +66,32 @@
         {
             "userId": "9",
             "nickname": "Alan Tomaz",
-            "message": "",
+            "message": "<img src='http:\/\/localhost:80\/Web%20Chat\/admin\/received-files\/chat-media\/1682457357-nyan-cat-1.gif' class='image-message' alt='Image Not Found'>",
             "img": "1682365051-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
+        },
+        {
+            "userId": "9",
+            "nickname": "Alan Tomaz",
+            "message": "<img src='http:\/\/localhost:80\/Web%20Chat\/admin\/received-files\/chat-media\/1682457885-nyan-cat-1.gif' class='image-message' alt='Image Not Found'>",
+            "img": "1682365051-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
+        },
+        {
+            "userId": "9",
+            "nickname": "Alan Tomaz",
+            "message": "<video class='message-video' controls><source src='http:\/\/localhost:80\/Web%20Chat\/admin\/received-files\/chat-media\/1682463174-mov_bbb.mp4' type='video\/mp4'> Your browser does not support this video format<\/video>",
+            "img": "1682462830-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
+        },
+        {
+            "userId": "9",
+            "nickname": "Alan Tomaz",
+            "message": "<img src='https:\/\/images.unsplash.com\/photo-1604311795833-25e1d5c128c6?ixlib=rb-4.0.3",
+            "img": "1682462830-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
         },
         {
             "userId": "9",
             "nickname": "Alan Tomaz",
             "message": "",
-            "img": "1682365051-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
-        },
-        {
-            "userId": "9",
-            "nickname": "Alan Tomaz",
-            "message": "hgykhjdl",
-            "img": "1682365051-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
-        },
-        {
-            "userId": "9",
-            "nickname": "Alan Tomaz",
-            "message": "f",
-            "img": "1682365051-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
-        },
-        {
-            "userId": "9",
-            "nickname": "Alan Tomaz",
-            "message": "",
-            "img": "1682365051-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
-        },
-        {
-            "userId": "9",
-            "nickname": "Alan Tomaz",
-            "message": "",
-            "img": "1682365051-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
-        },
-        {
-            "userId": "9",
-            "nickname": "Alan Tomaz",
-            "message": "",
-            "img": "1682365051-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
-        },
-        {
-            "userId": "9",
-            "nickname": "Alan Tomaz",
-            "message": "",
-            "img": "1682365051-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
-        },
-        {
-            "userId": "9",
-            "nickname": "Alan Tomaz",
-            "message": "",
-            "img": "1682365051-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
-        },
-        {
-            "userId": "9",
-            "nickname": "Alan Tomaz",
-            "message": "",
-            "img": "1682365051-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
+            "img": "1682462830-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
         }
     ]
 }

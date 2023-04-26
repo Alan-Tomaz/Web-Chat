@@ -22,7 +22,8 @@ function loadChats(rootUrl) {
     let chatsDiv;
     searchLoading.classList.add("search-loading-show");
 
-
+    let atualChats = document.querySelectorAll(".channels");
+    atualChats.forEach(n => n.remove());
 
     EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", "",
         function () {
@@ -31,15 +32,15 @@ function loadChats(rootUrl) {
             /* Create The Chats */
             function loadChat(n, index) {
                 if (n.chatInfo[0].img == "") {
-                    var img = "chat-generic-img.png";
+                    var img = "img/chat-generic-img.png";
                 } else {
-                    var img = n.chatInfo[0].img;
+                    var img = "admin/received-files/chat-img/" + n.chatInfo[0].img;
                 }
                 newChat =
                     `
                     <div class = "chats channels" onclick = "showChat('${rootUrl}',${index})" >
                     <div class = "chats-img-box">
-                    <img src = "${rootUrl}img/${img}" class = "chats-img img-circle" >
+                    <img src = "${rootUrl}${img}" class = "chats-img img-circle" >
                     </div> 
                     <div class = "chats-info" >
                     <div class = "chats-name-box" >
@@ -657,7 +658,7 @@ function showChatInfo(rootUrl, chatId) {
                             if (chats.chatInfo[0].img == "") {
                                 document.getElementById("profile-img").src = rootUrl + "img/" + "chat-generic-img.png";
                             } else {
-                                document.getElementById("profile-img").src = rootUrl + "admin/received-files/avatars/" + chats.chatInfo[0].img;
+                                document.getElementById("profile-img").src = rootUrl + "admin/received-files/chat-img/" + chats.chatInfo[0].img;
                             }
 
 
@@ -732,7 +733,7 @@ function showChatInfo(rootUrl, chatId) {
                             if (chats.chatInfo[0].img == "") {
                                 document.getElementById("profile-img").src = rootUrl + "img/" + "chat-generic-img.png";
                             } else {
-                                document.getElementById("profile-img").src = rootUrl + "admin/received-files/avatars/" + chats.chatInfo[0].img;
+                                document.getElementById("profile-img").src = rootUrl + "admin/received-files/chat-img/" + chats.chatInfo[0].img;
                             }
 
 
@@ -1304,18 +1305,117 @@ function closeFileSendBox() {
 }
 
 function insertTheImageUrl() {
-    fileInput2.disabled = true;
-    submitBtn3.disabled = true;
-    fileCloseBtn.style.display = "none";
-    fileLoading.style.display = "inline-block";
-    setTimeout(() => {
-        message = document.getElementById("message-field");
-        message.value = `<img src="${fileInput.value}" alt="Image Not Found">`;
-        fileSend.classList.remove("file-send-content-show");
-        fileLoading.style.display = "none";
-        fileInput2.disabled = false;
-        submitBtn3.disabled = false;
-    }, 1000);
+    if (fileInput.value != "") {
+        fileInput2.disabled = true;
+        submitBtn3.disabled = true;
+        fileCloseBtn.style.display = "none";
+        fileLoading.style.display = "inline-block";
+        setTimeout(() => {
+            message = document.getElementById("message-field");
+            message.value += `<img src='${fileInput.value}' class='image-message' alt='Image Not Found'>`;
+            fileSend.classList.remove("file-send-content-show");
+            fileLoading.style.display = "none";
+            fileInput2.disabled = false;
+            submitBtn3.disabled = false;
+        }, 1000);
+    } else {
+        ShowPopUpDialog("popup-error", "Error!", "Insert The URL");
+    }
+}
+
+function insertTheFile(rootUrl, chatId) {
+    if (fileInput2.value != "") {
+
+        fileInput.disabled = true;
+        submitBtn1.disabled = true;
+        submitBtn2.disabled = true;
+        fileCloseBtn.style.display = "none";
+        fileLoading.style.display = "inline-block";
+
+        if (isSending == false) {
+            isSending = true;
+            fileInput2 = document.getElementById("file-input");
+            setTimeout(() => {
+
+                var formData = EasyHttpRequest.InstantiateFormData();
+                EasyHttpRequest.AddField(formData, "chat", chatId);
+                EasyHttpRequest.AddField(formData, "userId", localStorage.getItem("userId"));
+
+                EasyHttpRequest.StartAsyncFileUpload(rootUrl + "apis/post-media-api.php", "file-input", 0, "media", formData,
+                    function () {
+                        /* When The Request Is Done */
+                        /* Create The Chats */
+                        fileSend.classList.remove("file-send-content-show");
+                        fileCloseBtn.style.display = "inline-block";
+                        fileLoading.style.display = "none";
+                        fileInput.disabled = false;
+                        submitBtn1.disabled = false;
+                        submitBtn2.disabled = false;
+
+                    },
+                    function (progress, totalProgress) {
+
+                    },
+                    function (textResult, jsonResult) {
+                        console.log(textResult);
+                        //If error
+                        if (jsonResult.postMediaStatus != 0) {
+                            switch (jsonResult.postMediaStatus) {
+                                case 1:
+                                    ShowPopUpDialog("popup-error", "Error!", "Non-existent Directory");
+
+
+
+                                    isSending = false;
+                                    break;
+                                case 2:
+                                    ShowPopUpDialog("popup-error", "Error!", "You're Not Logged");
+                                    isSending = false;
+                                    break;
+                                case 3:
+                                    ShowPopUpDialog("popup-error", "Error!", "File Non-Existent");
+                                    isSending = false;
+                                    break;
+                                case 4:
+                                    ShowPopUpDialog("popup-error", "Error!", "File Not Supported");
+                                    isSending = false;
+                                    break;
+                                case 5:
+                                    ShowPopUpDialog("popup-error", "Error!", "File Too Big");
+                                    isSending = false;
+                                    break;
+                            }
+                        }
+                        //If success
+                        else {
+
+                            let content = `<div class="chat-messages">    
+                    <div class="chat-message chat-our-message">
+                    <div class = "message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${localStorage.getItem("userId")}, ${k})" onmouseout="hideMiniProfile()" >
+                    <img src="${rootUrl}${jsonResult.avatar}" class = "message-img img-circle" onclick = "showUserProfileInnerEvent('${rootUrl}', ${localStorage.getItem("userId")})" onmouseout = "hideMiniProfile()" id="message-id-${k}">
+                    </div>
+                    <div class="message">
+                    ${jsonResult.mediaMessage}
+                    </div>
+                    </div>
+                    </div>`
+                            k++;
+
+
+                            chatMessages.innerHTML += content;
+                            isSending = false;
+                            chatBox.scrollTop = 9999999;
+                        }
+                    },
+                    function () {
+                        /* Case The Request can't be done */
+                        ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                    });
+            }, 1000);
+        }
+    } else {
+        ShowPopUpDialog("popup-error", "Error!", "Insert The File");
+    }
 }
 
 
@@ -1336,21 +1436,26 @@ videoBtn.addEventListener("click", () => {
 })
 
 function insertTheVideoUrl() {
-    fileInput2.disabled = true;
-    submitBtn3.disabled = true;
-    fileCloseBtn.style.display = "none";
-    fileLoading.style.display = "inline-block";
-    let videoUrl = fileInput.value;
-    videoUrl = videoUrl.split("https://www.youtube.com/watch?v=")
-    console.log(videoUrl)
-    setTimeout(() => {
-        message = document.getElementById("message-field");
-        message.value = `<iframe src="https://www.youtube.com/embed/${videoUrl[1]}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-        fileSend.classList.remove("file-send-content-show");
-        fileLoading.style.display = "none";
-        fileInput2.disabled = false;
-        submitBtn3.disabled = false;
-    }, 1000);
+    if (fileInput.value != "") {
+        fileInput2.disabled = true;
+        submitBtn3.disabled = true;
+        fileCloseBtn.style.display = "none";
+        fileLoading.style.display = "inline-block";
+        let videoUrl = fileInput.value;
+        videoUrl = videoUrl.split("https://www.youtube.com/watch?v=")
+        console.log(videoUrl)
+        setTimeout(() => {
+            message = document.getElementById("message-field");
+            message.value += `<iframe src='https://www.youtube.com/embed/${videoUrl[1]}' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>`;
+            fileSend.classList.remove("file-send-content-show");
+            fileLoading.style.display = "none";
+            fileInput2.disabled = false;
+            submitBtn3.disabled = false;
+        }, 1000);
+    } else {
+        ShowPopUpDialog("popup-error", "Error!", "Insert The URL");
+
+    }
 }
 
 /* ==================== SHOW CHAT when a conversation is opened  =================== */
@@ -1371,9 +1476,9 @@ function showChat(rootUrl, id) {
 
             /* Create The Chats */
 
-            groupImg = rootUrl + "img/chat-generic-img.png";
+            let groupImg = rootUrl + "img/chat-generic-img.png";
             if (chats.chatInfo[0].img != "") {
-                groupImg = rootUrl + "admin/received-files/chat-img/" + chat.chatInfo[0].img;
+                groupImg = rootUrl + "admin/received-files/chat-img/" + chats.chatInfo[0].img;
             }
             document.getElementById("chat-img").src = groupImg;
             document.getElementById("chat-name").innerHTML = chats.chatInfo[0].name;
@@ -1403,17 +1508,24 @@ function showChat(rootUrl, id) {
                 `
                 k++;
                 document.getElementById("chat-messages-box").innerHTML += message;
+
             }
 
-            chats.chatMessage.forEach(showMessages)
+            if (chats.chatMessage.length >= 1) {
+                chats.chatMessage.forEach(showMessages)
+            }
 
             setTimeout(() => {
+                document.getElementById("submit-3").setAttribute("onclick", `insertTheFile('${rootUrl}', ${id})`)
                 document.getElementById("send").setAttribute("onclick", `sendMessage('${rootUrl}', ${id})`)
                 document.getElementById("chat-header").setAttribute("onclick", `showChatInfo('${rootUrl}', ${id})`);
                 chatContent.classList.add("chat-content-show");
                 chatBlank.classList.add("blank-content-hide");
                 chat.forEach(n => n.classList.add("chat-content-box-show"));
                 globalLoading.classList.remove("global-loading-show");
+                chatBox = document.getElementById('chat-messages-box');
+                chatBox.scrollTop = 9999999;
+
             }, 500);
         },
 
@@ -1715,5 +1827,118 @@ function Logout(rootUrl) {
                 //when the request is failure
                 ShowPopUpDialog("popup-error", "Error!", "Something is wrong right now, please try again later");
             });
+    }
+}
+
+/* ==================== SHOW CREATE CHAT POPUP ===================  */
+
+let createChatPopupScreen = document.getElementById("add-chat-screen");
+let createChatPopup = document.getElementById("add-chat-popup");
+
+function showAddChatPopup() {
+    createChatPopupScreen.style.display = "flex";
+    setTimeout(() => {
+        createChatPopupScreen.classList.add("add-chat-screen-show");
+        createChatPopup.classList.add("add-chat-popup-show");
+    }, 10);
+}
+
+/* ==================== HIDE CREATE CHAT POPUP ===================  */
+let canClose = true;
+
+function hideAddChatPopup() {
+    if (canClose == true) {
+        createChatPopupScreen.classList.remove("add-chat-screen-show");
+        createChatPopup.classList.remove("add-chat-popup-show");
+
+        setTimeout(() => {
+            createChatPopupScreen.style.display = "none";
+        }, 1500);
+    }
+}
+
+/* ==================== Change chat img file name when the input is changed ===================  */
+let createChatBtn = document.getElementById("add-chat-btn")
+let createChatFileInput = document.getElementById("add-chat-img");
+let createChatFileNameDiv = document.getElementById("add-chat-img-text");
+
+function changeFileName() {
+    createChatFileNameDiv.innerHTML = createChatFileInput.files[0].name;
+}
+
+/* ==================== CREATE NEW CHAT ===================  */
+let newChatName = document.getElementById("add-chat-name");
+let newChatDesc = document.getElementById("add-chat-desc");
+let newChatImg = document.getElementById("add-chat-img");
+let newChatloadingBar = document.getElementById("add-chat-loading-bar")
+let newChatloading = document.getElementById("add-chat-loading")
+
+function createChat(rootUrl) {
+    if (newChatName.value != "" && newChatDesc.value != "" && newChatImg.value != "") {
+
+        newChatloadingBar.classList.add("add-chat-loading-show");
+        canClose = false;
+
+        var formData = EasyHttpRequest.InstantiateFormData();
+        EasyHttpRequest.AddField(formData, "chat-name", newChatName.value);
+        EasyHttpRequest.AddField(formData, "chat-description", newChatDesc.value);
+
+
+        EasyHttpRequest.StartAsyncFileUpload(rootUrl + "apis/create-chat-api.php", "add-chat-img", 0, "chat-img", formData,
+            function () {
+                /* When The Request Is Done */
+
+                newChatloadingBar.classList.remove("add-chat-loading-show");
+                canClose = true;
+
+
+                createChatPopupScreen.classList.remove("add-chat-screen-show");
+                createChatPopup.classList.remove("add-chat-popup-show");
+
+                setTimeout(() => {
+                    createChatPopupScreen.style.display = "none";
+                }, 1500);
+            },
+            function (progress, totalProgress) {
+                newChatloading.style.width = progress + "%";
+
+            },
+            function (textResult, jsonResult) {
+                console.log(textResult);
+                //If error
+                if (jsonResult.addChatStatus != 0) {
+                    switch (jsonResult.addChatStatus) {
+                        case 1:
+                            ShowAlert("alert-bar", "ERROR", "Error!", "You Don't Have Permission For This");
+                            break;
+                        case 2:
+                            ShowAlert("alert-bar", "ERROR", "Error!", "There are empty fields, please fill them in");
+                            break;
+                        case 3:
+                            ShowAlert("alert-bar", "ERROR", "Error!", "The File Alread Exists");
+                            break;
+                        case 4:
+                            ShowAlert("alert-bar", "ERROR", "Error!", "Non-existent directory");
+                            break;
+                        case 5:
+                            ShowAlert("alert-bar", "ERROR", "Error!", "This File Format Is Not Supported");
+                            break;
+                        case 6:
+                            ShowAlert("alert-bar", "ERROR", "Error!", "This File is Too Big");
+                            break;
+                    }
+                }
+                //If success
+                else {
+                    loadChats(rootUrl);
+
+                }
+            },
+            function () {
+                /* Case The Request can't be done */
+                ShowAlert("alert-bar", "ERROR", "Error!", "There was an error, please try again later.");
+            });
+    } else {
+        ShowAlert("alert-bar", "ERROR", "Error!", "There are empty fields, please fill them in");
     }
 }

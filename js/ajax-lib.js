@@ -250,7 +250,6 @@ class EasyHttpRequest {
     static BuildFormData(formDataObject) {
         //Prepare the string of URI formdata
         var uriFormData = "";
-
         //Build the URI formdata
         for (var i = 0; i < formDataObject.length; i++) {
             var fieldOfFormData = JSON.parse(formDataObject[i]);
@@ -258,7 +257,6 @@ class EasyHttpRequest {
                 uriFormData += "&";
             uriFormData += fieldOfFormData.name + "=" + fieldOfFormData.value;
         }
-
         //Return the URI compiled formdata
         return uriFormData;
     }

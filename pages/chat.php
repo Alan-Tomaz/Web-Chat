@@ -39,6 +39,32 @@ if ($isLogged) {
 </head>
 
 <body class="overflow-hidden" onload="loadChats('<?= ROOT_URL ?>'), loadPage(<?= $userId ?>, <?= $isAdmin ?>)">
+    <div class="alert-bar" id="alert-bar">
+        <h1 class="alert-title" id="alert-title">Error</h1>
+        <p class="alert-text" id="alert-text">Error</p>
+    </div>
+    <?php if (isset($_SESSION["user-is-admin"])) : ?>
+        <div class="add-chat-screen" id="add-chat-screen">
+            <div class="add-chat-popup" id="add-chat-popup">
+                <i class="uil uil-times close-add-chat" id="close-add-chat" onclick="hideAddChatPopup()"></i>
+                <img src="<?= ROOT_URL ?>img/9004812_chat_message_bubble_communication_icon.png" class="add-chat-img">
+                <h2 class="add-chat-popup-title" id="add-chat-title">Add New Chat</h2>
+                <input type="text" class="add-chat-name" id="add-chat-name" placeholder="Chat Name">
+                <textarea class="add-chat-desc" id="add-chat-desc" placeholder="Chat Description"></textarea>
+                <div class="add-chat-img-box">
+                    <input type="file" class="add-chat-img" id="add-chat-img" onchange="changeFileName()">
+                    <label for="add-chat-img" class="add-chat-img-btn">Add Chat Image</label>
+                    <div class="add-chat-img-text" id="add-chat-img-text"></div>
+                </div>
+                <div class="add-chat-confirmation-btn">
+                    <button type="button" id="add-chat-btn" class="add-chat-btn btn" onclick="createChat('<?= ROOT_URL ?>')">Create Chat</button>
+                </div>
+                <div class="add-chat-loading" id="add-chat-loading-bar">
+                    <div id="add-chat-loading"></div>
+                </div>
+            </div>
+        </div>
+    <?php endif ?>
     <div class="mini-profile" id="mini-profile">
         <div class="mini-profile-img">
             <img src="<?= ROOT_URL ?>img/user.png" id="mini-profile-img">
@@ -136,8 +162,15 @@ if ($isLogged) {
                     </div> -->
                     <hr class="user-hr hr">
                 </div>
-
-
+                <?php if (isset($_SESSION["user-is-admin"])) : ?>
+                    <div class="add-chat-container">
+                        <h1 class="add-chat-title">Add Chat</h1>
+                        <div class="add-chat-box" onclick="showAddChatPopup()">
+                            <i class="uil uil-plus add-chat"></i>
+                        </div>
+                        <hr class="user-hr hr">
+                    </div>
+                <?php endif ?>
 
             </div>
 
@@ -185,12 +218,12 @@ if ($isLogged) {
                             <button class="input-submit" onclick="insertTheVideoUrl()" id="submit-2">Submit</button>
                         </div>
                         <span>OR</span>
-                        <form class="file-send-box" method="POST">
+                        <div class="file-send-box">
                             <p class="file-alert" id="file-alert-2">Upload a Video</p>
-                            <input type="file" id="file-input">
-                            <input type="submit" class="input-submit" value="Submit" id="submit-3"></input>
+                            <input type="file" id="file-input" name="file-input">
+                            <button class="input-submit" id="submit-3">Submit</button>
                             <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="file-send-loading" id="file-box-loading">
-                        </form>
+                        </div>
                         <i class="uil uil-times close-file" id="close-file-box" onclick="closeFileSendBox()"></i>
 
                     </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 19-Abr-2023 às 01:08
+-- Tempo de geração: 26-Abr-2023 às 04:28
 -- Versão do servidor: 10.4.27-MariaDB
 -- versão do PHP: 8.2.0
 
@@ -26,30 +26,6 @@ USE `web_chat`;
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `chats`
---
-
-CREATE TABLE `chats` (
-  `chat_id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `thumbnail` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `images`
---
-
-CREATE TABLE `images` (
-  `img_id` int(11) NOT NULL,
-  `img_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Estrutura da tabela `users`
 --
 
@@ -63,36 +39,21 @@ CREATE TABLE `users` (
   `location` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `avatar` varchar(255) NOT NULL,
-  `last_activity` varchar(255) NOT NULL,
+  `last_activity` timestamp NOT NULL DEFAULT current_timestamp(),
   `is_admin` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Estrutura da tabela `video`
+-- Extraindo dados da tabela `users`
 --
 
-CREATE TABLE `video` (
-  `video_id` int(11) NOT NULL,
-  `video_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `users` (`user_id`, `name`, `biography`, `birth_date`, `phone_number`, `email`, `location`, `password`, `avatar`, `last_activity`, `is_admin`) VALUES
+(9, 'Alan Tomaz', 'Hi!, Nice To Meet You.', '2023-04-11', '(96) 9 9999-999', 'alan4tomaz8@gmail.com', 'S&atilde;o Paulo, Brasil', '$2y$10$MMuF4re/b9ryZKT6uaG8C.uIXRQzA8S5maCeLqGVR3eRWrbBli9t.', '1682462830-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg', '2023-04-21 06:01:07', 1),
+(10, 'Priscila', 'I&#039;m Priscila', '2004-02-02', '(31) 9 8496-779', 'priscila@gmail.com', 'Mariana, Minas Gerais', '$2y$10$Nrg10h5ZHtX6.JMO1s5jnup85Vo2/5K5AbIVL0oYpOADHuiAcjZ3S', '1682365139-✎ᝰ┆Anime Icon _.jpeg', '2023-04-24 18:26:36', 0);
 
 --
 -- Índices para tabelas despejadas
 --
-
---
--- Índices para tabela `chats`
---
-ALTER TABLE `chats`
-  ADD PRIMARY KEY (`chat_id`);
-
---
--- Índices para tabela `images`
---
-ALTER TABLE `images`
-  ADD PRIMARY KEY (`img_id`);
 
 --
 -- Índices para tabela `users`
@@ -101,38 +62,14 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`);
 
 --
--- Índices para tabela `video`
---
-ALTER TABLE `video`
-  ADD PRIMARY KEY (`video_id`);
-
---
 -- AUTO_INCREMENT de tabelas despejadas
 --
-
---
--- AUTO_INCREMENT de tabela `chats`
---
-ALTER TABLE `chats`
-  MODIFY `chat_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `images`
---
-ALTER TABLE `images`
-  MODIFY `img_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de tabela `video`
---
-ALTER TABLE `video`
-  MODIFY `video_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

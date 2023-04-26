@@ -4,7 +4,7 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
 //Get message data
 $chatIndex = filter_var($_POST["chat"], FILTER_SANITIZE_NUMBER_INT);
 $userId = filter_var($_POST["userId"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? null;
-$message = filter_var($_POST["message"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$message = $_POST["message"];
 
 //Prepare the response
 $postMessageStatus = 0;
