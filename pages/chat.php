@@ -43,6 +43,54 @@ if ($isLogged) {
         <h1 class="alert-title" id="alert-title">Error</h1>
         <p class="alert-text" id="alert-text">Error</p>
     </div>
+    <div class="delete-screen" id="delete-screen">
+        <div class="delete-popup" id="delete-popup">
+            <i class="uil uil-times close-delete-popup" id="close-delete-popup" onclick="hideDeletePopup()"></i>
+            <img src="<?= ROOT_URL ?>img/9004743_trash_delete_bin_remove_icon (1).png" class="delete-popup-img">
+            <h2 class="delete-popup-title" id="delete-popup-title">Delete</h2>
+            <p class="delete-popup-text" id="delete-popup-text">Are You Sure That You Want To Delete?</p>
+            <div class="delete-popup-confirmation-btn">
+                <div id="cancel-delete-popup-btn" class="cancel-delete-popup-btn btn" onclick="hideDeletePopup()">
+                    <span id="cancel-delete-popup-btn-text">Cancel</span>
+                </div>
+                <div id="delete-popup-btn" class="delete-popup-btn btn" onclick="deleteUser()">
+                    <span id="delete-popup-btn-text">Delete</span>
+                    <img id="delete-popup-loading" class="delete-popup-loading" src="<?= ROOT_URL ?>img/Rolling-alt.svg">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="message-options-screen">
+        <div class="edit-message-popup" id="edit-message-popup">
+            <i class="uil uil-times close-edit-message" id="close-edit-message" onclick="hideEditMessagePopup()"></i>
+            <img src="<?= ROOT_URL ?>img/1055085_compose_edit_paper_pencil_write_icon.png" class="edit-message-img">
+            <h2 class="edit-message-title" id="edit-message-title">Edit Message</h2>
+            <textarea class="edit-message-text" id="edit-message-text" placeholder="New Message"></textarea>
+
+            <div class="edit-message-confirmation-btn">
+                <div id="edit-message-btn" class="edit-message-btn btn" onclick="editMessage()">
+                    <span id="edit-message-btn-text">Edit Message</span>
+                    <img id="edit-message-loading" class="edit-message-loading" src="<?= ROOT_URL ?>img/Rolling-alt.svg">
+                </div>
+            </div>
+        </div>
+        <div class="delete-message-popup" id="delete-message-popup">
+            <i class="uil uil-times delete-edit-message" id="delete-edit-message" onclick="hideDeleteMessagePopup()"></i>
+            <img src="<?= ROOT_URL ?>img/9004743_trash_delete_bin_remove_icon (1).png" class="delete-message-img">
+            <h2 class="delete-message-title" id="delete-message-title">Delete Message Message</h2>
+            <p class="delete-message-text" id="delete-message-text">Are You Sure That You Want To Delete This Message?</p>
+            <div class="delete-message-confirmation-btn">
+                <div id="cancel-delete-message-btn" class="cancel-delete-message-btn btn" onclick="hideDeleteMessagePopup()">
+                    <span id="cancel-delete-message-btn-text">Cancel</span>
+                </div>
+                <div id="delete-message-btn" class="delete-message-btn btn" onclick="deleteMessage()">
+                    <span id="delete-message-btn-text">Delete Message</span>
+                    <img id="delete-message-loading" class="delete-message-loading" src="<?= ROOT_URL ?>img/Rolling-alt.svg">
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
     <?php if (isset($_SESSION["user-is-admin"])) : ?>
         <div class="add-chat-screen" id="add-chat-screen">
             <div class="add-chat-popup" id="add-chat-popup">
@@ -171,7 +219,6 @@ if ($isLogged) {
                         <hr class="user-hr hr">
                     </div>
                 <?php endif ?>
-
             </div>
 
             <div class="chat-content" id="chat-content">
@@ -198,15 +245,7 @@ if ($isLogged) {
                     </div>
                 </div>
                 <div class="chat-messages-box hide-user-profile hide-emojis-clips hide-search-results chat-content-box" id="chat-messages-box">
-                    <div class="chat-messages">
-                        <div class="chat-message">
-                            <div class="message-img-box open-user-profile" id="message-img-box-0" onmouseover="showMiniProfile(0)" onmouseout="hideMiniProfile()">
-                                <img src="<?= ROOT_URL ?>img/user.png" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent()">
-                            </div>
-                            <div class="message">lorem500</div>
-                        </div>
 
-                    </div>
                 </div>
                 <div class="chat-footer hide-user-profile hide-search-results chat-content-box">
                     <div class="file-send-content" id="file-send-content">

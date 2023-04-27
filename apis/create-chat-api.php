@@ -11,22 +11,26 @@ if (isset($_SESSION["user-is-admin"])) {
     if ($chatName == "" || $chatDesc == "" || $chatImg == "") {
         $addChatStatus = 2;
     } else {
-        $chat = str_replace(" ", "-", $chatName);
 
-        $chatPath =   "../admin/chat-channels/" . $chat . ".json";
+        $chatsDir = "../admin/chat-channels/";
+
+        if (is_dir($chatsDir)) {
+
+            $chatsArray = array_diff(scandir($chatsDir), array('.', '..'));
+            /* Create a new array to reorganize indexes */
+            $chats = array();
+            $chats = array_values($chatsArray);
+
+            $chatId = count($chats);
+
+
+            $chat = str_replace(" ", "-", $chatName);
+
+            $chatPath = $chatsDir . $chatId . "-" . $chat . ".json";
 
 
 
-        if (file_exists($chatPath) == false) {
-
-            $chatsDir = "../admin/chat-channels/";
-            if (is_dir($chatsDir)) {
-                $chatsArray = array_diff(scandir($chatsDir), array('.', '..'));
-                /* Create a new array to reorganize indexes */
-                $chats = array();
-                $chats = array_values($chatsArray);
-
-                $chatId = count($chats);
+            if (file_exists($chatPath) == false) {
 
 
                 //WORK ON NEW AVATAR
@@ -72,10 +76,7 @@ if (isset($_SESSION["user-is-admin"])) {
 
                         //Create the chat file
                         $chatFile = fopen($chatPath, "w");
-                        fwrite(
-                            $chatFile,
-                            json_encode($chatRootObj, JSON_PRETTY_PRINT)
-                        );
+                        fwrite($chatFile, json_encode($chatRootObj, JSON_PRETTY_PRINT));
                         fclose($chatFile);
                     } else {
                         $addChatStatus = 6;
@@ -84,10 +85,10 @@ if (isset($_SESSION["user-is-admin"])) {
                     $addChatStatus = 5;
                 }
             } else {
-                $addChatStatus = 4;
+                $addChatStatus = 3;
             }
         } else {
-            $addChatStatus = 3;
+            $addChatStatus = 4;
         }
     }
 } else {

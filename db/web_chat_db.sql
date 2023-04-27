@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 26-Abr-2023 às 04:28
+-- Tempo de geração: 27-Abr-2023 às 06:15
 -- Versão do servidor: 10.4.27-MariaDB
 -- versão do PHP: 8.2.0
 
@@ -34,7 +34,7 @@ CREATE TABLE `users` (
   `name` varchar(255) NOT NULL,
   `biography` text NOT NULL,
   `birth_date` date NOT NULL,
-  `phone_number` varchar(15) NOT NULL,
+  `phone_number` varchar(16) NOT NULL,
   `email` varchar(255) NOT NULL,
   `location` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -48,8 +48,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `name`, `biography`, `birth_date`, `phone_number`, `email`, `location`, `password`, `avatar`, `last_activity`, `is_admin`) VALUES
-(9, 'Alan Tomaz', 'Hi!, Nice To Meet You.', '2023-04-11', '(96) 9 9999-999', 'alan4tomaz8@gmail.com', 'S&atilde;o Paulo, Brasil', '$2y$10$MMuF4re/b9ryZKT6uaG8C.uIXRQzA8S5maCeLqGVR3eRWrbBli9t.', '1682462830-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg', '2023-04-21 06:01:07', 1),
-(10, 'Priscila', 'I&#039;m Priscila', '2004-02-02', '(31) 9 8496-779', 'priscila@gmail.com', 'Mariana, Minas Gerais', '$2y$10$Nrg10h5ZHtX6.JMO1s5jnup85Vo2/5K5AbIVL0oYpOADHuiAcjZ3S', '1682365139-✎ᝰ┆Anime Icon _.jpeg', '2023-04-24 18:26:36', 0);
+(9, 'Alan Tomaz', 'Hi!', '2023-04-11', '(96) 9 9999-999', 'alan4tomaz8@gmail.com', 'S&atilde;o Paulo, Brasil', '$2y$10$MMuF4re/b9ryZKT6uaG8C.uIXRQzA8S5maCeLqGVR3eRWrbBli9t.', '1682542481-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg', '2023-04-21 06:01:07', 1);
 
 --
 -- Índices para tabelas despejadas
@@ -69,7 +68,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

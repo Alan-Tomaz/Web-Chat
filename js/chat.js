@@ -13,7 +13,6 @@ function loadPage(id, isAdmin) {
     }
 }
 
-
 /* ==================== LOAD THE CHATS =================== */
 
 function loadChats(rootUrl) {
@@ -40,7 +39,7 @@ function loadChats(rootUrl) {
                     `
                     <div class = "chats channels" onclick = "showChat('${rootUrl}',${index})" >
                     <div class = "chats-img-box">
-                    <img src = "${rootUrl}${img}" class = "chats-img img-circle" >
+                    <img src = "${rootUrl}${img}" class = "chats-img img-circle" id="chats-img-index">
                     </div> 
                     <div class = "chats-info" >
                     <div class = "chats-name-box" >
@@ -112,6 +111,8 @@ let hideUserProfile = document.querySelectorAll(".hide-user-profile");
 hideUserProfile.forEach(n => n.addEventListener("click", () => {
     isShowing = false;
     setTimeout(() => {
+        document.getElementById("update-avatar").value = "";
+        closeAll();
         profileCard.classList.remove("profile-active-user");
         profileCard.classList.remove("profile-active");
     }, 50);
@@ -156,7 +157,7 @@ function showUserProfileInnerEvent(rootUrl, id) {
             EasyHttpRequest.StartAsyncPostRequest(apiPath, formDataCompiled,
                 function () {
                     /* When The Request Is Done */
-
+                    hideChatInfoEditable(rootUrl, id);
                     /* Create The Chats */
 
                     profileCard.classList.add("profile-active");
@@ -177,6 +178,10 @@ function showUserProfileInnerEvent(rootUrl, id) {
                         let logoutBtn = document.getElementById("logout-profile");
                         logoutBtn.style.display = "inline-block";
 
+                        document.getElementById("logout-profile").innerHTML = '<i class="uil uil-signout "></i>Logout';
+                        document.getElementById("logout-profile").setAttribute("onclick", `Logout('${rootUrl}')`);
+
+
                         let editBtns = document.querySelectorAll(".edit-btn");
                         editBtns.forEach(n => n.style.display = "inline-block");
 
@@ -190,16 +195,17 @@ function showUserProfileInnerEvent(rootUrl, id) {
                             n.setAttribute("onclick", `updateData(${index}, '${rootUrl}', ${id}, ${localStorage.getItem("isAdmin")})`);
                         }
                         if (localStorage.getItem("isAdmin") == 1) {
+                            if (localStorage.getItem("userId") != id) {
+                                document.getElementById("logout-profile").innerHTML = 'Delete User';
+                                document.getElementById("logout-profile").setAttribute("onclick", `deleteUserPopup('${rootUrl}', ${id})`);
+                                document.getElementById("logout-profile").style.display = "inline-block";
+                            }
                             document.getElementById("update-0").setAttribute("onclick", `updateAvatar('${rootUrl}',${id}, ${localStorage.getItem("isAdmin")})`)
                         } else {
                             document.getElementById("update-0").setAttribute("onclick", `updateAvatar('${rootUrl}',${id})`)
                         }
                     }
 
-                    if (localStorage.getItem("userId") != id) {
-                        let logoutBtn = document.getElementById("logout-profile");
-                        logoutBtn.style.display = "none";
-                    }
 
 
 
@@ -307,7 +313,7 @@ function showUserProfileInnerEvent(rootUrl, id) {
             EasyHttpRequest.StartAsyncPostRequest(apiPath, formDataCompiled,
                 function () {
                     /* When The Request Is Done */
-
+                    hideChatInfoEditable(rootUrl, id)
                     /* Create The Chats */
 
                     isShowing = true;
@@ -329,6 +335,9 @@ function showUserProfileInnerEvent(rootUrl, id) {
                         let logoutBtn = document.getElementById("logout-profile");
                         logoutBtn.style.display = "inline-block";
 
+                        document.getElementById("logout-profile").innerHTML = '<i class="uil uil-signout "></i>Logout';
+                        document.getElementById("logout-profile").setAttribute("onclick", `Logout('${rootUrl}')`);
+
                         let editBtns = document.querySelectorAll(".edit-btn");
                         editBtns.forEach(n => n.style.display = "inline-block");
 
@@ -343,15 +352,18 @@ function showUserProfileInnerEvent(rootUrl, id) {
                         }
                         if (localStorage.getItem("isAdmin") == 1) {
                             document.getElementById("update-0").setAttribute("onclick", `updateAvatar('${rootUrl}',${id}, ${localStorage.getItem("isAdmin")})`)
+                            if (localStorage.getItem("userId") != id) {
+                                document.getElementById("logout-profile").innerHTML = 'Delete User';
+                                document.getElementById("logout-profile").setAttribute("onclick", `deleteUserPopup('${rootUrl}', ${id})`);
+                                document.getElementById("logout-profile").style.display = "inline-block";
+                            }
                         } else {
                             document.getElementById("update-0").setAttribute("onclick", `updateAvatar('${rootUrl}',${id})`)
                         }
                     }
 
-                    if (localStorage.getItem("userId") != id) {
-                        let logoutBtn = document.getElementById("logout-profile");
-                        logoutBtn.style.display = "none";
-                    }
+
+
 
 
 
@@ -469,6 +481,8 @@ function showOwnUserProfile(rootUrl, userId) {
             setTimeout(() => {
                 EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/show-user-profile-api.php", formDataCompiled,
                     function () {
+                        hideChatInfoEditable(rootUrl, userId)
+
                         isRequesting = false;
                         profileCard.classList.add("profile-active");
                         profileCard.classList.add("profile-active-user");
@@ -527,6 +541,9 @@ function showOwnUserProfile(rootUrl, userId) {
                             const logoutBtn = document.getElementById("logout-profile");
                             logoutBtn.style.display = "inline-block";
 
+                            document.getElementById("logout-profile").innerHTML = '<i class="uil uil-signout "></i>Logout';
+                            document.getElementById("logout-profile").setAttribute("onclick", `Logout('${rootUrl}')`);
+
                             const editBtns = document.querySelectorAll(".edit-btn");
                             editBtns.forEach(n => n.style.display = "inline-block");
 
@@ -553,6 +570,9 @@ function showOwnUserProfile(rootUrl, userId) {
             setTimeout(() => {
                 EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/show-user-profile-api.php", formDataCompiled,
                     function () {
+
+                        hideChatInfoEditable(rootUrl, userId)
+
                         isRequesting = false;
                         isShowing = true;
                         profileCard.classList.add("profile-active");
@@ -610,6 +630,9 @@ function showOwnUserProfile(rootUrl, userId) {
 
                             const logoutBtn = document.getElementById("logout-profile");
                             logoutBtn.style.display = "inline-block";
+
+                            document.getElementById("logout-profile").innerHTML = '<i class="uil uil-signout "></i>Logout';
+                            document.getElementById("logout-profile").setAttribute("onclick", `Logout('${rootUrl}')`);
 
                             const editBtns = document.querySelectorAll(".edit-btn");
                             editBtns.forEach(n => n.style.display = "inline-block");
@@ -675,11 +698,17 @@ function showChatInfo(rootUrl, chatId) {
 
                             document.querySelectorAll(".edit-btn").forEach(n => n.style.display = "none");
 
+
                             document.getElementById("upload-avatar").style.display = "none";
 
+                            if (localStorage.getItem("isAdmin") == 1) {
+                                showChatInfoEditable(rootUrl, chatId);
+                                document.getElementById("edit-5").style.display = "inline-block";
+                                document.getElementById("edit-6").style.display = "inline-block";
+                                document.getElementById("upload-avatar").style.display = "inline-block";
+                                document.getElementById("logout-profile").style.display = "inline-block";
+                            }
                             setTimeout(() => {
-
-
                                 isShowing = true;
                                 profileCard.classList.add("profile-active");
                                 globalLoading.classList.remove("global-loading-show");
@@ -749,7 +778,16 @@ function showChatInfo(rootUrl, chatId) {
 
                             document.querySelectorAll(".edit-btn").forEach(n => n.style.display = "none");
 
+
                             document.getElementById("upload-avatar").style.display = "none";
+                            if (localStorage.getItem("isAdmin") == 1) {
+                                showChatInfoEditable(rootUrl, chatId);
+                                document.getElementById("edit-5").style.display = "inline-block";
+                                document.getElementById("edit-6").style.display = "inline-block";
+                                document.getElementById("upload-avatar").style.display = "inline-block";
+                                document.getElementById("logout-profile").style.display = "inline-block";
+
+                            }
 
                             setTimeout(() => {
 
@@ -791,6 +829,27 @@ function showChatInfo(rootUrl, chatId) {
     }, 50);
 }
 
+/* Show Chat Edit Content if Is Admin */
+function showChatInfoEditable(rootUrl, chatId) {
+    document.getElementsByName("email")[0].placeholder = "Insert The New Chat Name";
+    document.getElementsByName("location")[0].placeholder = "Insert The New Chat Description";
+    document.getElementById("update-0").setAttribute("onclick", `updateChatInfo(0,'${rootUrl}', ${chatId})`);
+    document.getElementById("update-5").setAttribute("onclick", `updateChatInfo(5,'${rootUrl}', ${chatId})`);
+    document.getElementById("update-6").setAttribute("onclick", `updateChatInfo(6,'${rootUrl}', ${chatId})`);
+    document.getElementById("logout-profile").innerHTML = "Delete Chat";
+    document.getElementById("logout-profile").setAttribute("onclick", `deleteChat('${rootUrl}', ${chatId})`);
+}
+
+/* Hide ChatInfo */
+function hideChatInfoEditable(rootUrl, id) {
+    document.getElementsByName("email")[0].placeholder = "Insert Your New Email";
+    document.getElementsByName("location")[0].placeholder = "Insert Your New Location";
+    document.getElementById("update-0").setAttribute("onclick", `updateAvatar('${rootUrl}', ${id})`);
+    document.getElementById("update-5").setAttribute("onclick", `updateData(5,'${rootUrl}', ${id})`);
+    document.getElementById("update-6").setAttribute("onclick", `updateData(6,'${rootUrl}', ${id})`);
+    document.getElementById("logout-profile").innerHTML = '<i class="uil uil-signout "></i>Logout';
+    document.getElementById("logout-profile").setAttribute("onclick", `Logout('${rootUrl}')`);
+}
 
 /* ==================== SHOW AND HIDE THE INNER INPUT =================== */
 let isRunning = false;
@@ -875,7 +934,7 @@ function updateAvatar(rootUrl, userId, isAdmin) {
                             loading.style.display = "none";
                             isRunning = false;
                             progressBar.classList.remove("progress-bar-active");
-                            updateImgs(avatarName, rootUrl);
+                            updateImgs(avatarName, rootUrl, userId);
                         }, 1000);
                     },
                     /* Progress Back */
@@ -920,6 +979,9 @@ function updateAvatar(rootUrl, userId, isAdmin) {
                                 case 11:
                                     ShowPopUpDialog("popup-error", "Error!", "Extension Not Supported");
                                     break;
+                                case 12:
+                                    ShowPopUpDialog("popup-error", "Error!", "Directory Not Found");
+                                    break;
                             }
                         }
                         //If success
@@ -939,11 +1001,15 @@ function updateAvatar(rootUrl, userId, isAdmin) {
 }
 
 /* UPDATE IMAGES FUNCTION */
-function updateImgs(avatarName, rootUrl) {
+function updateImgs(avatarName, rootUrl, userId) {
+
     let profileImg = document.getElementById("profile-img");
-    let userImg = document.getElementById("user-img");
+    if (userId == localStorage.getItem("userId")) {
+        let userImg = document.getElementById("user-img");
+        userImg.src = rootUrl + "admin/received-files/avatars/" + avatarName;
+    }
     profileImg.src = rootUrl + "admin/received-files/avatars/" + avatarName;
-    userImg.src = rootUrl + "admin/received-files/avatars/" + avatarName;
+
 }
 
 /* ==================== UPDATE DATA =================== */
@@ -1014,6 +1080,9 @@ function updateData(id, rootUrl, userId, isAdmin) {
                             case 11:
                                 ShowPopUpDialog("popup-error", "Error!", "Extension Not Supported");
                                 break;
+                            case 12:
+                                ShowPopUpDialog("popup-error", "Error!", "Directory Not Found");
+                                break;
                         }
                     }
                     //If success
@@ -1037,6 +1106,76 @@ function updateData(id, rootUrl, userId, isAdmin) {
         ShowPopUpDialog("popup-error", "Error", "You don't have permission for this")
     }
 
+}
+
+/* ==================== DELETE USER =================== */
+function deleteUserPopup(rootUrl, userId) {
+    let deleteScreen = document.getElementById("delete-screen");
+    let deleteUserPopup = document.getElementById("delete-popup");
+    if (localStorage.getItem("isAdmin") != undefined) {
+        deleteScreen.style.display = "flex";
+        deleteUserPopup.style.display = "flex";
+        document.getElementById("delete-popup-btn").setAttribute("onclick", `deleteUser('${rootUrl}', ${userId})`)
+        setTimeout(() => {
+            deleteScreen.classList.add("delete-screen-show");
+            deleteUserPopup.classList.add("delete-popup-show");
+        }, 10);
+    } else {
+        ShowPopUpDialog("popup-error", "Error", "You don't have permission for this");
+    }
+}
+
+/* hide delete user popup */
+function hideDeletePopup() {
+    let deleteScreen = document.getElementById("delete-screen");
+    let deleteUserPopup = document.getElementById("delete-popup");
+    deleteScreen.classList.remove("delete-screen-show");
+    deleteUserPopup.classList.remove("delete-popup-show");
+    setTimeout(() => {
+        deleteScreen.style.display = "none";
+        deleteUserPopup.style.display = "none";
+    }, 1100);
+
+}
+
+function deleteUser(rootUrl, userId) {
+    if (localStorage.getItem("isAdmin") != undefined) {
+        var formData = EasyHttpRequest.InstantiateFormData();
+        EasyHttpRequest.AddField(formData, "user-id", userId);
+        var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+
+        EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/delete-user-api.php", formDataCompiled,
+            function () {
+
+            },
+            function (textResult, jsonResult) {
+                console.log(textResult);
+                //If error
+                if (jsonResult.deleteUserStatus != 0) {
+                    switch (jsonResult.deleteUserStatus) {
+                        case 1:
+                            ShowAlert("alert-bar", "Error", "Error", "You Don't Have Permission For This");
+                            break;
+                        case 2:
+                            ShowAlert("alert-bar", "Error", "Error", "Error");
+                            break;
+                        case 3:
+                            ShowAlert("alert-bar", "Error", "Error", "Directory Non-existent");
+                            break;
+                    }
+                }
+                //If success
+                else {
+                    hideDeletePopup();
+                    ShowAlert("alert-bar", "Success", "Success", "User Successfully Deleted");
+                }
+            },
+            function () {
+                ShowAlert("alert-bar", "Error", "Error", "There's an error, please try again later");
+            });
+    } else {
+        ShowAlert("alert-bar", "Error", "Error", "You Don't Have Permission For This");
+    }
 }
 
 /* ==================== CLOSE BTN =================== */
@@ -1243,6 +1382,16 @@ function sendMessage(rootUrl, chatId) {
                         message = document.getElementById("message-field");
                         let content = `<div class="chat-messages">    
                     <div class="chat-message chat-our-message">
+                    <div class="message-options-container">
+                                <div class="message-options-btn-box">
+                                    <i class="uil uil-ellipsis-v message-options-btn" onclick="showMessagesOptions()"></i>
+                                </div>
+                                <div class="message-options">
+                                    <button class="edit-option-btn" onclick="editMessage('${rootUrl}', ${jsonResult.messageIndex}, ${chatId}, ${localStorage.getItem("userId")})">Edit Message</button>
+                                    <hr class="btn-hr hr">
+                                    <button class="delete-option-btn" onclick="deleteMessage('${rootUrl}', ${jsonResult.messageIndex}, ${chatId}, ${localStorage.getItem("userId")})">Delete Message</button>
+                                </div>
+                            </div>
                     <div class = "message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${localStorage.getItem("userId")}, ${k})" onmouseout="hideMiniProfile()" >
                     <img src="${rootUrl}${jsonResult.avatar}" class = "message-img img-circle" onclick = "showUserProfileInnerEvent('${rootUrl}', ${localStorage.getItem("userId")})" onmouseout = "hideMiniProfile()" id="message-id-${k}">
                     </div>
@@ -1497,8 +1646,18 @@ function showChat(rootUrl, id) {
                 }
                 let message =
                     `
-                <div class="chat-messages">
+                    <div class="chat-messages">
                         <div class="chat-message ${userClass}">
+                            <div class="message-options-container">
+                                <div class="message-options-btn-box">
+                                    <i class="uil uil-ellipsis-v message-options-btn" onclick="showMessagesOptions()"></i>
+                                </div>
+                                <div class="message-options">
+                                    <button class="edit-option-btn" onclick="editMessage('${rootUrl}', ${index}, ${id}, ${localStorage.getItem("userId")})">Edit Message</button>
+                                    <hr class="btn-hr hr"> 
+                                    <button class="delete-option-btn" onclick="deleteMessage('${rootUrl}', ${index}, ${id}, ${localStorage.getItem("userId")})">Delete Message</button>
+                                </div>
+                            </div>
                             <div class="message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${n.userId}, ${k})" onmouseout="hideMiniProfile()">
                                 <img src="${userImg}" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent('${rootUrl}',${n.userId})" id="message-id-${k}">
                             </div>
@@ -1595,11 +1754,11 @@ function searchChats(rootUrl, date, randomNumber) {
                             }
                             newChat =
                                 `
-                                <div class = "chats search-chat" onclick = "showChat(${index})" >
+                                <div class = "chats search-chat" onclick = "showChat(${index})">
                                 <div class = "chats-img-box">
-                                <img src = "${rootUrl}img/${img}" class = "chats-img img-circle" >
+                                <img src = "${rootUrl}img/${img}" class = "chats-img img-circle">
                                 </div> 
-                                <div class = "chats-info" >
+                                <div class = "chats-info">
                                 <div class = "chats-name-box" >
                                 <h4 class = "chats-name">${n.chatInfo[0].name}</h4> 
                                 </div> 
@@ -1940,5 +2099,180 @@ function createChat(rootUrl) {
             });
     } else {
         ShowAlert("alert-bar", "ERROR", "Error!", "There are empty fields, please fill them in");
+    }
+}
+
+/* ==================== EDIT CHAT ===================  */
+function updateChatInfo(inputId, rootUrl, chatId) {
+    let confirmationBtn = document.getElementById("update-" + inputId);
+    if (inputId != 0) {
+        let input = document.getElementById("inner-input-" + inputId);
+        if (input.value != "") {
+            if (localStorage.getItem("isAdmin") != undefined) {
+                let editBtn = document.getElementById("edit-" + inputId);
+                let info = document.getElementById("info-" + inputId);
+                let loading = document.getElementById("loading-" + inputId);
+                let hideCloseBtns = document.querySelectorAll(".close-btn");
+                hideCloseBtns.forEach(n => n.style.display = "none");
+                confirmationBtn.style.display = "none";
+                input.disabled = true;
+                loading.style.display = "inline-block";
+                isRunning = true;
+
+                var formData = EasyHttpRequest.InstantiateFormData();
+                EasyHttpRequest.AddField(formData, "chat-id", chatId);
+                if (inputId == 5) {
+                    var inputName = "chat-name";
+                }
+                if (inputId == 6) {
+                    var inputName = "chat-desc";
+                }
+                EasyHttpRequest.AddField(formData, inputName, input.value);
+                var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+
+                isRequesting = true;
+                setTimeout(() => {
+                    EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/edit-chat-api.php", formDataCompiled,
+                        function () {
+                            info.style.display = "inline-block";
+                            input.disabled = false;
+                            input.style.display = "none";
+                            editBtn.style.display = "inline-block";
+                            loading.style.display = "none";
+                            isRunning = false;
+                        },
+                        function (textResult, jsonResult) {
+                            console.log(textResult);
+                            //If error
+                            if (jsonResult.editChatStatus != 0) {
+                                switch (jsonResult.editChatStatus) {
+                                    case 1:
+                                        ShowPopUpDialog("popup-error", "Error!", "You Don't have permission for This");
+                                        break;
+                                    case 2:
+                                        ShowPopUpDialog("popup-error", "Error!", "Error");
+                                        break;
+                                    case 3:
+                                        ShowPopUpDialog("popup-error", "Error!", "No data to be updated");
+                                        break;
+                                    case 4:
+                                        ShowPopUpDialog("popup-error", "Error!", "There are empty fields, please fill them in");
+                                        break;
+                                    case 5:
+                                        ShowPopUpDialog("popup-error", "Error!", "Non-existent directory");
+                                        break;
+                                    case 6:
+                                        ShowPopUpDialog("popup-error", "Error!", "Chat Non-existent");
+                                        break;
+                                    case 7:
+                                        ShowPopUpDialog("popup-error", "Error!", "File Not Suported");
+                                        break;
+                                    case 8:
+                                        ShowPopUpDialog("popup-error", "Error!", "File Too Big");
+                                        break;
+                                }
+                            }
+
+                            //If success
+                            else {
+                                info.innerHTML = input.value;
+                                ShowPopUpDialog("popup", "Update Data", "Data Succesfully Updated");
+                            }
+                        },
+                        function () {
+                            ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                        });
+                }, 1000);
+            } else {
+                ShowPopUpDialog("popup-error", "Error!", "You Don't have permission for This");
+            }
+        } else {
+            ShowPopUpDialog("popup-error", "Error!", "There are empty fields, please fill them in");
+
+        }
+    } else {
+        let input = document.getElementById("update-avatar");
+        if (input.value != "") {
+            let closeBtn = document.getElementById("close-0");
+            let updateImg = document.getElementById("update-img")
+            let loading = document.getElementById("loading-0");
+            let progressBar = document.getElementById("progress-bar");
+            let actualProgress = document.getElementById("progress");
+            actualProgress.style.width = "0%";
+            confirmationBtn.style.display = "none";
+            closeBtn.style.display = "none";
+            loading.style.display = "inline-block";
+            isRunning = true;
+            if (localStorage.getItem("isAdmin") != undefined) {
+                setTimeout(() => {
+                    let imgName;
+                    progressBar.classList.add("progress-bar-active");
+
+                    var formData = EasyHttpRequest.InstantiateFormData();
+                    EasyHttpRequest.AddField(formData, "chat-id", chatId);
+                    /*                 var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+                     */
+                    EasyHttpRequest.StartAsyncFileUpload(rootUrl + "apis/edit-chat-api.php", "update-avatar", 0, "img", formData,
+                        function () {
+                            setTimeout(() => {
+                                updateImg.style.display = "none";
+                                loading.style.display = "none";
+                                isRunning = false;
+                                progressBar.classList.remove("progress-bar-active");
+                                document.getElementById("profile-img").src = rootUrl + "admin/received-files/chat-img/" + imgName;
+                                loadChats(rootUrl);
+                                showChat(rootUrl, chatId);
+                            }, 1000);
+                        },
+                        /* Progress Back */
+                        function (progress, totalProgress) {
+                            actualProgress.style.width = progress + "%";
+                        },
+                        function (textResult, jsonResult) {
+                            console.log(textResult);
+                            //If error
+                            if (jsonResult.editChatStatus != 0) {
+                                switch (jsonResult.editChatStatus) {
+                                    case 1:
+                                        ShowPopUpDialog("popup-error", "Error!", "You Don't have permission for This");
+                                        break;
+                                    case 2:
+                                        ShowPopUpDialog("popup-error", "Error!", "Error");
+                                        break;
+                                    case 3:
+                                        ShowPopUpDialog("popup-error", "Error!", "No data to be updated");
+                                        break;
+                                    case 4:
+                                        ShowPopUpDialog("popup-error", "Error!", "There are empty fields, please fill them in");
+                                        break;
+                                    case 5:
+                                        ShowPopUpDialog("popup-error", "Error!", "Non-existent directory");
+                                        break;
+                                    case 6:
+                                        ShowPopUpDialog("popup-error", "Error!", "Chat Non-existent");
+                                        break;
+                                    case 7:
+                                        ShowPopUpDialog("popup-error", "Error!", "File Not Suported");
+                                        break;
+                                    case 8:
+                                        ShowPopUpDialog("popup-error", "Error!", "File Too Big");
+                                        break;
+                                }
+
+                            }
+                            //If success
+                            else {
+                                ShowPopUpDialog("popup", "Update Avatar", "Avatar Succesfully Updated");
+                                imgName = jsonResult.imgName;
+                            }
+                        },
+                        function () {
+                            ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+                        });
+                }, 1000);
+            } else {
+                ShowPopUpDialog("popup-error", "Error", "You don't have permission for this")
+            }
+        }
     }
 }

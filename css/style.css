@@ -947,6 +947,7 @@ input[type=file] {
     display: flex;
     justify-content: flex-start;
     gap: .5rem;
+    position: relative;
 }
 
 .chat-our-message {
@@ -1815,6 +1816,243 @@ input[type=file] {
     background-color: var(--color-red);
 }
 
+/* Message Options */
+.message-options-container {
+    transition: var(--transition);
+    top: -25px;
+    z-index: 70;
+    display: none;
+    position: absolute;
+}
+
+.chat-messages:hover .message-options-container {
+    display: inline-block;
+}
+
+.chat-message>.message-options-container {
+    left: -25px;
+}
+
+.chat-our-message>.message-options-container {
+    right: -25px;
+    left: 100%;
+}
+
+.message-options-btn-box {
+    cursor: pointer;
+}
+
+.message-options-btn-box:hover .message-options-btn {
+    color: var(--primary-color-variant);
+}
+
+.message-options-btn {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.message-options {
+    position: absolute;
+    left: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 .4rem 1rem rgba(0, 0, 0, 0.2);
+    display: none;
+}
+
+.chat-our-message>.message-options-container>.message-options {
+    left: 100;
+    right: 15px;
+}
+
+.edit-option-btn,
+.delete-option-btn {
+    width: 150px;
+    padding: 1.6rem 0.8rem;
+    border: none;
+    outline: none;
+    transition: var(--transition);
+    background-color: transparent;
+    color: var(--text-white);
+    font-size: var(--smaller-font-size);
+    background-color: var(--primary-color);
+}
+
+.edit-option-btn:hover,
+.delete-option-btn:hover {
+    cursor: pointer;
+    background-color: var(--primary-color-variant);
+}
+
+/* MESSAGE OPTIONS SCREEN */
+.message-options-screen,
+.delete-screen {
+    height: 100%;
+    width: 100%;
+    z-index: 200;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    transition: background-color 1s ease;
+}
+
+
+.message-options-screen-show,
+.delete-screen-show {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.edit-message-popup,
+.delete-message-popup,
+.delete-popup {
+    position: relative;
+    width: 400px;
+    background: var(--primary-color);
+    border-radius: 6px;
+    text-align: center;
+    padding: 0 .5rem 1.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 1.5rem;
+    opacity: 0;
+    display: none;
+    transition: 1s;
+}
+
+.delete-message-popup,
+.delete-popup {
+    gap: 2rem;
+}
+
+.edit-message-popup-show,
+.delete-message-popup-show,
+.delete-popup-show {
+    opacity: 1;
+}
+
+.close-edit-message,
+.delete-edit-message,
+.close-delete-popup {
+    position: absolute;
+    right: 1%;
+    top: 1%;
+    color: var(--text-white);
+    font-size: 2rem;
+}
+
+.close-edit-message:hover,
+.delete-edit-message:hover,
+.close-delete-popup:hover {
+    opacity: .9;
+    cursor: pointer;
+}
+
+.edit-message-img,
+.delete-message-img,
+.delete-popup-img {
+    width: 100px;
+    margin-top: -50px;
+    border-radius: 5rem;
+
+}
+
+.delete-message-img,
+.delete-popup-img {
+    border-radius: initial;
+}
+
+
+.edit-message-img {
+    box-shadow: 0 .2rem .2rem rgba(0, 0, 0, 0.6);
+}
+
+.edit-message-title,
+.delete-message-title,
+.delete-popup-title {
+    font-weight: bold;
+    font-size: var(--h2-font-size);
+}
+
+.edit-message-text {
+    height: 200px;
+    width: 90%;
+    resize: none;
+    border: none;
+    outline: none;
+    padding: 1rem;
+    border-radius: .5rem;
+}
+
+.edit-message-text:focus {
+    border: 0;
+    outline: 2px solid var(--primary-color-variant);
+}
+
+.edit-message-text::placeholder {
+    color: var(--text-grey);
+    font-weight: var(--font-bold);
+}
+
+.edit-message-confirmation-btn,
+.delete-message-confirmation-btn,
+.delete-popup-confirmation-btn {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.edit-message-btn,
+.delete-message-btn,
+.cancel-delete-message-btn,
+.cancel-delete-popup-btn,
+.delete-popup-btn {
+    background-color: var(--primary-color-variant);
+    border: none;
+    display: flex;
+    padding: 1.5rem 0.2rem;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    outline: none;
+    transition: var(--transition);
+    color: var(--text-white);
+    font-size: var(--small-font-size);
+}
+
+.edit-message-btn:hover,
+.delete-message-btn:hover,
+.cancel-delete-message-btn:hover,
+.cancel-delete-popup-btn:hover,
+.delete-popup-btn:hover {
+    opacity: .9;
+    cursor: pointer;
+}
+
+.edit-message-loading,
+.delete-message-loading,
+.delete-popup-loading {
+    width: 25px;
+    height: 25px;
+    opacity: 0;
+    display: none;
+    transition: opacity .3s display .1s;
+}
+
+.edit-message-loading-show,
+.delete-message-loading-show,
+.delete-popup-loading-show {
+    display: inline-block;
+    opacity: 1;
+}
+
 /* ============================= MEDIA QUERIES ===============================  */
 /* Medium Devices */
 @media screen and (max-width: 1024px) {
@@ -2128,7 +2366,9 @@ input[type=file] {
         overflow-y: scroll;
     }
 
-    .add-chat-popup {
+    .add-chat-popup,
+    .edit-message-popup,
+    .delete-message-popup {
         width: 300px;
     }
 

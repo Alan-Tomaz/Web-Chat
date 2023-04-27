@@ -51,6 +51,7 @@ if ($postMessageStatus == 0) {
             $chatMessage->img = $user["avatar"];
         }
 
+        $messageIndex = count($chatRootObj->messages);
         array_push($chatRootObj->messages, $chatMessage);
 
         //If the messages array, have more than 100 messages, delete the more old message
@@ -76,6 +77,7 @@ if (isset($user["avatar"])) {
         $result->avatar = "admin/received-files/avatars/" . $user["avatar"];
     }
 }
+$result->messageIndex = $messageIndex;
 $result->postMessageStatus = $postMessageStatus;
 //Print the result of object in JSON format
 echo (json_encode($result, JSON_PRETTY_PRINT));

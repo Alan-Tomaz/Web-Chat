@@ -78,8 +78,39 @@ if (isset($_SESSION["user-id"]) && isset($_POST["user-id"])) {
                 $editUserStatus = 1;
             }
             if ($editUserStatus === 0) {
-                $userSaveDataQuery = "UPDATE users SET name = '$username' WHERE user_id = '$targetUserId' LIMIT 1";
-                $userSaveDataResult = mysqli_query($connection, $userSaveDataQuery);
+                $chatsPath =   "../admin/chat-channels/";
+
+                $chats = array();
+                if (is_dir($chatsPath)) {
+                    $chatsArray = array_diff(scandir($chatsPath), array('.', '..'));
+                    /* Create a new array to reorganize indexes */
+
+                    /* $ocurrences = $array_keys($chatsArray, "/$searchingName(.*?)/"); */
+                    $chats = array_values($chatsArray);
+
+                    sort($chats);
+                    $i = 0;
+                    foreach ($chats as $index => $chat) {
+                        $chatExtension = explode(".", $chat);
+                        if (end($chatExtension) == "json") {
+                            //Read The Chat File
+                            $chatObj = json_decode(file_get_contents($chatsPath . $chat), false);
+
+                            foreach ($chatObj->messages as $message) {
+                                if ($message->userId == $targetUserId) {
+                                    $message->nickname = $username;
+                                }
+                            }
+
+
+                            file_put_contents($chatsPath . $chat, json_encode($chatObj));
+                        }
+                    }
+                    $userSaveDataQuery = "UPDATE users SET name = '$username' WHERE user_id = '$targetUserId' LIMIT 1";
+                    $userSaveDataResult = mysqli_query($connection, $userSaveDataQuery);
+                } else {
+                    $editUserStatus = 12;
+                }
             }
             $value = $username;
         } else if (isset($_POST["biography"])) {
@@ -207,20 +238,52 @@ if (isset($_SESSION["user-id"]) && isset($_POST["user-id"])) {
                     //make sure image is not too large (1MB)
                     if ($avatar["size"] < 1000000) {
                         //upload avatar 
-                        if ($user["avatar"] != "") {
-                            $oldAvatarPath = "../admin/received-files/avatars/" . $user["avatar"];
-                            if ($oldAvatarPath) {
-                                unlink($oldAvatarPath);
+
+                        $chatsPath =   "../admin/chat-channels/";
+
+                        $chats = array();
+                        if (is_dir($chatsPath)) {
+                            $chatsArray = array_diff(scandir($chatsPath), array('.', '..'));
+                            /* Create a new array to reorganize indexes */
+
+                            /* $ocurrences = $array_keys($chatsArray, "/$searchingName(.*?)/"); */
+                            $chats = array_values($chatsArray);
+
+                            sort($chats);
+                            $i = 0;
+                            foreach ($chats as $index => $chat) {
+                                $chatExtension = explode(".", $chat);
+                                if (end($chatExtension) == "json") {
+                                    //Read The Chat File
+                                    $chatObj = json_decode(file_get_contents($chatsPath . $chat), false);
+
+                                    foreach ($chatObj->messages as $message) {
+                                        if ($message->userId == $targetUserId) {
+                                            $message->img = $avatarName;
+                                        }
+                                    }
+
+
+                                    file_put_contents($chatsPath . $chat, json_encode($chatObj));
+                                }
                             }
-                        }
+                            if ($user["avatar"] != "") {
+                                $oldAvatarPath = "../admin/received-files/avatars/" . $user["avatar"];
+                                if ($oldAvatarPath) {
+                                    unlink($oldAvatarPath);
+                                }
+                            }
 
-                        move_uploaded_file($avatarTmpName, $avatarDestinationPath);
-                        if ($editUserStatus == 0) {
+                            move_uploaded_file($avatarTmpName, $avatarDestinationPath);
+                            if ($editUserStatus == 0) {
 
-                            $userSaveDataQuery = "UPDATE users SET avatar = '$avatarName' WHERE user_id = '$targetUserId' LIMIT 1";
-                            $userSaveDataResult = mysqli_query($connection, $userSaveDataQuery);
+                                $userSaveDataQuery = "UPDATE users SET avatar = '$avatarName' WHERE user_id = '$targetUserId' LIMIT 1";
+                                $userSaveDataResult = mysqli_query($connection, $userSaveDataQuery);
 
-                            $userAvatar = $avatarName;
+                                $userAvatar = $avatarName;
+                            }
+                        } else {
+                            $readChatStatus = 12;
                         }
                     } else {
                         $editUserStatus = 10;
