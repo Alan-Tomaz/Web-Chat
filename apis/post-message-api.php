@@ -43,7 +43,7 @@ if ($postMessageStatus == 0) {
         $chatMessage->userId = $userId;
         $chatMessage->nickname = $user["name"];
         $chatMessage->message = $message;
-
+        $chatMessage->messageMedia = "";
 
         if ($user["avatar"] == "") {
             $chatMessage->img = "";
@@ -55,8 +55,12 @@ if ($postMessageStatus == 0) {
         array_push($chatRootObj->messages, $chatMessage);
 
         //If the messages array, have more than 100 messages, delete the more old message
-        if (count($chatRootObj->messages) >= 100)
+        if (count($chatRootObj->messages) >= 100) {
+            if ($chatRootObj->messages[99]->messageMedia != "") {
+                unlink("../admin/received-files/chat-media/" . $chatObj->messages[99]->messageMedia);
+            }
             array_shift($chatRootObj->messages);
+        }
 
         //Write the modified file
         $chatFile = fopen($chatsPath . $chats[$chatIndex], "w");

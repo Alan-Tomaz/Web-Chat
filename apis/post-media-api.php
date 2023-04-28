@@ -66,6 +66,7 @@ if ($postMediaStatus == 0) {
                     $chatMessage->nickname = $user["name"];
                     $mediaMessage = "<img src='" . ROOT_URL . "admin/received-files/chat-media/" . $mediaName . "' class='image-message' alt='Image Not Found'>";
                     $chatMessage->message = $mediaMessage;
+                    $chatMessage->messageMedia = $mediaName;
 
                     if ($user["avatar"] == "") {
                         $chatMessage->img = "";
@@ -105,6 +106,7 @@ if ($postMediaStatus == 0) {
                         $chatMessage->nickname = $user["name"];
                         $mediaMessage = "<video class='message-video' controls><source src='" . ROOT_URL . "admin/received-files/chat-media/" . $mediaName . "' type='video/mp4'> Your browser does not support this video format</video>";
                         $chatMessage->message = $mediaMessage;
+                        $chatMessage->messageMedia = $mediaName;
 
                         if ($user["avatar"] == "") {
                             $chatMessage->img = "";
@@ -119,8 +121,12 @@ if ($postMediaStatus == 0) {
                         );
 
                         //If the messages array, have more than 100 messages, delete the more old message
-                        if (count($chatRootObj->messages) >= 100)
+                        if (count($chatRootObj->messages) >= 100) {
+                            if ($chatRootObj->messages[99]->messageMedia != "") {
+                                unlink("../admin/received-files/chat-media/" . $chatObj->messages[99]->messageMedia);
+                            }
                             array_shift($chatRootObj->messages);
+                        }
 
                         //Write the modified file
                         $chatFile = fopen($chatsPath . $chats[$chatIndex], "w");

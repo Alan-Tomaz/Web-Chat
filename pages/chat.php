@@ -39,6 +39,11 @@ if ($isLogged) {
 </head>
 
 <body class="overflow-hidden" onload="loadChats('<?= ROOT_URL ?>'), loadPage(<?= $userId ?>, <?= $isAdmin ?>)">
+    <div class="message-options" id="message-options">
+        <button class="edit-option-btn" id="edit-option-btn" onclick="">Edit Message</button>
+        <hr class="btn-hr hr">
+        <button class="delete-option-btn" id="delete-option-btn" onclick="">Delete Message</button>
+    </div>
     <div class="alert-bar" id="alert-bar">
         <h1 class="alert-title" id="alert-title">Error</h1>
         <p class="alert-text" id="alert-text">Error</p>
@@ -60,7 +65,7 @@ if ($isLogged) {
             </div>
         </div>
     </div>
-    <div class="message-options-screen">
+    <div class="message-options-screen" id="message-options-screen">
         <div class="edit-message-popup" id="edit-message-popup">
             <i class="uil uil-times close-edit-message" id="close-edit-message" onclick="hideEditMessagePopup()"></i>
             <img src="<?= ROOT_URL ?>img/1055085_compose_edit_paper_pencil_write_icon.png" class="edit-message-img">
@@ -69,22 +74,39 @@ if ($isLogged) {
 
             <div class="edit-message-confirmation-btn">
                 <div id="edit-message-btn" class="edit-message-btn btn" onclick="editMessage()">
-                    <span id="edit-message-btn-text">Edit Message</span>
+                    <span id="edit-message-btn-text" class="edit-message-btn-text">Edit Message</span>
                     <img id="edit-message-loading" class="edit-message-loading" src="<?= ROOT_URL ?>img/Rolling-alt.svg">
+                </div>
+            </div>
+        </div>
+        <!-- EDIT MEDIA MESSAGE -->
+        <div class="edit-message-popup" id="edit-media-message-popup">
+            <i class="uil uil-times close-edit-message" id="close-edit-message" onclick="hideEditMediaMessagePopup()"></i>
+            <img src="<?= ROOT_URL ?>img/1055085_compose_edit_paper_pencil_write_icon.png" class="edit-message-img">
+            <h2 class="edit-message-title" id="edit-message-title">Edit Message</h2>
+            <div class="add-chat-img-box">
+                <input type="file" class="editMediaMessage" id="edit-media-message" onchange="changeMediaMessage()">
+                <label for="add-chat-img" class="add-chat-img-btn">Edit Media</label>
+                <div class="add-chat-img-text" id="add-chat-img-text"></div>
+            </div>
+            <div class="edit-message-confirmation-btn">
+                <div id="edit-media-message-btn" class="edit-message-btn btn" onclick="editMediaMessage()">
+                    <span id="edit-media-message-btn-text" class="edit-message-btn-text">Edit Message</span>
+                    <img id="edit-media-message-loading" class="edit-message-loading" src="<?= ROOT_URL ?>img/Rolling-alt.svg">
                 </div>
             </div>
         </div>
         <div class="delete-message-popup" id="delete-message-popup">
             <i class="uil uil-times delete-edit-message" id="delete-edit-message" onclick="hideDeleteMessagePopup()"></i>
             <img src="<?= ROOT_URL ?>img/9004743_trash_delete_bin_remove_icon (1).png" class="delete-message-img">
-            <h2 class="delete-message-title" id="delete-message-title">Delete Message Message</h2>
+            <h2 class="delete-message-title" id="delete-message-title">Delete Message</h2>
             <p class="delete-message-text" id="delete-message-text">Are You Sure That You Want To Delete This Message?</p>
             <div class="delete-message-confirmation-btn">
                 <div id="cancel-delete-message-btn" class="cancel-delete-message-btn btn" onclick="hideDeleteMessagePopup()">
                     <span id="cancel-delete-message-btn-text">Cancel</span>
                 </div>
                 <div id="delete-message-btn" class="delete-message-btn btn" onclick="deleteMessage()">
-                    <span id="delete-message-btn-text">Delete Message</span>
+                    <span id="delete-message-btn-text" class="delete-message-btn-text">Delete Message</span>
                     <img id="delete-message-loading" class="delete-message-loading" src="<?= ROOT_URL ?>img/Rolling-alt.svg">
                 </div>
             </div>
@@ -144,7 +166,7 @@ if ($isLogged) {
     <section class="chat-section section">
         <div class="chat-container container">
             <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="global-loading" id="global-loading">
-            <div class="chats-list hide-user-profile hide-search-results" id="chats-list">
+            <div class="chats-list hide-user-profile hide-search-results hide-message-options" id="chats-list">
                 <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" class="search-loading" id="search-loading">
 
                 <div class="user-content hide-user-profile hide-emojis-clips">
@@ -222,14 +244,14 @@ if ($isLogged) {
             </div>
 
             <div class="chat-content" id="chat-content">
-                <div class="blank-content hide-user-profile hide-search-results" id="chat-blank">
+                <div class="blank-content hide-user-profile hide-search-results hide-message-options" id="chat-blank">
                     <div class="chat-blank-img">
                         <img src="<?= ROOT_URL ?>img/undraw_online_messaging_re_qft3.svg">
                     </div>
                     <h1 class="chat-blank-title">Hi! Welcome To Web Chat!</h1>
                     <p class="chat-blank-paragraph">Select a group and start chatting.</p>
                 </div>
-                <div class="chat-header chat-content-box hide-emojis-clips hide-search-results" id="chat-header" onclick="showChatInfo()">
+                <div class="chat-header chat-content-box hide-emojis-clips hide-search-results hide-message-options" id="chat-header" onclick="showChatInfo()">
                     <div class="header-vr vr"></div>
                     <div class="back-box" id="previous-page" onclick="previousPage(0)">
                         <i class="uil uil-arrow-left back"></i>
@@ -244,10 +266,10 @@ if ($isLogged) {
                         </div>
                     </div>
                 </div>
-                <div class="chat-messages-box hide-user-profile hide-emojis-clips hide-search-results chat-content-box" id="chat-messages-box">
+                <div class="chat-messages-box hide-user-profile hide-emojis-clips hide-search-results hide-message-options chat-content-box" id="chat-messages-box">
 
                 </div>
-                <div class="chat-footer hide-user-profile hide-search-results chat-content-box">
+                <div class="chat-footer hide-user-profile hide-search-results hide-message-options chat-content-box">
                     <div class="file-send-content" id="file-send-content">
 
                         <div class="file-send-box">
@@ -293,7 +315,7 @@ if ($isLogged) {
                         </div>
                     </div>
                 </div>
-                <div class="profile hide-emojis-clips hide-search-results" id="profile-card">
+                <div class="profile hide-emojis-clips hide-search-results hide-message-options" id="profile-card">
                     <div class="back-box back-box-profile" id="previous-page" onclick="previousPage(1)">
                         <i class="uil uil-arrow-left back"></i>
                     </div>

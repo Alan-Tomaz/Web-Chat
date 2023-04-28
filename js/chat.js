@@ -837,7 +837,7 @@ function showChatInfoEditable(rootUrl, chatId) {
     document.getElementById("update-5").setAttribute("onclick", `updateChatInfo(5,'${rootUrl}', ${chatId})`);
     document.getElementById("update-6").setAttribute("onclick", `updateChatInfo(6,'${rootUrl}', ${chatId})`);
     document.getElementById("logout-profile").innerHTML = "Delete Chat";
-    document.getElementById("logout-profile").setAttribute("onclick", `deleteChat('${rootUrl}', ${chatId})`);
+    document.getElementById("logout-profile").setAttribute("onclick", `deleteChatPopup('${rootUrl}', ${chatId})`);
 }
 
 /* Hide ChatInfo */
@@ -1112,7 +1112,13 @@ function updateData(id, rootUrl, userId, isAdmin) {
 function deleteUserPopup(rootUrl, userId) {
     let deleteScreen = document.getElementById("delete-screen");
     let deleteUserPopup = document.getElementById("delete-popup");
+    let deletePopupTitle = document.getElementById("delete-popup-title");
+    let deletePopupText = document.getElementById("delete-popup-text");
+    let deletePopupBtn = document.getElementById("delete-popup-btn-text");
     if (localStorage.getItem("isAdmin") != undefined) {
+        deletePopupText.innerHTML = "Are You Sure That You Want To Delete This User?";
+        deletePopupTitle.innerHTML = "Delete User";
+        deletePopupBtn.innerHTML = "Delete User";
         deleteScreen.style.display = "flex";
         deleteUserPopup.style.display = "flex";
         document.getElementById("delete-popup-btn").setAttribute("onclick", `deleteUser('${rootUrl}', ${userId})`)
@@ -1160,6 +1166,9 @@ function deleteUser(rootUrl, userId) {
                             ShowAlert("alert-bar", "Error", "Error", "Error");
                             break;
                         case 3:
+                            ShowAlert("alert-bar", "Error", "Error", "This User Dont Exists");
+                            break;
+                        case 4:
                             ShowAlert("alert-bar", "Error", "Error", "Directory Non-existent");
                             break;
                     }
@@ -1380,22 +1389,17 @@ function sendMessage(rootUrl, chatId) {
                     else {
 
                         message = document.getElementById("message-field");
-                        let content = `<div class="chat-messages">    
-                    <div class="chat-message chat-our-message">
-                    <div class="message-options-container">
+                        let content = `<div class="chat-messages" id="chat-messages-${k}" onmouseover="showOptionBtn(${k}, ${localStorage.getItem("userId")})" onmouseout="hideOptionBtn(${k}, ${localStorage.getItem("userId")})">    
+                    <div class="chat-message chat-our-message" id="message-${k}">
+                    <div class="message-options-container" id="message-options-container-${k}">
                                 <div class="message-options-btn-box">
-                                    <i class="uil uil-ellipsis-v message-options-btn" onclick="showMessagesOptions()"></i>
-                                </div>
-                                <div class="message-options">
-                                    <button class="edit-option-btn" onclick="editMessage('${rootUrl}', ${jsonResult.messageIndex}, ${chatId}, ${localStorage.getItem("userId")})">Edit Message</button>
-                                    <hr class="btn-hr hr">
-                                    <button class="delete-option-btn" onclick="deleteMessage('${rootUrl}', ${jsonResult.messageIndex}, ${chatId}, ${localStorage.getItem("userId")})">Delete Message</button>
+                                    <i class="uil uil-ellipsis-v message-options-btn" onclick="showMessagesOptions('${rootUrl}',${k}, ${chatId}, ${localStorage.getItem("userId")})"></i>
                                 </div>
                             </div>
                     <div class = "message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${localStorage.getItem("userId")}, ${k})" onmouseout="hideMiniProfile()" >
                     <img src="${rootUrl}${jsonResult.avatar}" class = "message-img img-circle" onclick = "showUserProfileInnerEvent('${rootUrl}', ${localStorage.getItem("userId")})" onmouseout = "hideMiniProfile()" id="message-id-${k}">
                     </div>
-                    <div class="message">
+                    <div class="message" id="message-text-${k}">
                     ${message.value}
                     </div>
                     </div>
@@ -1538,12 +1542,17 @@ function insertTheFile(rootUrl, chatId) {
                         //If success
                         else {
 
-                            let content = `<div class="chat-messages">    
-                    <div class="chat-message chat-our-message">
+                            let content = `<div class="chat-messages" id="chat-messages-${k}" onmouseover="showOptionBtn(${k}, ${localStorage.getItem("userId")})" onmouseout="hideOptionBtn(${k}, ${localStorage.getItem("userId")})">    
+                    <div class="chat-message chat-our-message" id="message-${k}">
+                    <div class="message-options-container" id="message-options-container-${k}">
+                        <div class="message-options-btn-box">
+                            <i class="uil uil-ellipsis-v message-options-btn" onclick="showMessagesOptions('${rootUrl}',${k}, ${chatId}, ${localStorage.getItem("userId")}, ${true})"></i>
+                        </div>
+                    </div>
                     <div class = "message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${localStorage.getItem("userId")}, ${k})" onmouseout="hideMiniProfile()" >
                     <img src="${rootUrl}${jsonResult.avatar}" class = "message-img img-circle" onclick = "showUserProfileInnerEvent('${rootUrl}', ${localStorage.getItem("userId")})" onmouseout = "hideMiniProfile()" id="message-id-${k}">
                     </div>
-                    <div class="message">
+                    <div class="message" id="message-text-${k}">
                     ${jsonResult.mediaMessage}
                     </div>
                     </div>
@@ -1633,9 +1642,13 @@ function showChat(rootUrl, id) {
             document.getElementById("chat-name").innerHTML = chats.chatInfo[0].name;
             document.getElementById("chat-desc").innerHTML = chats.chatInfo[0].description;
 
+            /* TEST, CASE HAVE ERROR, REMOVE */
+            k = 0;
+
+            let isMedia;
 
             function showMessages(n, index) {
-
+                isMedia = false;
                 userImg = rootUrl + "img/" + "403024_avatar_boy_male_user_young_icon.png"
                 if (n.img != "") {
                     userImg = rootUrl + "admin/received-files/avatars/" + n.img;
@@ -1644,24 +1657,22 @@ function showChat(rootUrl, id) {
                 if (localStorage.getItem("userId") == n.userId) {
                     userClass = "chat-our-message"
                 }
+                if (n.messageMedia != "") {
+                    isMedia = true;
+                }
                 let message =
                     `
-                    <div class="chat-messages">
-                        <div class="chat-message ${userClass}">
-                            <div class="message-options-container">
+                    <div class="chat-messages" id="chat-messages-${k}" onmouseover="showOptionBtn(${k}, ${n.userId})" onmouseout="hideOptionBtn(${k}, ${localStorage.getItem("userId")})">
+                        <div class="chat-message ${userClass}" id="message-${k}">
+                            <div class="message-options-container" id="message-options-container-${k}">
                                 <div class="message-options-btn-box">
-                                    <i class="uil uil-ellipsis-v message-options-btn" onclick="showMessagesOptions()"></i>
-                                </div>
-                                <div class="message-options">
-                                    <button class="edit-option-btn" onclick="editMessage('${rootUrl}', ${index}, ${id}, ${localStorage.getItem("userId")})">Edit Message</button>
-                                    <hr class="btn-hr hr"> 
-                                    <button class="delete-option-btn" onclick="deleteMessage('${rootUrl}', ${index}, ${id}, ${localStorage.getItem("userId")})">Delete Message</button>
+                                    <i class="uil uil-ellipsis-v message-options-btn" onclick="showMessagesOptions('${rootUrl}',${k},${id}, ${n.userId}, ${isMedia})"></i>
                                 </div>
                             </div>
                             <div class="message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${n.userId}, ${k})" onmouseout="hideMiniProfile()">
                                 <img src="${userImg}" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent('${rootUrl}',${n.userId})" id="message-id-${k}">
                             </div>
-                            <div class="message">${n.message}</div>
+                            <div class="message" id="message-text-${k}">${n.message}</div>
                         </div>
                     </div>
                 `
@@ -2274,5 +2285,368 @@ function updateChatInfo(inputId, rootUrl, chatId) {
                 ShowPopUpDialog("popup-error", "Error", "You don't have permission for this")
             }
         }
+    }
+}
+
+/* ==================== DELETE CHAT =================== */
+function deleteChatPopup(rootUrl, chatId) {
+    let deleteScreen = document.getElementById("delete-screen");
+    let deleteUserPopup = document.getElementById("delete-popup");
+    let deletePopupTitle = document.getElementById("delete-popup-title");
+    let deletePopupText = document.getElementById("delete-popup-text");
+    let deletePopupBtn = document.getElementById("delete-popup-btn-text");
+    if (localStorage.getItem("isAdmin") != undefined) {
+        deletePopupText.innerHTML = "Are You Sure That You Want To Delete This Chat?";
+        deletePopupTitle.innerHTML = "Delete Chat";
+        deletePopupBtn.innerHTML = "Delete Chat";
+        deleteScreen.style.display = "flex";
+        deleteUserPopup.style.display = "flex";
+        document.getElementById("delete-popup-btn").setAttribute("onclick", `deleteChat('${rootUrl}', ${chatId})`)
+        setTimeout(() => {
+            deleteScreen.classList.add("delete-screen-show");
+            deleteUserPopup.classList.add("delete-popup-show");
+        }, 10);
+    } else {
+        ShowPopUpDialog("popup-error", "Error", "You don't have permission for this");
+    }
+}
+
+function deleteChat(rootUrl, chatId) {
+    if (localStorage.getItem("isAdmin") != undefined) {
+        var formData = EasyHttpRequest.InstantiateFormData();
+        EasyHttpRequest.AddField(formData, "chat-id", chatId);
+        var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+
+        EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/delete-chat-api.php", formDataCompiled,
+            function () {
+
+            },
+            function (textResult, jsonResult) {
+                console.log(textResult);
+                //If error
+                if (jsonResult.deleteChatStatus != 0) {
+                    switch (jsonResult.deleteChatStatus) {
+                        case 1:
+                            ShowAlert("alert-bar", "Error", "Error", "You Don't Have Permission For This");
+                            break;
+                        case 2:
+                            ShowAlert("alert-bar", "Error", "Error", "Error");
+                            break;
+                        case 3:
+                            ShowAlert("alert-bar", "Error", "Error", "Directory Non-existent");
+                            break;
+                    }
+                }
+                //If success
+                else {
+                    hideDeletePopup();
+                    ShowAlert("alert-bar", "Success", "Success", "Chat Successfully Deleted");
+                    loadChats(rootUrl);
+                }
+            },
+            function () {
+                ShowAlert("alert-bar", "Error", "Error", "There's an error, please try again later");
+            });
+    } else {
+        ShowAlert("alert-bar", "Error", "Error", "You Don't Have Permission For This");
+    }
+}
+
+/* ==================== SHOW MESSAGE OPTIONS =================== */
+
+function showOptionBtn(msgId, userId) {
+    if (localStorage.getItem("userId") == userId || localStorage.getItem("isAdmin") == 1) {
+        let messagesOptionsContainer = document.getElementById("message-options-container-" + msgId);
+        messagesOptionsContainer.style.display = "flex";
+    }
+}
+
+function hideOptionBtn(msgId, userId) {
+    if (localStorage.getItem("userId") == userId || localStorage.getItem("isAdmin") == 1) {
+        let messagesOptionsContainer = document.getElementById("message-options-container-" + msgId);
+        messagesOptionsContainer.style.display = "none";
+    }
+}
+
+function showMessagesOptions(rootUrl, msgId, chatId, userId, isMedia) {
+    let messagesOptionsContainer = document.querySelectorAll(".message-options-container");
+    let messagesOptions = document.getElementById("message-options");
+    let deleteOptionBtn = document.getElementById("delete-option-btn");
+    let editOptionBtn = document.getElementById("edit-option-btn");
+
+    messageRoot = document.getElementById("message-" + msgId);
+
+    /* Remove The Style For Other options Popups */
+    messagesOptionsContainer.forEach(n => n.classList.remove("message-options-container-show"));
+    messagesOptions.style.display = "none";
+    messagesOptions.classList.remove("message-options-show");
+
+    editOptionBtn.setAttribute("onclick", `editMessagePopup('${rootUrl}', ${msgId}, ${chatId}, ${userId})`);
+    if (isMedia == true) {
+        editOptionBtn.setAttribute("onclick", `editMediaMessagePopup('${rootUrl}', ${msgId}, ${chatId}, ${userId})`);
+    }
+    deleteOptionBtn.setAttribute("onclick", `deleteMessagePopup('${rootUrl}', ${msgId}, ${chatId}, ${userId})`);
+
+
+    let elementPosition = messagesOptions.getBoundingClientRect();
+    let targetElementPosition = messagesOptionsContainer[msgId].getBoundingClientRect();
+
+
+
+    messagesOptions.style.top = (targetElementPosition.top + 150) + "px";
+    if (messageRoot.className == "chat-message chat-our-message") {
+        messagesOptions.style.left = (targetElementPosition.right - 170) + "px";
+    } else {
+        messagesOptions.style.left = (targetElementPosition.right) + "px";
+    }
+
+
+
+    setTimeout(() => {
+        /* Add the options Popups */
+        messagesOptionsContainer[msgId].classList.add("message-options-container-show");
+        messagesOptions.style.display = "flex";
+        setTimeout(() => {
+            messagesOptions.style.top = (targetElementPosition.top + 50) + "px";
+            messagesOptions.classList.add("message-options-show");
+        }, 10);
+    }, 10);
+}
+
+/* HIDE MESSAGE OPTIONS */
+let hideMessageOptionsElements = document.querySelectorAll(".hide-message-options").forEach(n => n.addEventListener("click", hideMessageOptions));
+
+function hideMessageOptions() {
+    let messagesOptionsContainer = document.querySelectorAll(".message-options-container");
+    let messagesOptions = document.getElementById("message-options");
+    messagesOptionsContainer.forEach(n => n.classList.remove("message-options-container-show"));
+    messagesOptions.style.display = "none";
+    messagesOptions.classList.remove("message-options-show");
+}
+
+function editMessagePopup(rootUrl, msgId, chatId, userId) {
+    if (localStorage.getItem("isAdmin") == 1 || localStorage.getItem("userId") == userId) {
+        hideMessageOptions()
+        let messageScreen = document.getElementById("message-options-screen");
+        let messagePopup = document.getElementById("edit-message-popup");
+        let editMessageBtn = document.getElementById("edit-message-btn");
+        editMessageBtn.setAttribute("onclick", `editMessage('${rootUrl}', ${msgId}, ${chatId}, ${userId})`)
+        messageScreen.style.display = "flex";
+        messagePopup.style.display = "flex";
+        setTimeout(() => {
+            messagePopup.classList.add("edit-message-popup-show");
+            messageScreen.classList.add("message-options-screen-show");
+        }, 10);
+    }
+}
+
+function editMediaMessagePopup(rootUrl, msgId, chatId, userId) {
+    if (localStorage.getItem("isAdmin") == 1 || localStorage.getItem("userId") == userId) {
+        hideMessageOptions()
+        let messageScreen = document.getElementById("message-options-screen");
+        let messagePopup = document.getElementById("edit-media-message-popup");
+        let editMediaMessageBtn = document.getElementById("edit-media-message-btn");
+        editMediaMessageBtn.setAttribute("onclick", `editMediaMessage('${rootUrl}', ${msgId}, ${chatId}, ${userId})`)
+        messageScreen.style.display = "flex";
+        messagePopup.style.display = "flex";
+        setTimeout(() => {
+            messagePopup.classList.add("edit-media-message-popup-show");
+            messageScreen.classList.add("message-options-screen-show");
+        }, 10);
+    }
+}
+
+function deleteMessagePopup(rootUrl, msgId, chatId, userId) {
+    if (localStorage.getItem("isAdmin") == 1 || localStorage.getItem("userId") == userId) {
+        hideMessageOptions()
+        let messageScreen = document.getElementById("message-options-screen");
+        let messagePopup = document.getElementById("delete-message-popup");
+        let deleteMessageBtn = document.getElementById("delete-message-btn");
+        deleteMessageBtn.setAttribute("onclick", `deleteMessage('${rootUrl}', ${msgId}, ${chatId}, ${userId})`)
+        messageScreen.style.display = "flex";
+        messagePopup.style.display = "flex";
+        setTimeout(() => {
+            messagePopup.classList.add("delete-message-popup-show");
+            messageScreen.classList.add("message-options-screen-show");
+        }, 10);
+    }
+}
+
+function hideEditMessagePopup() {
+    let messageScreen = document.getElementById("message-options-screen");
+    let messagePopup = document.getElementById("edit-message-popup");
+    messagePopup.classList.remove("edit-message-popup-show");
+    messageScreen.classList.remove("message-options-screen-show");
+    setTimeout(() => {
+        messageScreen.style.display = "none";
+        messagePopup.style.display = "none";
+    }, 1000);
+}
+
+function hideEditMediaMessagePopup() {
+    let messageScreen = document.getElementById("message-options-screen");
+    let messagePopup = document.getElementById("edit-media-message-popup");
+    messagePopup.classList.remove("edit-media-message-popup-show");
+    messageScreen.classList.remove("message-options-screen-show");
+    setTimeout(() => {
+        messageScreen.style.display = "none";
+        messagePopup.style.display = "none";
+    }, 1000);
+}
+
+function hideDeleteMessagePopup() {
+    let messageScreen = document.getElementById("message-options-screen");
+    let messagePopup = document.getElementById("delete-message-popup");
+    messagePopup.classList.remove("delete-message-popup-show");
+    messageScreen.classList.remove("message-options-screen-show");
+    setTimeout(() => {
+        messageScreen.style.display = "none";
+        messagePopup.style.display = "none";
+    }, 1000);
+}
+
+/* Edit Media Message */
+function editMediaMessage(rootUrl, msgId, chatId, userId) {
+
+}
+
+function editMessage(rootUrl, msgId, chatId, userId) {
+    if (localStorage.getItem("isAdmin") == 1 || localStorage.getItem("userId") == userId) {
+
+        let newMessage = document.getElementById("edit-message-text");
+        let editMessageLoading = document.getElementById("edit-message-loading");
+        let editBtnMessage = document.getElementById("edit-message-btn-text")
+        let currentMessageText = document.getElementById("message-text-" + msgId);
+
+        editBtnMessage.classList.add("edit-message-btn-text-hide");
+        setTimeout(() => {
+            editMessageLoading.classList.add("edit-message-loading-show");
+            editBtnMessage.style.display = "none";
+            setTimeout(() => {
+                editMessageLoading.style.display = "inline-block";
+            }, 10);
+        }, 300);
+
+        var formData = EasyHttpRequest.InstantiateFormData();
+        EasyHttpRequest.AddField(formData, "new-message", newMessage.value);
+        EasyHttpRequest.AddField(formData, "user-id", userId);
+        EasyHttpRequest.AddField(formData, "msg-id", msgId);
+        EasyHttpRequest.AddField(formData, "chat-id", chatId);
+        var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+
+        EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/edit-message-api.php", formDataCompiled,
+            function () {
+                /* When The Request is Done */
+                editMessageLoading.classList.remove("edit-message-loading-show");
+                setTimeout(() => {
+                    editMessageLoading.style.display = "none";
+                    editBtnMessage.style.display = "inline-block";
+                    setTimeout(() => {
+                        editBtnMessage.classList.remove("edit-message-btn-text-hide");
+                    }, 10);
+                }, 300);
+            },
+            function (textResult, jsonResult) {
+                console.log(textResult);
+                //If error
+                if (jsonResult.editMessageStatus != 0) {
+                    switch (jsonResult.editMessageStatus) {
+                        case 1:
+                            ShowAlert("alert-bar", "Error", "Error", "Empty Values")
+                            break;
+                        case 2:
+                            ShowAlert("alert-bar", "Error", "Error", "You Don't Have Permission For This")
+                            break;
+                        case 3:
+                            ShowAlert("alert-bar", "Error", "Error", "Directory Non-Existent")
+                            break;
+                        case 4:
+                            ShowAlert("alert-bar", "Error", "Error", "Message Don't Exists")
+                            break;
+
+                    }
+                }
+                //If success
+                else {
+                    hideEditMessagePopup()
+                    ShowAlert("alert-bar", "success", "Success", "Message Successfully Updated")
+                    currentMessageText.innerHTML = jsonResult.newMessage;
+                }
+            },
+            function () {
+                ShowAlert("alert-bar", "Error", "Error", "There's an error, please try again later")
+            });
+    } else {
+        ShowAlert("alert-bar", "Error", "Error", "You Don't Have Permission For This");
+    }
+}
+
+function deleteMessage(rootUrl, msgId, chatId, userId) {
+    if (localStorage.getItem("isAdmin") == 1 || localStorage.getItem("userId") == userId) {
+
+        let deleteMessageLoading = document.getElementById("delete-message-loading");
+        let deleteBtnMessage = document.getElementById("delete-message-btn-text")
+        let currentMessage = document.getElementById("chat-messages-" + msgId);
+
+        deleteBtnMessage.classList.add("delete-message-btn-text-hide");
+        setTimeout(() => {
+            deleteMessageLoading.classList.add("delete-message-loading-show");
+            deleteBtnMessage.style.display = "none";
+            setTimeout(() => {
+                deleteMessageLoading.style.display = "inline-block";
+            }, 10);
+        }, 300);
+
+        var formData = EasyHttpRequest.InstantiateFormData();
+        EasyHttpRequest.AddField(formData, "user-id", userId);
+        EasyHttpRequest.AddField(formData, "msg-id", msgId);
+        EasyHttpRequest.AddField(formData, "chat-id", chatId);
+        var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+
+        EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/delete-message-api.php", formDataCompiled,
+            function () {
+                /* When The Request is Done */
+                deleteMessageLoading.classList.remove("delete-message-loading-show");
+                setTimeout(() => {
+                    deleteMessageLoading.style.display = "none";
+                    deleteBtnMessage.style.display = "inline-block";
+                    setTimeout(() => {
+                        deleteBtnMessage.classList.remove("delete-message-btn-text-hide");
+                    }, 10);
+                }, 300);
+            },
+            function (textResult, jsonResult) {
+                console.log(textResult);
+                //If error
+                if (jsonResult.deleteMessageStatus != 0) {
+                    switch (jsonResult.deleteMessageStatus) {
+                        case 1:
+                            ShowAlert("alert-bar", "Error", "Error", "Empty Values")
+                            break;
+                        case 2:
+                            ShowAlert("alert-bar", "Error", "Error", "You Don't Have Permission For This")
+                            break;
+                        case 3:
+                            ShowAlert("alert-bar", "Error", "Error", "Directory Non-Existent")
+                            break;
+                        case 4:
+                            ShowAlert("alert-bar", "Error", "Error", "Message Don't Exists")
+                            break;
+
+                    }
+                }
+                //If success
+                else {
+                    hideDeleteMessagePopup()
+                    ShowAlert("alert-bar", "Success", "Success", "Message Successfully Deleted")
+                    currentMessage.remove();
+                    k--;
+                }
+            },
+            function () {
+                ShowAlert("alert-bar", "Error", "Error", "There's an error, please try again later")
+            });
+    } else {
+        ShowAlert("alert-bar", "Error", "Error", "You Don't Have Permission For This");
     }
 }
