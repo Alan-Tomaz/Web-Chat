@@ -698,6 +698,16 @@ input[type=file] {
     position: relative;
 }
 
+.chat-not-found {
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-not-found:hover {
+    cursor: initial;
+}
+
 .search-loading {
     position: absolute;
     right: 1%;
@@ -933,6 +943,7 @@ input[type=file] {
 .chat-messages-box {
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 6rem 0;
     flex-direction: column;
 }
@@ -2392,4 +2403,7 @@ input[type=file] {
         width: 300px;
     }
 
+    .message {
+        max-width: 90%;
+    }
 }

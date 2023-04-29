@@ -8,8 +8,8 @@ $readChatStatus = 0;
 $isSearching = false;
 if (isset($_GET["chat-name"])) {
     $isSearching = true;
-    $searchingName = $_GET["chat-name"];
-    $searchingNamePattern = "/$searchingName(.?)/";
+    $searchingName = filter_var($_GET["chat-name"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $searchingNamePattern = "/" . preg_quote($searchingName) . "/i";
 }
 
 
@@ -33,8 +33,6 @@ if (is_dir($chatsPath)) {
             } else {
                 $match = 0;
             }
-
-
             if ($match == 1) {
                 array_push($chats, $arr);
             }
@@ -42,32 +40,37 @@ if (is_dir($chatsPath)) {
     } else {
         $chats = array_values($chatsArray);
     }
-    sort($chats);
-    $i = 0;
-    foreach ($chats as $index => $chat) {
-        $chatExtension = explode(".", $chat);
-        if (end($chatExtension) == "json") {
-            //Read The Chat File
-            $chatObj = json_decode(file_get_contents($chatsPath . $chat), false);
+    if (count($chats) == 0) {
+        $readChatStatus = 2;
+    }
+    if ($readChatStatus == 0) {
+        sort($chats);
+        $i = 0;
+        foreach ($chats as $index => $chat) {
+            $chatExtension = explode(".", $chat);
+            if (end($chatExtension) == "json") {
+                //Read The Chat File
+                $chatObj = json_decode(file_get_contents($chatsPath . $chat), false);
 
-            /* Chat Object */
-            $chatObject = new stdClass();
+                /* Chat Object */
+                $chatObject = new stdClass();
 
-            /* Chat Info Objects */
-            $chatMessage = new stdClass();
-            $chatInfo = new stdClass();
+                /* Chat Info Objects */
+                $chatMessage = new stdClass();
+                $chatInfo = new stdClass();
 
 
-            /* Add The ChatInfo into Chat Object */
-            $chatObject->chatInfo = $chatObj->chatInfo;
-            $chatObject->chatMessage = $chatObj->messages;
+                /* Add The ChatInfo into Chat Object */
+                $chatObject->chatInfo = $chatObj->chatInfo;
+                $chatObject->chatMessage = $chatObj->messages;
 
-            /* All Chats Object */
-            $allChats = array();
+                /* All Chats Object */
+                $allChats = array();
 
-            /* Add The Chats Into the All Chats Object */
+                /* Add The Chats Into the All Chats Object */
 
-            $result->allChats[$index] = $chatObject;
+                $result->allChats[$index] = $chatObject;
+            }
         }
     }
 } else {

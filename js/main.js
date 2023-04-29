@@ -50,11 +50,13 @@ function ShowAlert(id, type, title, message) {
         case "error":
         case "Error":
         case "ERROR":
+            alertElement.classList.remove("alert-success")
             alertElement.classList.add("alert-error")
             break;
         case "Success":
         case "success":
         case "SUCCESS":
+            alertElement.classList.remove("alert-error")
             alertElement.classList.add("alert-success")
             break;
     }

@@ -82,8 +82,12 @@ if ($postMediaStatus == 0) {
                     );
 
                     //If the messages array, have more than 100 messages, delete the more old message
-                    if (count($chatRootObj->messages) >= 100)
+                    if (count($chatRootObj->messages) >= 100) {
+                        if ($chatRootObj->messages[99]->messageMedia != "") {
+                            unlink("../admin/received-files/chat-media/" . $chatObj->messages[99]->messageMedia);
+                        }
                         array_shift($chatRootObj->messages);
+                    }
 
                     //Write the modified file
                     $chatFile = fopen($chatsPath . $chats[$chatIndex], "w");

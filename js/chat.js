@@ -1,6 +1,7 @@
 //Global Variables
 let globalLoading = document.getElementById("global-loading");
 let k = 0;
+let intervals = [];
 
 let messageId = 0;
 
@@ -55,6 +56,7 @@ function loadChats(rootUrl) {
             chats.forEach(loadChat);
 
             setTimeout(() => {
+
                 chatsDiv = document.querySelectorAll(".channels");
                 chatsDiv.forEach(n => n.classList.add("chats-show"));
                 let searchLoading = document.getElementById("search-loading");
@@ -1244,7 +1246,8 @@ function formatPhoneNumber(value) {
 let emoji = document.getElementById("emoji-btn");
 let emojiList = document.getElementById("emoji-list");
 let emojiBox = document.getElementById("emoji-box");
-for (let i = 128512; i <= 129488; i++) {
+
+/* for (let i = 128512; i <= 129488; i++) {
     let j = 0;
     emojiCode = `<li class = 'emojis' id='emoji-${j}' onclick='showEmoji(${i})'>&#${i}</li>`
     emojiList.innerHTML += emojiCode;
@@ -1263,6 +1266,37 @@ for (let i = 128512; i <= 129488; i++) {
     if (i == 129327) {
         i = 129487;
     }
+} */
+let m = 0;
+let o = 0;
+let p = 0;
+for (let i = 128512; i <= 129488; i++) {
+
+    if (p == 10) {
+        o++
+        p = 0;
+    }
+
+    emojiCode = `<li class = 'emojis' id='emoji-${o}${p}' onclick='showEmoji(${o},${p})'>&#${i}</li>`
+
+    emojiList.innerHTML += emojiCode;
+    if (i == 128567) {
+        i = 128576;
+    }
+    if (i == 128580) {
+        i = 129295;
+    }
+    if (i == 129301) {
+        i = 129311;
+    }
+    if (i == 129317) {
+        i = 129318
+    }
+    if (i == 129327) {
+        i = 129487;
+    }
+    m++
+    p++
 }
 let notHideEmoji = false;
 emojiList.addEventListener("click", () => {
@@ -1405,6 +1439,42 @@ function sendMessage(rootUrl, chatId) {
                     </div>
                     </div>`
                         k++;
+
+
+
+                        let n = 0;
+                        let m = 0;
+                        for (let i = 128512; i <= 129488; i++) {
+
+                            if (n == 10) {
+                                m++;
+                                n = 0;
+                            }
+
+                            let emojiCode = "&#" + i;
+                            let pattern = new RegExp(`\€[${m}][${n}]`, "g");
+
+                            content = content.replace(pattern, emojiCode);
+                            console.log(content);
+                            /* console.log(content.replace(pattern, emojiCode)) */
+                            if (i == 128567) {
+                                i = 128576;
+                            }
+                            if (i == 128580) {
+                                i = 129295;
+                            }
+                            if (i == 129301) {
+                                i = 129311;
+                            }
+                            if (i == 129317) {
+                                i = 129318
+                            }
+                            if (i == 129327) {
+                                i = 129487;
+                            }
+                            n++;
+
+                        }
                         chatMessages.innerHTML += content;
                         message.value = "";
                         messageLoading.classList.remove("send-message-loading-show");
@@ -1422,8 +1492,8 @@ function sendMessage(rootUrl, chatId) {
 }
 
 /* ==================== SHOW EMOJIS =================== */
-function showEmoji(emojiUnicode) {
-    message.value += "&#" + emojiUnicode;
+function showEmoji(emojiDecimalCode, emojiUnityCode) {
+    message.value += "€" + `${emojiDecimalCode}${emojiUnityCode}`;
 }
 
 /* ==================== SHOW IMAGE AND VIDEO TEMPLATE =================== */
@@ -1466,6 +1536,7 @@ function insertTheImageUrl() {
         setTimeout(() => {
             message = document.getElementById("message-field");
             message.value += `<img src='${fileInput.value}' class='image-message' alt='Image Not Found'>`;
+            message.value = message.value.replace(/\&/g, "¥");
             fileSend.classList.remove("file-send-content-show");
             fileLoading.style.display = "none";
             fileInput2.disabled = false;
@@ -1677,6 +1748,39 @@ function showChat(rootUrl, id) {
                     </div>
                 `
                 k++;
+
+                let r = 0;
+                let m = 0;
+                for (let i = 128512; i <= 129488; i++) {
+
+                    if (r == 10) {
+                        m++;
+                        r = 0;
+                    }
+
+                    let emojiCode = "&#" + i;
+                    let pattern = new RegExp(`\€[${m}][${r}]`, "g");
+
+                    message = message.replace(pattern, emojiCode);
+                    /* console.log(content.replace(pattern, emojiCode)) */
+                    if (i == 128567) {
+                        i = 128576;
+                    }
+                    if (i == 128580) {
+                        i = 129295;
+                    }
+                    if (i == 129301) {
+                        i = 129311;
+                    }
+                    if (i == 129317) {
+                        i = 129318
+                    }
+                    if (i == 129327) {
+                        i = 129487;
+                    }
+                    r++;
+
+                }
                 document.getElementById("chat-messages-box").innerHTML += message;
 
             }
@@ -1686,6 +1790,14 @@ function showChat(rootUrl, id) {
             }
 
             setTimeout(() => {
+                intervals.forEach(n => {
+                    clearInterval(n);
+                });
+                intervals.push(setInterval(() => {
+                    reloadChat(rootUrl, id)
+                    console.log(id);
+                }, 5000));
+
                 document.getElementById("submit-3").setAttribute("onclick", `insertTheFile('${rootUrl}', ${id})`)
                 document.getElementById("send").setAttribute("onclick", `sendMessage('${rootUrl}', ${id})`)
                 document.getElementById("chat-header").setAttribute("onclick", `showChatInfo('${rootUrl}', ${id})`);
@@ -1724,50 +1836,48 @@ function showChat(rootUrl, id) {
 let searchInput = document.getElementById("search-input");
 let searchResultBox = document.getElementById("search-result-box");
 let searchLoading = document.getElementById("search-loading")
-let isShowingResults = false;
-let isSearching = [];
-let isSearchIndex;
-let milliseconds = new Date();
+let setTimeOutSearchingInstances = [];
 /* milliseconds = milliseconds.setTime(date.getTime()); */
 
-function searchChats(rootUrl, date, randomNumber) {
-    isSearching.forEach(n => n = false);
-    date = new Date();
-    randomNumber = Math.random() * ((milliseconds.setTime(date.getTime())) - 0) + 0
-    isSearching[randomNumber] = false;
-    if (isSearching[randomNumber] == false) {
-        isSearching[randomNumber] = true;
-        searchInput = document.getElementById("search-input");
-        searchResultBox = document.getElementById("search-result-box");
-        searchResultBox.innerHTML = "";
-        searchResultBox.classList.remove("search-result-box-show");
-        searchLoading = document.getElementById("search-loading");
-        searchLoading.classList.add("search-loading-show");
-        let chats = [];
-        let chatsDiv;
+function searchChats(rootUrl) {
 
-        if (isSearching[randomNumber] == true) {
-            var formData = EasyHttpRequest.InstantiateFormData();
-            EasyHttpRequest.AddField(formData, "chat-name", searchInput.value);
-            var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
-            EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", formDataCompiled,
-                function () {
-                    if (isSearching[randomNumber] == true) {
-                        /* When The Request Is Done */
-                        isSearching[randomNumber] = false;
+    setTimeOutSearchingInstances.forEach(n => {
+        clearTimeout(n);
+    });
 
-                        /* Create The Chats */
-                        function loadChat(n, index) {
-                            if (n.chatInfo[0].img == "") {
-                                var img = "chat-generic-img.png";
-                            } else {
-                                var img = n.chatInfo[0].img;
-                            }
-                            newChat =
-                                `
-                                <div class = "chats search-chat" onclick = "showChat(${index})">
+    searchInput = document.getElementById("search-input");
+    searchResultBox = document.getElementById("search-result-box");
+    searchResultBox.innerHTML = "";
+    searchResultBox.classList.remove("search-result-box-show");
+    searchLoading = document.getElementById("search-loading");
+    searchLoading.classList.add("search-loading-show");
+    let chats = [];
+    let chatsDiv;
+
+    setTimeOutSearchingInstances.push(setTimeout(() => {
+
+        var formData = EasyHttpRequest.InstantiateFormData();
+        EasyHttpRequest.AddField(formData, "chat-name", searchInput.value);
+        var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+        EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", formDataCompiled,
+            function () {
+                /* When The Request Is Done */
+
+                setTimeOutSearchingInstances.push(setTimeout(() => {
+
+
+                    /* Create The Chats */
+                    function loadChat(n, index) {
+                        if (n.chatInfo[0].img == "") {
+                            var img = "img/chat-generic-img.png";
+                        } else {
+                            var img = "admin/received-files/chat-img/" + n.chatInfo[0].img;
+                        }
+                        newChat =
+                            `
+                                <div class = "chats search-chat" onclick = "showChat('${rootUrl}', ${n.chatInfo[0].chatId})">
                                 <div class = "chats-img-box">
-                                <img src = "${rootUrl}img/${img}" class = "chats-img img-circle">
+                                <img src = "${rootUrl}${img}" class = "chats-img img-circle" id="chats-img-index">
                                 </div> 
                                 <div class = "chats-info">
                                 <div class = "chats-name-box" >
@@ -1777,62 +1887,84 @@ function searchChats(rootUrl, date, randomNumber) {
                                 </div> 
                                 </div>
                                 `
-                            searchResultBox.innerHTML += newChat;
-                        }
-
-                        setTimeout(() => {
-                            searchResultBox.innerHTML = "";
-
-                            chats.forEach(loadChat);
-
-                            chatsDiv = document.querySelectorAll(".search-chat");
-                            chatsDiv.forEach(n => n.classList.add("chats-show"));
-                            let searchLoading = document.getElementById("search-loading");
-                            searchLoading.classList.remove("search-loading-show");
-
-                        }, 100);
+                        searchResultBox.innerHTML += newChat;
                     }
-                },
-                function (textResult, jsonResult) {
-                    if (isSearching[randomNumber] == true) {
-                        console.log(textResult);
 
-                        //If error
-                        if (jsonResult.readChatStatus != 0) {
-                            switch (jsonResult.readChatStatus) {
-                                case 1:
-                                    ShowPopUpDialog("popup-error", "Error!", "Non-existent directory");
-                            }
+                    setTimeOutSearchingInstances.push(setTimeout(() => {
+
+                        if (chats != "undefined") {
+                            chats.forEach(loadChat);
                         }
-                        //If success
-                        else {
 
+                        chatsDiv = document.querySelectorAll(".search-chat");
+                        chatsDiv.forEach(n => n.classList.add("chats-show"));
+                        let searchLoading = document.getElementById("search-loading");
+                        searchLoading.classList.remove("search-loading-show");
+
+                    }, 100));
+                }, 10));
+
+            },
+            function (textResult, jsonResult) {
+                console.log(textResult);
+
+                setTimeOutSearchingInstances.push(setTimeout(() => {
+                    //If error
+                    if (jsonResult.readChatStatus != 0) {
+                        chats = "undefined";
+                        switch (jsonResult.readChatStatus) {
+                            case 1:
+                                ShowPopUpDialog("popup-error", "Error!", "Non-existent directory");
+                                break;
+                            case 2:
+
+                                /* Create The Chats */
+                                setTimeOutSearchingInstances.push(setTimeout(() => {
+                                    searchResultBox.classList.add("search-result-box-show");
+                                    searchResultBox.innerHTML = "";
+                                    searchResultBox.innerHTML +=
+                                        `
+                                        <div class = "chats search-chat chat-not-found">
+                                            No Chat Found
+                                        </div>
+                                    `;
+
+                                }, 100));
+                                break;
+                        }
+                    }
+
+                    //If success
+                    else {
+                        setTimeOutSearchingInstances.push(setTimeout(() => {
+                            searchResultBox.innerHTML = "";
                             chats = jsonResult.allChats;
                             searchResultBox.classList.add("search-result-box-show");
-                            isShowingResults = true;
-
-                        }
+                        }, 10));
                     }
-                },
-                function () {
-                    /* Case The Request can't be done */
-                    ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
-                });
+                }, 10));
+            }
 
-        }
-
-    }
+            ,
+            function () {
+                /* Case The Request can't be done */
+                ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+            });
+    }, 1000));
 }
 
-/* let hideSearchResults = document.querySelectorAll(".hide-search-results");
+
+
+
+let hideSearchResults = document.querySelectorAll(".hide-search-results");
 hideSearchResults.forEach(n => n.addEventListener("click", () => {
     searchResultBox.innerHTML = "";
     searchResultBox.classList.remove("search-result-box-show");
     searchLoading.classList.remove("search-loading-show");
-    isShowingResults = false;
-    isSearching.forEach(n => n = false);
-
-})) */
+    setTimeOutSearchingInstances.forEach(n => {
+        clearTimeout(n);
+    });
+}))
 
 /* ==================== Return to the previous page =================== */
 let backToThePreviousPage = document.getElementById("previous-page");
@@ -2505,10 +2637,85 @@ function hideDeleteMessagePopup() {
     }, 1000);
 }
 
+/* ==================== Change chat img file name when the input is changed ===================  */
+
+function changeMediaMessage() {
+    let changeMediaMessageInput = document.getElementById("edit-media-message");
+    let changeMediaMessageNameDiv = document.getElementById("edit-media-message-img-text");
+    changeMediaMessageNameDiv.innerHTML = changeMediaMessageInput.files[0].name;
+}
+
 /* Edit Media Message */
 function editMediaMessage(rootUrl, msgId, chatId, userId) {
+    if (localStorage.getItem("isAdmin") == 1 || localStorage.getItem("userId") == userId) {
 
+        let mediaMessageInput = document.getElementById("edit-media-message");
+        if (mediaMessageInput.value != "") {
+            let currentMessageText = document.getElementById("message-text-" + msgId);
+            let loadingBar = document.getElementById("edit-message-media-loading-bar");
+            loadingBar.classList.add("add-chat-loading-show");
+
+
+            var formData = EasyHttpRequest.InstantiateFormData();
+            EasyHttpRequest.AddField(formData, "user-id", userId);
+            EasyHttpRequest.AddField(formData, "msg-id", msgId);
+            EasyHttpRequest.AddField(formData, "chat-id", chatId);
+
+            EasyHttpRequest.StartAsyncFileUpload(rootUrl + "apis/edit-media-message-api.php", "edit-media-message", 0, "new-media", formData,
+                function () {
+                    /* When The Request is Done */
+                    loadingBar.classList.remove("add-chat-loading-show");
+                },
+                function (progressCallback, totalProgress) {
+                    document.getElementById("edit-message-media-loading").style.width = progressCallback + "%";
+                },
+                function (textResult, jsonResult) {
+                    console.log(textResult);
+                    //If error
+                    if (jsonResult.editMediaMessageStatus != 0) {
+                        switch (jsonResult.editMediaMessageStatus) {
+                            case 1:
+                                ShowAlert("alert-bar", "Error", "Error", "Empty Values")
+                                break;
+                            case 2:
+                                ShowAlert("alert-bar", "Error", "Error", "You Don't Have Permission For This")
+                                break;
+                            case 3:
+                                ShowAlert("alert-bar", "Error", "Error", "Directory Non-Existent")
+                                break;
+                            case 6:
+                                ShowAlert("alert-bar", "Error", "Error", "Chat Don't Exists")
+                                break;
+                            case 4:
+                                ShowAlert("alert-bar", "Error", "Error", "File Type Not Supported")
+                                break;
+                            case 5:
+                                ShowAlert("alert-bar", "Error", "Error", "File Too Big")
+                                break;
+                            case 7:
+                                ShowAlert("alert-bar", "Error", "Error", "Message Don't Exists")
+                                break;
+
+                        }
+                    }
+                    //If success
+                    else {
+                        hideEditMediaMessagePopup()
+                        ShowAlert("alert-bar", "success", "Success", "Message Successfully Updated")
+                        currentMessageText.innerHTML = jsonResult.newMessage;
+                    }
+                },
+                function () {
+                    ShowAlert("alert-bar", "Error", "Error", "There's an error, please try again later")
+                });
+        } else {
+            ShowAlert("alert-bar", "Error", "Error", "Empty Fields");
+        }
+    } else {
+        ShowAlert("alert-bar", "Error", "Error", "You Don't Have Permission For This");
+    }
 }
+
 
 function editMessage(rootUrl, msgId, chatId, userId) {
     if (localStorage.getItem("isAdmin") == 1 || localStorage.getItem("userId") == userId) {
@@ -2649,4 +2856,116 @@ function deleteMessage(rootUrl, msgId, chatId, userId) {
     } else {
         ShowAlert("alert-bar", "Error", "Error", "You Don't Have Permission For This");
     }
+}
+
+/* RELOAD THE CHAT TO BRING NEW MESSAGES */
+
+function reloadChat(rootUrl, id) {
+    globalLoading.classList.add("global-loading-show");
+
+
+    EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", "",
+        function () {
+            /* When The Request Is Done */
+
+
+            if (chats.chatMessage.length > k) {
+                for (let s = k; s <= chats.chatMessage.length; s++) {
+
+                    isMedia = false;
+                    userImg = rootUrl + "img/" + "403024_avatar_boy_male_user_young_icon.png"
+                    if (chats.chatMessage[k].img != "") {
+                        userImg = rootUrl + "admin/received-files/avatars/" + chats.chatMessage[k].img;
+                    }
+                    userClass = "";
+                    if (localStorage.getItem("userId") == chats.chatMessage[k].userId) {
+                        userClass = "chat-our-message"
+                    }
+                    if (chats.chatMessage[k].messageMedia != "") {
+                        isMedia = true;
+                    }
+                    let message =
+                        `
+                                        <div class="chat-messages" id="chat-messages-${k}" onmouseover="showOptionBtn(${k}, ${chats.chatMessage[k].userId})" onmouseout="hideOptionBtn(${k}, ${localStorage.getItem("userId")})">
+                                            <div class="chat-message ${userClass}" id="message-${k}">
+                                                <div class="message-options-container" id="message-options-container-${k}">
+                                                    <div class="message-options-btn-box">
+                                                        <i class="uil uil-ellipsis-v message-options-btn" onclick="showMessagesOptions('${rootUrl}',${k},${id}, ${chats.chatMessage[k].userId}, ${isMedia})"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${chats.chatMessage[k].userId}, ${k})" onmouseout="hideMiniProfile()">
+                                                    <img src="${userImg}" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent('${rootUrl}',${chats.chatMessage[k].userId})" id="message-id-${k}">
+                                                </div>
+                                                <div class="message" id="message-text-${k}">${chats.chatMessage[k].message}</div>
+                                            </div>
+                                        </div>
+                                    `
+                    k++;
+
+                    let r = 0;
+                    let m = 0;
+                    for (let i = 128512; i <= 129488; i++) {
+
+                        if (r == 10) {
+                            m++;
+                            r = 0;
+                        }
+
+                        let emojiCode = "&#" + i;
+                        let pattern = new RegExp(`\€[${m}][${r}]`, "g");
+
+                        message = message.replace(pattern, emojiCode);
+                        /* console.log(content.replace(pattern, emojiCode)) */
+                        if (i == 128567) {
+                            i = 128576;
+                        }
+                        if (i == 128580) {
+                            i = 129295;
+                        }
+                        if (i == 129301) {
+                            i = 129311;
+                        }
+                        if (i == 129317) {
+                            i = 129318
+                        }
+                        if (i == 129327) {
+                            i = 129487;
+                        }
+                        r++;
+
+                    }
+                    document.getElementById("chat-messages-box").innerHTML += message;
+                }
+
+            }
+
+
+
+
+            setTimeout(() => {
+
+                globalLoading.classList.remove("global-loading-show");
+                chatBox = document.getElementById('chat-messages-box');
+                chatBox.scrollTop = 9999999;
+            }, 500);
+        },
+
+
+        function (textResult, jsonResult) {
+            //If error
+            if (jsonResult.readChatStatus != 0) {
+                switch (jsonResult.readChatStatus) {
+                    case 1:
+                        ShowPopUpDialog("popup-error", "Error!", "Non-existent directory");
+                }
+            }
+            //If success
+            else {
+                chats = jsonResult.allChats[id];
+            }
+        },
+        function () {
+            /* Case The Request can't be done */
+            ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+        });
 }

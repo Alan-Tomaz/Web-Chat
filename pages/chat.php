@@ -84,16 +84,19 @@ if ($isLogged) {
             <i class="uil uil-times close-edit-message" id="close-edit-message" onclick="hideEditMediaMessagePopup()"></i>
             <img src="<?= ROOT_URL ?>img/1055085_compose_edit_paper_pencil_write_icon.png" class="edit-message-img">
             <h2 class="edit-message-title" id="edit-message-title">Edit Message</h2>
-            <div class="add-chat-img-box">
-                <input type="file" class="editMediaMessage" id="edit-media-message" onchange="changeMediaMessage()">
-                <label for="add-chat-img" class="add-chat-img-btn">Edit Media</label>
-                <div class="add-chat-img-text" id="add-chat-img-text"></div>
+            <div class="add-chat-img-box" id="edit-media-message-img-box">
+                <input type="file" class="editMediaMessage" id="edit-media-message" name="edit-media-message" onchange="changeMediaMessage()">
+                <label for="edit-media-message" class="add-chat-img-btn">Edit Media</label>
+                <div class="add-chat-img-text" id="edit-media-message-img-text"></div>
             </div>
             <div class="edit-message-confirmation-btn">
                 <div id="edit-media-message-btn" class="edit-message-btn btn" onclick="editMediaMessage()">
                     <span id="edit-media-message-btn-text" class="edit-message-btn-text">Edit Message</span>
                     <img id="edit-media-message-loading" class="edit-message-loading" src="<?= ROOT_URL ?>img/Rolling-alt.svg">
                 </div>
+            </div>
+            <div class="add-chat-loading" id="edit-message-media-loading-bar">
+                <div id="edit-message-media-loading"></div>
             </div>
         </div>
         <div class="delete-message-popup" id="delete-message-popup">
@@ -199,7 +202,7 @@ if ($isLogged) {
                             </div>
                         </div>
                     <?php endif ?>
-                    <!-- <div class="search-chats">
+                    <div class="search-chats">
                         <i class="uil uil-search search-icon"></i>
 
                         <input type="search" class="search-input" id="search-input" placeholder="Search Chats" onkeypress="searchChats('<?= ROOT_URL ?>', event)">
@@ -229,7 +232,7 @@ if ($isLogged) {
 
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                     <hr class="user-hr hr">
                 </div>
                 <?php if (isset($_SESSION["user-is-admin"])) : ?>
