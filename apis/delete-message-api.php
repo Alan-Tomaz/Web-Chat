@@ -38,15 +38,24 @@ if ($deleteMessageStatus == 0) {
                 //Read The Chat File
                 $chatObj = json_decode(file_get_contents($chatsPath . $chats[$chatId]), false);
 
+
                 if ($chatObj->messages[$msgId]) {
-                    if ($chatObj->messages[$msgId]->messageMedia != "") {
-                        unlink("../admin/received-files/chat-media/" . $chatObj->messages[$msgId]->messageMedia);
+                    if ($chatObj->messages[$msgId]->isDeleted == false) {
+                        if ($chatObj->messages[$msgId]->messageMedia != "") {
+                            unlink("../admin/received-files/chat-media/" . $chatObj->messages[$msgId]->messageMedia);
+                        }
+                        $chatObj->messages[$msgId]->isDeleted = true;
+                        $chatObj->messages[$msgId]->message = "";
+                        $chatObj->messages[$msgId]->messageMedia = "";
+                    } else {
+                        $deleteMessageStatus = 5;
                     }
-                    array_splice($chatObj->messages, $msgId, 1);
                 } else {
                     $deleteMessageStatus = 4;
                 }
                 file_put_contents($chatsPath . $chats[$chatId], json_encode($chatObj));
+            } else {
+                $deleteMessageStatus = 3;
             }
         } else {
             $deleteMessageStatus = 3;

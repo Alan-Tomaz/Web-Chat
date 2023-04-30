@@ -1417,6 +1417,14 @@ function sendMessage(rootUrl, chatId) {
                                 sendMessageIcon.classList.remove("send-hide");
                                 isSending = false;
                                 break;
+                            case 3:
+                                ShowPopUpDialog("popup-error", "Error!", "You're Not Logged");
+
+                                message.value = "";
+                                messageLoading.classList.remove("send-message-loading-show");
+                                sendMessageIcon.classList.remove("send-hide");
+                                isSending = false;
+                                break;
                         }
                     }
                     //If success
@@ -1427,10 +1435,10 @@ function sendMessage(rootUrl, chatId) {
                     <div class="chat-message chat-our-message" id="message-${k}">
                     <div class="message-options-container" id="message-options-container-${k}">
                                 <div class="message-options-btn-box">
-                                    <i class="uil uil-ellipsis-v message-options-btn" onclick="showMessagesOptions('${rootUrl}',${k}, ${chatId}, ${localStorage.getItem("userId")})"></i>
+                                    <i class="uil uil-ellipsis-v message-options-btn" id="message-options-btn-${k}" onclick="showMessagesOptions('${rootUrl}',${k}, ${chatId}, ${localStorage.getItem("userId")})"></i>
                                 </div>
                             </div>
-                    <div class = "message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${localStorage.getItem("userId")}, ${k})" onmouseout="hideMiniProfile()" >
+                    <div class = "message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${localStorage.getItem("userId")}, ${k}, ${true})" onmouseout="hideMiniProfile()" >
                     <img src="${rootUrl}${jsonResult.avatar}" class = "message-img img-circle" onclick = "showUserProfileInnerEvent('${rootUrl}', ${localStorage.getItem("userId")})" onmouseout = "hideMiniProfile()" id="message-id-${k}">
                     </div>
                     <div class="message" id="message-text-${k}">
@@ -1487,7 +1495,7 @@ function sendMessage(rootUrl, chatId) {
                     /* Case The Request can't be done */
                     ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
                 });
-        }, 1000);
+        }, 10);
     }
 }
 
@@ -1617,10 +1625,10 @@ function insertTheFile(rootUrl, chatId) {
                     <div class="chat-message chat-our-message" id="message-${k}">
                     <div class="message-options-container" id="message-options-container-${k}">
                         <div class="message-options-btn-box">
-                            <i class="uil uil-ellipsis-v message-options-btn" onclick="showMessagesOptions('${rootUrl}',${k}, ${chatId}, ${localStorage.getItem("userId")}, ${true})"></i>
+                            <i class="uil uil-ellipsis-v message-options-btn" id="message-options-btn-${k}" onclick="showMessagesOptions('${rootUrl}',${k}, ${chatId}, ${localStorage.getItem("userId")}, ${true})"></i>
                         </div>
                     </div>
-                    <div class = "message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${localStorage.getItem("userId")}, ${k})" onmouseout="hideMiniProfile()" >
+                    <div class = "message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${localStorage.getItem("userId")}, ${k}, ${true})" onmouseout="hideMiniProfile()" >
                     <img src="${rootUrl}${jsonResult.avatar}" class = "message-img img-circle" onclick = "showUserProfileInnerEvent('${rootUrl}', ${localStorage.getItem("userId")})" onmouseout = "hideMiniProfile()" id="message-id-${k}">
                     </div>
                     <div class="message" id="message-text-${k}">
@@ -1671,7 +1679,11 @@ function insertTheVideoUrl() {
         fileCloseBtn.style.display = "none";
         fileLoading.style.display = "inline-block";
         let videoUrl = fileInput.value;
-        videoUrl = videoUrl.split("https://www.youtube.com/watch?v=")
+        if (videoUrl.match(/https:\/\/youtu\.be\//i)) {
+            videoUrl = videoUrl.split("https://youtu.be/");
+        } else {
+            videoUrl = videoUrl.split("https://www.youtube.com/watch?v=");
+        }
         console.log(videoUrl)
         setTimeout(() => {
             message = document.getElementById("message-field");
@@ -1693,6 +1705,7 @@ let chat = document.querySelectorAll(".chat-content-box");
 let chatContent = document.getElementById("chat-content");
 
 function showChat(rootUrl, id) {
+    let isYourMessage;
     globalLoading.classList.add("global-loading-show");
     chat.forEach(n => n.classList.remove("chat-content-box-show"));
     chatBlank.classList.remove("blank-content-hide");
@@ -1719,6 +1732,7 @@ function showChat(rootUrl, id) {
             let isMedia;
 
             function showMessages(n, index) {
+                isYourMessage = false;
                 isMedia = false;
                 userImg = rootUrl + "img/" + "403024_avatar_boy_male_user_young_icon.png"
                 if (n.img != "") {
@@ -1727,62 +1741,86 @@ function showChat(rootUrl, id) {
                 userClass = "";
                 if (localStorage.getItem("userId") == n.userId) {
                     userClass = "chat-our-message"
+                    isYourMessage = true;
                 }
-                if (n.messageMedia != "") {
-                    isMedia = true;
-                }
-                let message =
-                    `
+                if (n.isDeleted == true) {
+
+                    let message =
+                        `
+                    <div class="chat-messages" id="chat-messages-${k}" onmouseover="showOptionBtn(${k}, ${n.userId}, ${true})" onmouseout="hideOptionBtn(${k}, ${localStorage.getItem("userId")})">
+                        <div class="chat-message ${userClass}" id="message-${k}">
+                            <div class="message-options-container" id="message-options-container-${k}">
+                                <div class="message-options-btn-box">
+                                    <i class="uil uil-ellipsis-v message-options-btn" id="message-options-btn-${k}" onclick="showMessagesOptions('${rootUrl}',${k},${id}, ${n.userId}, ${isMedia})"></i>
+                                </div>
+                            </div>
+                            <div class="message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${n.userId}, ${k}, ${isYourMessage})" onmouseout="hideMiniProfile()">
+                                <img src="${userImg}" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent('${rootUrl}',${n.userId})" id="message-id-${k}">
+                            </div>
+                            <div class="message" id="message-text-${k}"><b><i>Message Deleted</i></b></div>
+                        </div>
+                    </div>
+                `
+                    k++;
+
+                    document.getElementById("chat-messages-box").innerHTML += message;
+
+                } else {
+                    if (n.messageMedia != "") {
+                        isMedia = true;
+                    }
+                    let message =
+                        `
                     <div class="chat-messages" id="chat-messages-${k}" onmouseover="showOptionBtn(${k}, ${n.userId})" onmouseout="hideOptionBtn(${k}, ${localStorage.getItem("userId")})">
                         <div class="chat-message ${userClass}" id="message-${k}">
                             <div class="message-options-container" id="message-options-container-${k}">
                                 <div class="message-options-btn-box">
-                                    <i class="uil uil-ellipsis-v message-options-btn" onclick="showMessagesOptions('${rootUrl}',${k},${id}, ${n.userId}, ${isMedia})"></i>
+                                    <i class="uil uil-ellipsis-v message-options-btn" id="message-options-btn-${k}" onclick="showMessagesOptions('${rootUrl}',${k},${id}, ${n.userId}, ${isMedia})"></i>
                                 </div>
                             </div>
-                            <div class="message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${n.userId}, ${k})" onmouseout="hideMiniProfile()">
+                            <div class="message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${n.userId}, ${k}, ${isYourMessage})" onmouseout="hideMiniProfile()">
                                 <img src="${userImg}" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent('${rootUrl}',${n.userId})" id="message-id-${k}">
                             </div>
                             <div class="message" id="message-text-${k}">${n.message}</div>
                         </div>
                     </div>
                 `
-                k++;
+                    k++;
 
-                let r = 0;
-                let m = 0;
-                for (let i = 128512; i <= 129488; i++) {
+                    let r = 0;
+                    let m = 0;
+                    for (let i = 128512; i <= 129488; i++) {
 
-                    if (r == 10) {
-                        m++;
-                        r = 0;
-                    }
+                        if (r == 10) {
+                            m++;
+                            r = 0;
+                        }
 
-                    let emojiCode = "&#" + i;
-                    let pattern = new RegExp(`\€[${m}][${r}]`, "g");
+                        let emojiCode = "&#" + i;
+                        let pattern = new RegExp(`\€[${m}][${r}]`, "g");
 
-                    message = message.replace(pattern, emojiCode);
-                    /* console.log(content.replace(pattern, emojiCode)) */
-                    if (i == 128567) {
-                        i = 128576;
-                    }
-                    if (i == 128580) {
-                        i = 129295;
-                    }
-                    if (i == 129301) {
-                        i = 129311;
-                    }
-                    if (i == 129317) {
-                        i = 129318
-                    }
-                    if (i == 129327) {
-                        i = 129487;
-                    }
-                    r++;
+                        message = message.replace(pattern, emojiCode);
+                        /* console.log(content.replace(pattern, emojiCode)) */
+                        if (i == 128567) {
+                            i = 128576;
+                        }
+                        if (i == 128580) {
+                            i = 129295;
+                        }
+                        if (i == 129301) {
+                            i = 129311;
+                        }
+                        if (i == 129317) {
+                            i = 129318
+                        }
+                        if (i == 129327) {
+                            i = 129487;
+                        }
+                        r++;
 
+                    }
+                    document.getElementById("chat-messages-box").innerHTML += message;
                 }
-                document.getElementById("chat-messages-box").innerHTML += message;
-
             }
 
             if (chats.chatMessage.length >= 1) {
@@ -1795,7 +1833,6 @@ function showChat(rootUrl, id) {
                 });
                 intervals.push(setInterval(() => {
                     reloadChat(rootUrl, id)
-                    console.log(id);
                 }, 5000));
 
                 document.getElementById("submit-3").setAttribute("onclick", `insertTheFile('${rootUrl}', ${id})`)
@@ -1840,7 +1877,6 @@ let setTimeOutSearchingInstances = [];
 /* milliseconds = milliseconds.setTime(date.getTime()); */
 
 function searchChats(rootUrl) {
-
     setTimeOutSearchingInstances.forEach(n => {
         clearTimeout(n);
     });
@@ -1997,12 +2033,13 @@ function previousPage(page) {
 
 
 let miniProfile = document.getElementById("mini-profile");
-let mustShowMiniProfile;
+miniProfileTimeouts = [];
 
+function showMiniProfile(rootUrl, userId, id, isYourMessageParam) {
 
-function showMiniProfile(rootUrl, userId, id) {
-
-    mustShowMiniProfile = true;
+    miniProfileTimeouts.forEach(n => {
+        clearTimeout(n);
+    });
 
     let targetElement = document.getElementById("message-img-box-" + id);
 
@@ -2012,42 +2049,44 @@ function showMiniProfile(rootUrl, userId, id) {
     miniProfile.style.top = (targetElementPosition.top - 140) + "px";
     miniProfile.style.left = (targetElementPosition.right - 40) + "px";
 
+    if (isYourMessageParam == true) {
+        miniProfile.style.left = (targetElementPosition.right - 250) + "px";
+    }
+
     /*
      miniProfile.style.top = (targetElementPosition.top - 170) + "px";
      miniProfile.style.right = (targetElementPosition.right + 550) + "px";
      */
 
-    setTimeout(() => {
-        if (mustShowMiniProfile == true) {
+    miniProfileTimeouts.push(setTimeout(() => {
+        var formData = EasyHttpRequest.InstantiateFormData();
+        EasyHttpRequest.AddField(formData, "user-id", userId);
+        var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+
+        /* if (localStorage.getItem("isAdmin") != null || localStorage.getItem("userId") == id) {
+            apiPath = rootUrl + "apis/show-user-profile-api.php";
+        } */
+        EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/show-user-api.php", formDataCompiled,
+            function () {
+                /* When The Request Is Done */
+                /* Create The Chats */
+                miniProfileTimeouts.push(setTimeout(() => {
+                    miniProfile.classList.add("mini-profile-show");
+                }, 10));
+            },
 
 
 
-            var formData = EasyHttpRequest.InstantiateFormData();
-            EasyHttpRequest.AddField(formData, "user-id", userId);
-            var formDataCompiled = EasyHttpRequest.BuildFormData(formData);
+            function (textResult, jsonResult) {
+                console.log(textResult);
+                //If error
+                if (jsonResult.showUserStatus != 0) {
+                    switch (jsonResult.showUserStatus) {
+                        case 1:
+                        case 2:
+                            ShowPopUpDialog("popup-error", "Error!", "User Don't Exists");
 
-            /* if (localStorage.getItem("isAdmin") != null || localStorage.getItem("userId") == id) {
-                apiPath = rootUrl + "apis/show-user-profile-api.php";
-            } */
-            EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/show-user-api.php", formDataCompiled,
-                function () {
-                    /* When The Request Is Done */
-                    if (mustShowMiniProfile == true) {
-                        /* Create The Chats */
-
-                        miniProfile.classList.add("mini-profile-show");
-                    }
-                },
-
-
-                function (textResult, jsonResult) {
-                    console.log(textResult);
-                    //If error
-                    if (jsonResult.showUserStatus != 0) {
-                        switch (jsonResult.showUserStatus) {
-                            case 1:
-                            case 2:
-                                ShowPopUpDialog("popup-error", "Error!", "User Don't Exists");
+                            miniProfileTimeouts.push(setTimeout(() => {
 
                                 let miniProfileName = document.getElementById("mini-profile-name");
                                 miniProfileName.innerHTML = "None";
@@ -2057,13 +2096,16 @@ function showMiniProfile(rootUrl, userId, id) {
                                 miniProfileActivity.innerHTML = "None";
                                 let miniProfileImg = document.getElementById("mini-profile-img");
                                 miniProfileImg.src = rootUrl + "img/403024_avatar_boy_male_user_young_icon.png";
+                            }, 10));
 
 
-                                break;
-                        }
+                            break;
                     }
-                    //If success
-                    else {
+                }
+                //If success
+                else {
+                    miniProfileTimeouts.push(setTimeout(() => {
+
                         let miniProfileName = document.getElementById("mini-profile-name");
                         if (jsonResult.name.length > 30) {
                             miniProfileName.innerHTML = jsonResult.name.slice(0, 30) + "...";
@@ -2086,22 +2128,22 @@ function showMiniProfile(rootUrl, userId, id) {
                         } else {
                             miniProfileImg.src = rootUrl + "admin/received-files/avatars/" + jsonResult.avatar;
                         }
+                    }, 10));
 
-                    }
-                },
-                function () {
-                    /* Case The Request can't be done */
-                    ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
-                });
-        }
-    }, 1000);
+                }
+            },
+            function () {
+                /* Case The Request can't be done */
+                ShowPopUpDialog("popup-error", "Error!", "There was an error, please try again later.");
+            });
+
+    }, 1000));
 }
 
 function hideMiniProfile() {
-    mustShowMiniProfile = false;
-
-
-
+    miniProfileTimeouts.forEach(n => {
+        clearTimeout(n);
+    });
     miniProfile.classList.remove("mini-profile-show");
 }
 
@@ -2183,6 +2225,7 @@ function createChat(rootUrl) {
 
         var formData = EasyHttpRequest.InstantiateFormData();
         EasyHttpRequest.AddField(formData, "chat-name", newChatName.value);
+        newChatDesc.value = newChatDesc.value.replace(/\n/g, "");
         EasyHttpRequest.AddField(formData, "chat-description", newChatDesc.value);
 
 
@@ -2444,6 +2487,19 @@ function deleteChatPopup(rootUrl, chatId) {
 }
 
 function deleteChat(rootUrl, chatId) {
+    let deleteChatLoading = document.getElementById("delete-popup-loading");
+    let deleteChatBtn = document.getElementById("delete-popup-btn-text");
+
+
+    deleteChatBtn.classList.add("delete-popup-btn-text-hide");
+    setTimeout(() => {
+        deleteChatBtn.style.display = "none";
+        deleteChatLoading.style.display = "inline-block";
+        setTimeout(() => {
+            deleteChatLoading.classList.add("delete-popup-loading-show");
+        }, 10);
+    }, 300);
+
     if (localStorage.getItem("isAdmin") != undefined) {
         var formData = EasyHttpRequest.InstantiateFormData();
         EasyHttpRequest.AddField(formData, "chat-id", chatId);
@@ -2451,6 +2507,15 @@ function deleteChat(rootUrl, chatId) {
 
         EasyHttpRequest.StartAsyncPostRequest(rootUrl + "apis/delete-chat-api.php", formDataCompiled,
             function () {
+
+                deleteChatLoading.classList.remove("delete-popup-loading-show");
+                setTimeout(() => {
+                    deleteChatBtn.style.display = "inline-block";
+                    deleteChatLoading.style.display = "none";
+                    setTimeout(() => {
+                        deleteChatBtn.classList.remove("delete-popup-btn-text-hide");
+                    }, 10);
+                }, 300);
 
             },
             function (textResult, jsonResult) {
@@ -2486,10 +2551,12 @@ function deleteChat(rootUrl, chatId) {
 
 /* ==================== SHOW MESSAGE OPTIONS =================== */
 
-function showOptionBtn(msgId, userId) {
+function showOptionBtn(msgId, userId, isDeleted) {
     if (localStorage.getItem("userId") == userId || localStorage.getItem("isAdmin") == 1) {
-        let messagesOptionsContainer = document.getElementById("message-options-container-" + msgId);
-        messagesOptionsContainer.style.display = "flex";
+        if (isDeleted != true) {
+            let messagesOptionsContainer = document.getElementById("message-options-container-" + msgId);
+            messagesOptionsContainer.style.display = "flex";
+        }
     }
 }
 
@@ -2724,6 +2791,7 @@ function editMessage(rootUrl, msgId, chatId, userId) {
         let editMessageLoading = document.getElementById("edit-message-loading");
         let editBtnMessage = document.getElementById("edit-message-btn-text")
         let currentMessageText = document.getElementById("message-text-" + msgId);
+        let newEditMessage;
 
         editBtnMessage.classList.add("edit-message-btn-text-hide");
         setTimeout(() => {
@@ -2733,7 +2801,8 @@ function editMessage(rootUrl, msgId, chatId, userId) {
                 editMessageLoading.style.display = "inline-block";
             }, 10);
         }, 300);
-
+        newMessage.value = newMessage.value.replace(/\n/g, "");
+        console.log(newMessage.value);
         var formData = EasyHttpRequest.InstantiateFormData();
         EasyHttpRequest.AddField(formData, "new-message", newMessage.value);
         EasyHttpRequest.AddField(formData, "user-id", userId);
@@ -2752,6 +2821,40 @@ function editMessage(rootUrl, msgId, chatId, userId) {
                         editBtnMessage.classList.remove("edit-message-btn-text-hide");
                     }, 10);
                 }, 300);
+                if (newEditMessage != undefined) {
+                    let r = 0;
+                    let m = 0;
+                    for (let i = 128512; i <= 129488; i++) {
+
+                        if (r == 10) {
+                            m++;
+                            r = 0;
+                        }
+
+                        let emojiCode = "&#" + i;
+                        let pattern = new RegExp(`\€[${m}][${r}]`, "g");
+
+                        newEditMessage = newEditMessage.replace(pattern, emojiCode);
+                        /* console.log(content.replace(pattern, emojiCode)) */
+                        if (i == 128567) {
+                            i = 128576;
+                        }
+                        if (i == 128580) {
+                            i = 129295;
+                        }
+                        if (i == 129301) {
+                            i = 129311;
+                        }
+                        if (i == 129317) {
+                            i = 129318
+                        }
+                        if (i == 129327) {
+                            i = 129487;
+                        }
+                        r++;
+                    }
+                    currentMessageText.innerHTML = newEditMessage;
+                }
             },
             function (textResult, jsonResult) {
                 console.log(textResult);
@@ -2770,6 +2873,9 @@ function editMessage(rootUrl, msgId, chatId, userId) {
                         case 4:
                             ShowAlert("alert-bar", "Error", "Error", "Message Don't Exists")
                             break;
+                        case 5:
+                            ShowAlert("alert-bar", "Error", "Error", "Message Deleted")
+                            break;
 
                     }
                 }
@@ -2777,7 +2883,7 @@ function editMessage(rootUrl, msgId, chatId, userId) {
                 else {
                     hideEditMessagePopup()
                     ShowAlert("alert-bar", "success", "Success", "Message Successfully Updated")
-                    currentMessageText.innerHTML = jsonResult.newMessage;
+                    newEditMessage = jsonResult.newMessage;
                 }
             },
             function () {
@@ -2839,6 +2945,9 @@ function deleteMessage(rootUrl, msgId, chatId, userId) {
                         case 4:
                             ShowAlert("alert-bar", "Error", "Error", "Message Don't Exists")
                             break;
+                        case 5:
+                            ShowAlert("alert-bar", "Error", "Error", "Message Already Deleted")
+                            break;
 
                     }
                 }
@@ -2846,7 +2955,7 @@ function deleteMessage(rootUrl, msgId, chatId, userId) {
                 else {
                     hideDeleteMessagePopup()
                     ShowAlert("alert-bar", "Success", "Success", "Message Successfully Deleted")
-                    currentMessage.remove();
+                    document.getElementById("message-text-" + msgId).innerHTML = "<b><i>Message Deleted</i></b>";
                     k--;
                 }
             },
@@ -2861,93 +2970,176 @@ function deleteMessage(rootUrl, msgId, chatId, userId) {
 /* RELOAD THE CHAT TO BRING NEW MESSAGES */
 
 function reloadChat(rootUrl, id) {
-    globalLoading.classList.add("global-loading-show");
+    let reloadLoading = document.getElementById("reload-loading");
+    reloadLoading.classList.add("reload-loading-show");
+
+    var reloadChats;
+    var oldMessageElement;
+    var oldMessage;
+    var newMessageChat;
+    var chatsLength;
+    let isYourMessageReload;
 
 
     EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", "",
         function () {
             /* When The Request Is Done */
 
-
-            if (chats.chatMessage.length > k) {
-                for (let s = k; s <= chats.chatMessage.length; s++) {
-
-                    isMedia = false;
-                    userImg = rootUrl + "img/" + "403024_avatar_boy_male_user_young_icon.png"
-                    if (chats.chatMessage[k].img != "") {
-                        userImg = rootUrl + "admin/received-files/avatars/" + chats.chatMessage[k].img;
-                    }
-                    userClass = "";
-                    if (localStorage.getItem("userId") == chats.chatMessage[k].userId) {
-                        userClass = "chat-our-message"
-                    }
-                    if (chats.chatMessage[k].messageMedia != "") {
-                        isMedia = true;
-                    }
-                    let message =
-                        `
-                                        <div class="chat-messages" id="chat-messages-${k}" onmouseover="showOptionBtn(${k}, ${chats.chatMessage[k].userId})" onmouseout="hideOptionBtn(${k}, ${localStorage.getItem("userId")})">
-                                            <div class="chat-message ${userClass}" id="message-${k}">
-                                                <div class="message-options-container" id="message-options-container-${k}">
-                                                    <div class="message-options-btn-box">
-                                                        <i class="uil uil-ellipsis-v message-options-btn" onclick="showMessagesOptions('${rootUrl}',${k},${id}, ${chats.chatMessage[k].userId}, ${isMedia})"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${chats.chatMessage[k].userId}, ${k})" onmouseout="hideMiniProfile()">
-                                                    <img src="${userImg}" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent('${rootUrl}',${chats.chatMessage[k].userId})" id="message-id-${k}">
-                                                </div>
-                                                <div class="message" id="message-text-${k}">${chats.chatMessage[k].message}</div>
-                                            </div>
-                                        </div>
-                                    `
-                    k++;
-
-                    let r = 0;
-                    let m = 0;
-                    for (let i = 128512; i <= 129488; i++) {
-
-                        if (r == 10) {
-                            m++;
-                            r = 0;
-                        }
-
-                        let emojiCode = "&#" + i;
-                        let pattern = new RegExp(`\€[${m}][${r}]`, "g");
-
-                        message = message.replace(pattern, emojiCode);
-                        /* console.log(content.replace(pattern, emojiCode)) */
-                        if (i == 128567) {
-                            i = 128576;
-                        }
-                        if (i == 128580) {
-                            i = 129295;
-                        }
-                        if (i == 129301) {
-                            i = 129311;
-                        }
-                        if (i == 129317) {
-                            i = 129318
-                        }
-                        if (i == 129327) {
-                            i = 129487;
-                        }
-                        r++;
-
-                    }
-                    document.getElementById("chat-messages-box").innerHTML += message;
-                }
-
-            }
-
-
-
-
             setTimeout(() => {
+                if (reloadChats != undefined) {
+                    function changeActualMessages(n, index) {
+                        let userClassReload;
+                        let isMediaReload;
 
-                globalLoading.classList.remove("global-loading-show");
-                chatBox = document.getElementById('chat-messages-box');
-                chatBox.scrollTop = 9999999;
-            }, 500);
+                        if (index < k) {
+
+                            isYourMessageReload = false;
+                            isMediaReload = false;
+                            userImg = rootUrl + "img/" + "403024_avatar_boy_male_user_young_icon.png"
+                            if (n.img != "") {
+                                userImg = rootUrl + "admin/received-files/avatars/" + n.img;
+                            }
+                            userClassReload = "";
+                            if (localStorage.getItem("userId") == n.userId) {
+                                userClassReload = "chat-our-message";
+                                isYourMessageReload = true;
+                            }
+                            if (n.messageMedia != "") {
+                                isMedia = true;
+                            }
+
+                            document.getElementById("chat-messages-" + index).setAttribute("onmouseover", `showOptionBtn(${index}, ${n.userId})`);
+                            document.getElementById(`message-${index}`).className = `chat-message ${userClassReload}`;
+                            document.getElementById(`message-options-btn-${index}`).setAttribute("onclick", `showMessagesOptions('${rootUrl}', ${index}, ${id}, ${n.userId}, ${isMediaReload})`);
+                            document.getElementById(`message-img-box-${index}`).setAttribute("onmouseover", `showMiniProfile('${rootUrl}',${n.userId}, ${index}, ${isYourMessageReload})`);
+                            document.getElementById(`message-id-${index}`).src = `${userImg}`;
+                            document.getElementById(`message-id-${index}`).setAttribute("onclick", `showUserProfileInnerEvent('${rootUrl}',${n.userId})`);
+
+                            oldMessageElement = document.getElementById(`message-text-${index}`);
+
+                            if (n.isDeleted == true) {
+                                document.getElementById("chat-messages-" + index).setAttribute("onmouseover", `showOptionBtn(${index}, ${n.userId}, ${true})`);
+                                oldMessageElement.innerHTML = "<b><i>Message Deleted</i></b>";
+                            } else {
+                                newMessageChat = n.message;
+                                if (oldMessageElement.innerHTML != newMessageChat) {
+                                    let r = 0;
+                                    let m = 0;
+                                    for (let i = 128512; i <= 129488; i++) {
+
+                                        if (r == 10) {
+                                            m++;
+                                            r = 0;
+                                        }
+
+                                        let emojiCode = "&#" + i;
+                                        let pattern = new RegExp(`\€[${m}][${r}]`, "g");
+
+                                        newMessageChat = newMessageChat.replace(pattern, emojiCode);
+                                        /* console.log(content.replace(pattern, emojiCode)) */
+                                        if (i == 128567) {
+                                            i = 128576;
+                                        }
+                                        if (i == 128580) {
+                                            i = 129295;
+                                        }
+                                        if (i == 129301) {
+                                            i = 129311;
+                                        }
+                                        if (i == 129317) {
+                                            i = 129318
+                                        }
+                                        if (i == 129327) {
+                                            i = 129487;
+                                        }
+                                        r++;
+                                    }
+
+
+                                    oldMessageElement.innerHTML = newMessageChat;
+                                }
+                            }
+                        }
+                    }
+                    reloadChats.chatMessage.forEach(changeActualMessages);
+
+
+                    if (reloadChats.chatMessage.length > k) {
+                        chatsLength = reloadChats.chatMessage.length;
+                        for (let s = k; s < chatsLength; s++) {
+
+                            isYourMessageReload = false;
+                            isMedia = false;
+                            userImg = rootUrl + "img/" + "403024_avatar_boy_male_user_young_icon.png"
+                            if (reloadChats.chatMessage[k].img != "") {
+                                userImg = rootUrl + "admin/received-files/avatars/" + reloadChats.chatMessage[k].img;
+                            }
+                            userClass = "";
+                            if (localStorage.getItem("userId") == reloadChats.chatMessage[k].userId) {
+                                userClass = "chat-our-message"
+                                isYourMessageReload = true;
+                            }
+                            if (reloadChats.chatMessage[k].messageMedia != "") {
+                                isMedia = true;
+                            }
+                            let message =
+                                `
+                                            <div class="chat-messages" id="chat-messages-${k}" onmouseover="showOptionBtn(${k}, ${reloadChats.chatMessage[k].userId})" onmouseout="hideOptionBtn(${k}, ${localStorage.getItem("userId")})">
+                                            <div class="chat-message ${userClass}" id="message-${k}">
+                                            <div class="message-options-container" id="message-options-container-${k}">
+                                            <div class="message-options-btn-box">
+                                            <i class="uil uil-ellipsis-v message-options-btn" id="message-options-btn-${k}" onclick="showMessagesOptions('${rootUrl}',${k},${id}, ${reloadChats.chatMessage[k].userId}, ${isMedia})"></i>
+                                            </div>
+                                            </div>
+                                            <div class="message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${reloadChats.chatMessage[k].userId}, ${k}, ${isYourMessageReload})" onmouseout="hideMiniProfile()">
+                                            <img src="${userImg}" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent('${rootUrl}',${reloadChats.chatMessage[k].userId})" id="message-id-${k}">
+                                            </div>
+                                            <div class="message" id="message-text-${k}">${reloadChats.chatMessage[k].message}</div>
+                                            </div>
+                                            </div>
+                                            `
+                            k++;
+
+                            let r = 0;
+                            let m = 0;
+                            for (let i = 128512; i <= 129488; i++) {
+
+                                if (r == 10) {
+                                    m++;
+                                    r = 0;
+                                }
+
+                                let emojiCode = "&#" + i;
+                                let pattern = new RegExp(`\€[${m}][${r}]`, "g");
+
+                                message = message.replace(pattern, emojiCode);
+                                if (i == 128567) {
+                                    i = 128576;
+                                }
+                                if (i == 128580) {
+                                    i = 129295;
+                                }
+                                if (i == 129301) {
+                                    i = 129311;
+                                }
+                                if (i == 129317) {
+                                    i = 129318
+                                }
+                                if (i == 129327) {
+                                    i = 129487;
+                                }
+                                r++;
+
+                            }
+                            document.getElementById("chat-messages-box").innerHTML += message;
+                        }
+                        chatBox.scrollTop = 9999999;
+                    }
+                }
+            }, 100);
+            setTimeout(() => {
+                reloadLoading.classList.remove("reload-loading-show");
+            }, 150);
         },
 
 
@@ -2961,7 +3153,9 @@ function reloadChat(rootUrl, id) {
             }
             //If success
             else {
-                chats = jsonResult.allChats[id];
+                reloadChats = jsonResult.allChats[id];
+
+
             }
         },
         function () {

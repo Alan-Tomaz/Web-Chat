@@ -6,7 +6,7 @@ $editMessageStatus = 0;
 $userId = filter_var($_POST["user-id"], FILTER_SANITIZE_NUMBER_INT) ?? null;
 $chatId = filter_var($_POST["chat-id"], FILTER_SANITIZE_NUMBER_INT) ?? null;
 $msgId = filter_var($_POST["msg-id"], FILTER_SANITIZE_NUMBER_INT) ?? null;
-$newMessage = filter_var($_POST["new-message"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+$newMessage = $_POST["new-message"];
 
 
 if ($userId == null || $userId == "") {
@@ -43,7 +43,11 @@ if ($editMessageStatus == 0) {
                 $chatObj = json_decode(file_get_contents($chatsPath . $chats[$chatId]), false);
 
                 if ($chatObj->messages[$msgId]) {
-                    $chatObj->messages[$msgId]->message = $newMessage;
+                    if ($chatObj->messages[$msgId]->isDeleted == false) {
+                        $chatObj->messages[$msgId]->message = $newMessage;
+                    } else {
+                        $editMessageStatus = 5;
+                    }
                 } else {
                     $editMessageStatus = 4;
                 }

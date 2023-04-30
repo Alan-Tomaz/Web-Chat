@@ -4,9 +4,9 @@ require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
 $deleteChatStatus = 0;
 if (isset($_SESSION["user-is-admin"])) {
 
-    $chatId = filter_var($_POST["chat-id"], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $chatId = filter_var($_POST["chat-id"], FILTER_SANITIZE_NUMBER_INT) ?? null;
 
-    if ($chatId) {
+    if ($chatId != "" && $chatId != null) {
 
         $chatsPath =   "../admin/chat-channels/";
 
@@ -35,6 +35,26 @@ if (isset($_SESSION["user-is-admin"])) {
                     }
                 }
                 unlink($chatsPath . $chats[$chatId]);
+            }
+            $newChatsArray = array_diff(scandir($chatsPath), array('.', '..'));
+            /* Create a new array to reorganize indexes */
+
+            $newChats = array_values($newChatsArray);
+            sort($newChats);
+
+            /* RENAME OTHERS CHATS */
+            if (count($newChats) > 0) {
+                $n = 0;
+                foreach ($newChats as $index => $otherChat) {
+                    $otherChatExtension = explode("-", $otherChat, 2);
+                    $chatObject = json_decode(file_get_contents($chatsPath . $otherChat), false);
+                    $chatObject->chatInfo[0]->chatId = $n;
+                    file_put_contents($chatsPath . $otherChat, json_encode($chatObject));
+
+                    rename($chatsPath . $otherChat, $chatsPath . $n . "-" . $otherChatExtension[1]);
+
+                    $n++;
+                }
             }
         } else {
             $deleteChatStatus = 3;

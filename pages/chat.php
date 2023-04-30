@@ -269,6 +269,7 @@ if ($isLogged) {
                         </div>
                     </div>
                 </div>
+                <img src="<?= ROOT_URL ?>img/Rolling-1s-200px.svg" id="reload-loading" class="reload-loading">
                 <div class="chat-messages-box hide-user-profile hide-emojis-clips hide-search-results hide-message-options chat-content-box" id="chat-messages-box">
 
                 </div>

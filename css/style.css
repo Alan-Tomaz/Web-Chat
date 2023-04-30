@@ -631,11 +631,12 @@ input[type=file] {
 
 
 .user-img-box {
-    max-width: 4rem;
-    max-height: 4rem;
+    width: 4rem;
+    height: 4rem;
     border-radius: 5rem;
     overflow: hidden;
     min-width: 4rem;
+    min-height: 4rem;
 }
 
 .img-circle {
@@ -794,11 +795,12 @@ input[type=file] {
 }
 
 .chats-img-box {
-    max-width: 2.5rem;
-    max-height: 2.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 5rem;
     overflow: hidden;
     min-width: 2.5rem;
+    min-height: 2.5rem;
 }
 
 .chats-info {
@@ -923,6 +925,7 @@ input[type=file] {
     border-radius: 5rem;
     overflow: hidden;
     min-width: 3rem;
+    min-height: 3rem;
 }
 
 .chat-info {
@@ -946,6 +949,21 @@ input[type=file] {
     overflow-x: hidden;
     padding: 6rem 0;
     flex-direction: column;
+}
+
+.reload-loading {
+    position: absolute;
+    top: 90px;
+    right: 1%;
+    width: 20px;
+    height: 20px;
+    z-index: 70;
+    transition: var(--transition);
+    visibility: hidden;
+}
+
+.reload-loading-show {
+    visibility: visible;
 }
 
 .chat-messages {
@@ -984,6 +1002,7 @@ input[type=file] {
     border-radius: 5rem;
     overflow: hidden;
     min-width: 2rem;
+
 }
 
 .message {
@@ -1036,7 +1055,7 @@ input[type=file] {
     align-items: center;
     gap: .5rem;
     transition: opacity .3s ease;
-    z-index: 60;
+    z-index: 80;
     opacity: 0;
     border-radius: .3rem;
     width: 250px;
@@ -1049,18 +1068,21 @@ input[type=file] {
 }
 
 .mini-profile-img {
-    width: 6rem;
-    height: 6rem;
+    max-width: 6rem;
+    max-height: 6rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 5rem;
     overflow: hidden;
     min-width: 6rem;
+    min-height: 6rem;
+    border-radius: 100%;
 }
 
 .mini-profile-img>img {
-    border-radius: 50%;
+    height: 6rem;
+    width: 6rem;
+    object-fit: cover;
 }
 
 .mini-profile-info {
@@ -1350,6 +1372,7 @@ input[type=file] {
     display: flex;
     transition: var(--transition);
     right: -1200px;
+
 }
 
 .back-box-profile {
@@ -1371,7 +1394,7 @@ input[type=file] {
 }
 
 .profile-active {
-    z-index: 20;
+    z-index: 90;
     right: 0;
 }
 
@@ -1379,6 +1402,7 @@ input[type=file] {
     max-width: 12rem;
     max-height: 12rem;
     min-width: 12rem;
+    min-height: 12rem;
     position: relative;
     align-self: center;
 }
@@ -1852,6 +1876,11 @@ input[type=file] {
     cursor: pointer;
 }
 
+.chat-our-message>.message-options-container>.message-options-btn-box {
+    position: relative;
+    left: -5px;
+}
+
 .message-options-btn-box:hover .message-options-btn {
     color: var(--primary-color-variant);
 }
@@ -2062,7 +2091,8 @@ input[type=file] {
 }
 
 .edit-message-btn-text-hide,
-.delete-message-btn-text-hide {
+.delete-message-btn-text-hide,
+.delete-popup-btn-text-hide {
     opacity: 0;
 }
 

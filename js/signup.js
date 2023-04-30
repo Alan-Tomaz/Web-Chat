@@ -88,6 +88,7 @@ function OnClickSignUp(rootUrl) {
     var birth = document.getElementById("birth-date-impostor").value;
     var location = document.getElementById("location").value;
     var biography = document.getElementById("bio-input").value;
+    biography = biography.replace(/\n/g, "");
     var password = document.getElementById("password").value;
     var passwordR = document.getElementById("password-retype").value;
 
