@@ -3050,7 +3050,7 @@ function reloadChat(rootUrl, id) {
                                     isYourMessageReload = true;
                                 }
                                 if (n.messageMedia != "") {
-                                    isMedia = true;
+                                    isMediaReload = true;
                                 }
 
                                 /* 

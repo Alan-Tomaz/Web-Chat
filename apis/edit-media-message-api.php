@@ -71,7 +71,7 @@ if ($editMediaMessageStatus == 0) {
                                 unlink("../admin/received-files/chat-media/" . $chatRootObj->messages[$msgId]->messageMedia);
                             }
 
-                            $mediaMessage = "<img src='" . ROOT_URL . "admin/received-files/chat-media/" . $mediaName . "' class='image-message' alt='Image Not Found'>";
+                            $mediaMessage = "<img src='" . "%DOMAIN%" . "admin/received-files/chat-media/" . $mediaName . "' class='image-message' alt='Image Not Found'>";
 
                             $chatRootObj->messages[$msgId]->messageMedia = $mediaName;
                             $chatRootObj->messages[$msgId]->message = $mediaMessage;
@@ -111,7 +111,7 @@ if ($editMediaMessageStatus == 0) {
                                     unlink("../admin/received-files/chat-media/" . $chatRootObj->messages[$msgId]->messageMedia);
                                 }
 
-                                $mediaMessage = "<video class='message-video' controls><source src='" . ROOT_URL . "admin/received-files/chat-media/" . $mediaName . "' type='video/mp4'> Your browser does not support this video format</video>";
+                                $mediaMessage = "<video class='message-video' controls=''><source src='" . "%DOMAIN%" . "admin/received-files/chat-media/" . $mediaName . "' type='video/mp4'> Your browser does not support this video format</video>";
 
                                 $chatRootObj->messages[$msgId]->messageMedia = $mediaName;
                                 $chatRootObj->messages[$msgId]->message = $mediaMessage;

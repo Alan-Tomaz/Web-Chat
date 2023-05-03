@@ -1,1 +1,207 @@
-{"chatInfo":[{"chatId":0,"name":"Public Chat","description":"Public Chat","creationDate":"29\/04\/2023","img":"1682813501-Sin_sin on Twitter.jpeg"}],"messages":[{"msgId":0,"userId":"9","nickname":"Alan Tomaz","message":"g","messageMedia":"","img":"1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg","isDeleted":false}]}
+{
+    "chatInfo": [
+        {
+            "chatId": 0,
+            "name": "Public Chat",
+            "description": "Public Chat",
+            "creationDate": "29\/04\/2023",
+            "img": "1682813501-Sin_sin on Twitter.jpeg"
+        }
+    ],
+    "messages": [
+        {
+            "msgId": 0,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "Pomtooooo",
+            "messageMedia": "",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 1,
+            "userId": "9",
+            "nickname": "Alan Tomaz",
+            "message": "<iframe src='https:\/\/www.youtube.com\/embed\/ZfmjOFder5Y' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen=''><\/iframe>",
+            "messageMedia": "",
+            "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 2,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "<img src='https:\/\/youtu.be\/BJ8fVkhBpS4' class='image-message' alt='Image Not Found'>",
+            "messageMedia": "",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 3,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "<iframe src='https:\/\/www.youtube.com\/embed\/BJ8fVkhBpS4' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen=''><\/iframe>",
+            "messageMedia": "",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 4,
+            "userId": "9",
+            "nickname": "Alan Tomaz",
+            "message": "\u20ac27",
+            "messageMedia": "",
+            "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 5,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "\u20ac27",
+            "messageMedia": "",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 6,
+            "userId": "9",
+            "nickname": "Alan Tomaz",
+            "message": "\u20ac00",
+            "messageMedia": "",
+            "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 7,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "<video class='message-video' controls=''><source src='%DOMAIN%admin\/received-files\/chat-media\/1683136601-mov_bbb.mp4' type='video\/mp4'> Your browser does not support this video format<\/video>",
+            "messageMedia": "1683136601-mov_bbb.mp4",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg"
+        },
+        {
+            "msgId": 8,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "\u20ac00",
+            "messageMedia": "",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 9,
+            "userId": "15",
+            "nickname": "Priscila Teixeira",
+            "message": "l",
+            "messageMedia": "",
+            "img": "1682813495-\u270e\u1770\u2506Anime Icon _.jpeg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 10,
+            "userId": "9",
+            "nickname": "Alan Tomaz",
+            "message": "jhkjhj",
+            "messageMedia": "",
+            "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 11,
+            "userId": "18",
+            "nickname": "Ot&aacute;vio ",
+            "message": "Gdhd",
+            "messageMedia": "",
+            "img": "1682791660-IMG-20230413-WA0013.jpg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 12,
+            "userId": "9",
+            "nickname": "Alan Tomaz",
+            "message": "<img src='https:\/\/images.unsplash.com\/photo-1604311795833-25e1d5c128c6?ixlib=rb-4.0.3\u00a5ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8OSUzQTE2fGVufDB8fDB8fA==\u00a5w=1000\u00a5q=80' class='image-message' alt='Image Not Found'>",
+            "messageMedia": "",
+            "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 13,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "<img src='%DOMAIN%admin\/received-files\/chat-media\/1683136683-2b9dd7787efec209d5cc265c3a687a64ea788f9dd25399bb4d07b13d20155929_1.jpg~2.jpg' class='image-message' alt='Image Not Found'>",
+            "messageMedia": "1683136683-2b9dd7787efec209d5cc265c3a687a64ea788f9dd25399bb4d07b13d20155929_1.jpg~2.jpg",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg"
+        },
+        {
+            "msgId": 14,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "<video class='message-video' controls=''><source src='%DOMAIN%admin\/received-files\/chat-media\/1683136700-ec4cfac5b594e4adb111480e7f1f60df5080b358cd88d4a111c27c32dfe328b9_1.mp4' type='video\/mp4'> Your browser does not support this video format<\/video>",
+            "messageMedia": "1683136700-ec4cfac5b594e4adb111480e7f1f60df5080b358cd88d4a111c27c32dfe328b9_1.mp4",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg"
+        },
+        {
+            "msgId": 15,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "\u20ac77\u20ac77\u20ac77",
+            "messageMedia": "",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 16,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "<iframe src='https:\/\/www.youtube.com\/embed\/BJ8fVkhBpS4' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen=''><\/iframe>",
+            "messageMedia": "",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 17,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "\ud83d\ude0e\ud83d\ude0e",
+            "messageMedia": "",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 18,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "\ud83e\udd15\ud83d\ude37\ud83d\ude37\ud83d\ude07\ud83e\udd20\ud83e\udd20\ud83e\udd11\ud83e\udd13\ud83e\udd13\ud83e\udd21\ud83e\udd21\ud83e\udd12\ud83e\udd27\ud83d\ude33\ud83e\udd76\ud83d\ude2b\ud83d\ude27\ud83d\ude27\ud83d\ude2f",
+            "messageMedia": "",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 19,
+            "userId": "17",
+            "nickname": "Pato",
+            "message": "\ud83d\ude08\ud83d\udc7f\ud83d\udc7f\ud83d\udc7f\ud83d\udc7b\ud83d\udc7b\ud83d\udc7b\ud83c\udf83\ud83c\udf83\ud83c\udf83\ud83d\udca9\ud83d\udca9\ud83c\udf83\ud83e\udd16\ud83e\udd16\ud83e\udd16\ud83d\udc7d\ud83d\udc7d\ud83d\udc7e\ud83d\udc7e\ud83d\udc7e\ud83c\udf1b\ud83e\udd21\ud83c\udf1d\ud83c\udf1c\ud83c\udf1c\ud83c\udf1a\ud83c\udf1d\ud83c\udf1e\ud83c\udf1e\u2728\u2620\ufe0f\ud83d\udc79\ud83d\udc7a\ud83d\udc7a\ud83d\udd25\ud83d\udcaf\ud83d\udd73\ufe0f\ud83d\udca6\ud83d\udca8\ud83c\udf1f\u2b50\ud83d\udcab\ud83c\udf89\ud83d\ude48\ud83d\ude49\ud83d\ude3a\ud83d\ude38\ud83d\ude39\ud83d\ude3b\ud83d\ude3c",
+            "messageMedia": "",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 20,
+            "userId": "18",
+            "nickname": "Ot&aacute;vio ",
+            "message": "\ud83d\udc84",
+            "messageMedia": "",
+            "img": "1682791660-IMG-20230413-WA0013.jpg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 21,
+            "userId": "15",
+            "nickname": "Priscila Teixeira",
+            "message": "<img src='%DOMAIN%admin\/received-files\/chat-media\/1683136869-nyan-cat-1.gif' class='image-message' alt='Image Not Found'>",
+            "messageMedia": "1683136869-nyan-cat-1.gif",
+            "img": "1682813495-\u270e\u1770\u2506Anime Icon _.jpeg"
+        }
+    ]
+}
