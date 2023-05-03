@@ -1,8 +1,12 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . "/Web Chat/config/database.php";
 
+
 if (isset($_SESSION["user-id"])) {
     //Get message data
+
+    $result = new stdClass();
+
     $chatIndex = filter_var($_POST["chat"], FILTER_SANITIZE_NUMBER_INT);
     $userId = filter_var($_POST["userId"], FILTER_SANITIZE_FULL_SPECIAL_CHARS) ?? null;
     $message = $_POST["message"];
@@ -41,6 +45,12 @@ if (isset($_SESSION["user-id"])) {
 
             //Add the message to the array of messages and save the file
             $chatMessage = new stdClass();
+            if (count($chatRootObj->messages) != 0) {
+                $lastIndex = end($chatRootObj->messages);
+                $chatMessage->msgId =  ($lastIndex->msgId) + 1;
+            } else {
+                $chatMessage->msgId =  0;
+            }
             $chatMessage->userId = $userId;
             $chatMessage->nickname = $user["name"];
             $chatMessage->message = $message;
@@ -52,6 +62,7 @@ if (isset($_SESSION["user-id"])) {
             }
             $chatMessage->isDeleted = false;
 
+
             $messageIndex = count($chatRootObj->messages);
             array_push($chatRootObj->messages, $chatMessage);
 
@@ -62,6 +73,8 @@ if (isset($_SESSION["user-id"])) {
                 }
                 array_shift($chatRootObj->messages);
             }
+
+            $result->allMessages = $chatRootObj->messages;
 
             //Write the modified file
             $chatFile = fopen($chatsPath . $chats[$chatIndex], "w");
@@ -83,7 +96,7 @@ if (isset($_SESSION["user-id"])) {
     $postMessageStatus = 3;
 }
 //Pack the response into a object
-$result = new stdClass();
+
 if (isset($user["avatar"])) {
     if ($user["avatar"] == "") {
         $result->avatar = "img/403024_avatar_boy_male_user_young_icon.png";

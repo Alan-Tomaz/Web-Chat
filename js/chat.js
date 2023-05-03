@@ -2,8 +2,9 @@
 let globalLoading = document.getElementById("global-loading");
 let k = 0;
 let intervals = [];
-
+let y = -1;
 let messageId = 0;
+let messagesId = [];
 
 function loadPage(id, isAdmin) {
     localStorage.setItem("userId", id);
@@ -1446,7 +1447,10 @@ function sendMessage(rootUrl, chatId) {
                     </div>
                     </div>
                     </div>`
-                        k++;
+
+                        if (k < 98) {
+                            k++
+                        }
 
 
 
@@ -1483,12 +1487,23 @@ function sendMessage(rootUrl, chatId) {
                             n++;
 
                         }
-                        chatMessages.innerHTML += content;
+                        content = content.replace(/%DOMAIN%/gi, `${rootUrl}`);
+                        if (k < 98) {
+                            chatMessages.innerHTML += content;
+                        }
                         message.value = "";
                         messageLoading.classList.remove("send-message-loading-show");
                         sendMessageIcon.classList.remove("send-hide");
                         isSending = false;
                         chatBox.scrollTop = 9999999;
+
+                        reloadChat(rootUrl, chatId)
+                        intervals.forEach(n => {
+                            clearInterval(n);
+                        });
+                        intervals.push(setInterval(() => {
+                            reloadChat(rootUrl, chatId)
+                        }, 5000));
                     }
                 },
                 function () {
@@ -1636,13 +1651,24 @@ function insertTheFile(rootUrl, chatId) {
                     </div>
                     </div>
                     </div>`
-                            k++;
 
-
-                            chatMessages.innerHTML += content;
+                            if (k < 98) {
+                                k++
+                            }
+                            content = content.replace(/%DOMAIN%/gi, `${rootUrl}`);
+                            if (k < 98) {
+                                chatMessages.innerHTML += content;
+                            }
                             isSending = false;
                             chatBox.scrollTop = 9999999;
                         }
+                        reloadChat(rootUrl, chatId)
+                        intervals.forEach(n => {
+                            clearInterval(n);
+                        });
+                        intervals.push(setInterval(() => {
+                            reloadChat(rootUrl, chatId)
+                        }, 5000));
                     },
                     function () {
                         /* Case The Request can't be done */
@@ -1687,7 +1713,7 @@ function insertTheVideoUrl() {
         console.log(videoUrl)
         setTimeout(() => {
             message = document.getElementById("message-field");
-            message.value += `<iframe src='https://www.youtube.com/embed/${videoUrl[1]}' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen></iframe>`;
+            message.value += `<iframe src='https://www.youtube.com/embed/${videoUrl[1]}' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen=''></iframe>`;
             fileSend.classList.remove("file-send-content-show");
             fileLoading.style.display = "none";
             fileInput2.disabled = false;
@@ -1761,8 +1787,12 @@ function showChat(rootUrl, id) {
                         </div>
                     </div>
                 `
-                    k++;
 
+                    if (k < 98) {
+                        k++
+                    }
+                    messagesId.push(n.msgId);
+                    y = n.msgId;
                     document.getElementById("chat-messages-box").innerHTML += message;
 
                 } else {
@@ -1785,7 +1815,12 @@ function showChat(rootUrl, id) {
                         </div>
                     </div>
                 `
-                    k++;
+
+                    if (k < 98) {
+                        k++
+                    }
+                    messagesId.push(n.msgId);
+                    y = n.msgId;
 
                     let r = 0;
                     let m = 0;
@@ -1819,6 +1854,7 @@ function showChat(rootUrl, id) {
                         r++;
 
                     }
+                    message = message.replace(/%DOMAIN%/gi, `${rootUrl}`);
                     document.getElementById("chat-messages-box").innerHTML += message;
                 }
             }
@@ -2956,7 +2992,6 @@ function deleteMessage(rootUrl, msgId, chatId, userId) {
                     hideDeleteMessagePopup()
                     ShowAlert("alert-bar", "Success", "Success", "Message Successfully Deleted")
                     document.getElementById("message-text-" + msgId).innerHTML = "<b><i>Message Deleted</i></b>";
-                    k--;
                 }
             },
             function () {
@@ -2969,16 +3004,20 @@ function deleteMessage(rootUrl, msgId, chatId, userId) {
 
 /* RELOAD THE CHAT TO BRING NEW MESSAGES */
 
+let reloadChats;
+let oldMessageElement;
+let oldMessage;
+let newMessageChat;
+let chatsLength;
+let isYourMessageReload;
+let userClassReload;
+let isMediaReload;
+let messageTest;
+
 function reloadChat(rootUrl, id) {
     let reloadLoading = document.getElementById("reload-loading");
     reloadLoading.classList.add("reload-loading-show");
 
-    var reloadChats;
-    var oldMessageElement;
-    var oldMessage;
-    var newMessageChat;
-    var chatsLength;
-    let isYourMessageReload;
 
 
     EasyHttpRequest.StartAsyncGetRequest(rootUrl + "apis/read-chat-messages-api.php", "",
@@ -2987,157 +3026,186 @@ function reloadChat(rootUrl, id) {
 
             setTimeout(() => {
                 if (reloadChats != undefined) {
+
                     function changeActualMessages(n, index) {
-                        let userClassReload;
-                        let isMediaReload;
 
-                        if (index < k) {
-
-                            isYourMessageReload = false;
-                            isMediaReload = false;
-                            userImg = rootUrl + "img/" + "403024_avatar_boy_male_user_young_icon.png"
-                            if (n.img != "") {
-                                userImg = rootUrl + "admin/received-files/avatars/" + n.img;
-                            }
-                            userClassReload = "";
-                            if (localStorage.getItem("userId") == n.userId) {
-                                userClassReload = "chat-our-message";
-                                isYourMessageReload = true;
-                            }
-                            if (n.messageMedia != "") {
-                                isMedia = true;
-                            }
-
-                            document.getElementById("chat-messages-" + index).setAttribute("onmouseover", `showOptionBtn(${index}, ${n.userId})`);
-                            document.getElementById(`message-${index}`).className = `chat-message ${userClassReload}`;
-                            document.getElementById(`message-options-btn-${index}`).setAttribute("onclick", `showMessagesOptions('${rootUrl}', ${index}, ${id}, ${n.userId}, ${isMediaReload})`);
-                            document.getElementById(`message-img-box-${index}`).setAttribute("onmouseover", `showMiniProfile('${rootUrl}',${n.userId}, ${index}, ${isYourMessageReload})`);
-                            document.getElementById(`message-id-${index}`).src = `${userImg}`;
-                            document.getElementById(`message-id-${index}`).setAttribute("onclick", `showUserProfileInnerEvent('${rootUrl}',${n.userId})`);
-
+                        if (document.getElementById(`chat-messages-${index}`) != null) {
                             oldMessageElement = document.getElementById(`message-text-${index}`);
+                            messageTest = n.message.replace(/%DOMAIN%/gi, `${rootUrl}`);
+                            messageTest = messageTest.replace(/'/gi, '"');
+                            console.log(messageTest);
+                            console.log(oldMessageElement.innerHTML);
+                            console.log(n.msgId);
+                            console.log(messagesId[index]);
+                            if (n.msgId != messagesId[index] || messageTest != oldMessageElement.innerHTML) {
+                                isYourMessageReload = false;
+                                isMediaReload = false;
+                                userImg = rootUrl + "img/" + "403024_avatar_boy_male_user_young_icon.png";
+                                if (n.img != "") {
+                                    userImg = rootUrl + "admin/received-files/avatars/" + n.img;
+                                }
+                                userClassReload = "";
+                                if (localStorage.getItem("userId") == n.userId) {
+                                    userClassReload = "chat-our-message";
+                                    isYourMessageReload = true;
+                                }
+                                if (n.messageMedia != "") {
+                                    isMedia = true;
+                                }
 
-                            if (n.isDeleted == true) {
-                                document.getElementById("chat-messages-" + index).setAttribute("onmouseover", `showOptionBtn(${index}, ${n.userId}, ${true})`);
-                                oldMessageElement.innerHTML = "<b><i>Message Deleted</i></b>";
-                            } else {
-                                newMessageChat = n.message;
-                                if (oldMessageElement.innerHTML != newMessageChat) {
-                                    let r = 0;
-                                    let m = 0;
-                                    for (let i = 128512; i <= 129488; i++) {
+                                /* 
+                                document.getElementById("chat-messages-" + index).id = `chat-messages-${index}`;
+                                document.getElementById("message-" + index).id = `message-${index}`;
+                                document.getElementById("message-options-btn-" + index).id = `message-options-btn-${index}`;
+                                document.getElementById("message-img-box-" + index).id = `message-img-box-${index}`;
+                                document.getElementById("message-id-" + index).id = `message-id-${index}`;
+                                document.getElementById("message-text-" + index).id = `message-text-${index}`;
+                                document.getElementById("message-options-container-" + index).id = `message-options-container-${index}`; 
+                                */
 
-                                        if (r == 10) {
-                                            m++;
-                                            r = 0;
-                                        }
+                                document.getElementById("chat-messages-" + index).setAttribute("onmouseover", `showOptionBtn(${index}, ${n.userId})`);
+                                document.getElementById(`message-${index}`).className = `chat-message ${userClassReload}`;
+                                document.getElementById(`message-options-btn-${index}`).setAttribute("onclick", `showMessagesOptions('${rootUrl}', ${index}, ${id}, ${n.userId}, ${isMediaReload})`);
+                                document.getElementById(`message-img-box-${index}`).setAttribute("onmouseover", `showMiniProfile('${rootUrl}',${n.userId}, ${index}, ${isYourMessageReload})`);
+                                document.getElementById(`message-id-${index}`).src = `${userImg}`;
+                                document.getElementById(`message-id-${index}`).setAttribute("onclick", `showUserProfileInnerEvent('${rootUrl}',${n.userId})`);
 
-                                        let emojiCode = "&#" + i;
-                                        let pattern = new RegExp(`\€[${m}][${r}]`, "g");
 
-                                        newMessageChat = newMessageChat.replace(pattern, emojiCode);
-                                        /* console.log(content.replace(pattern, emojiCode)) */
-                                        if (i == 128567) {
-                                            i = 128576;
+
+
+
+
+                                if (n.isDeleted == true) {
+                                    document.getElementById("chat-messages-" + index).setAttribute("onmouseover", `showOptionBtn(${index}, ${n.userId}, ${true})`);
+                                    oldMessageElement.innerHTML = "<b><i>Message Deleted</i></b>";
+                                } else {
+                                    newMessageChat = n.message;
+                                    if (oldMessageElement.innerHTML != newMessageChat) {
+                                        let r = 0;
+                                        let m = 0;
+                                        for (let i = 128512; i <= 129488; i++) {
+
+                                            if (r == 10) {
+                                                m++;
+                                                r = 0;
+                                            }
+
+                                            let emojiCode = "&#" + i;
+                                            let pattern = new RegExp(`\€[${m}][${r}]`, "g");
+
+                                            newMessageChat = newMessageChat.replace(pattern, emojiCode);
+                                            if (i == 128567) {
+                                                i = 128576;
+                                            }
+                                            if (i == 128580) {
+                                                i = 129295;
+                                            }
+                                            if (i == 129301) {
+                                                i = 129311;
+                                            }
+                                            if (i == 129317) {
+                                                i = 129318
+                                            }
+                                            if (i == 129327) {
+                                                i = 129487;
+                                            }
+                                            r++;
                                         }
-                                        if (i == 128580) {
-                                            i = 129295;
-                                        }
-                                        if (i == 129301) {
-                                            i = 129311;
-                                        }
-                                        if (i == 129317) {
-                                            i = 129318
-                                        }
-                                        if (i == 129327) {
-                                            i = 129487;
-                                        }
-                                        r++;
+                                        messagesId[index] = n.msgId;
+                                        newMessageChat = newMessageChat.replace(/%DOMAIN%/gi, `${rootUrl}`);
+                                        oldMessageElement.innerHTML = newMessageChat;
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                reloadChats.chatMessage.forEach(changeActualMessages);
+
+                if (k < 98) {
+                    reloadChats.chatMessage.forEach(n => {
+                        if (n.userId != localStorage.getItem("userId")) {
+                            if (n.msgId > y) {
+                                isYourMessageReload = false;
+                                isMedia = false;
+                                userImg = rootUrl + "img/" + "403024_avatar_boy_male_user_young_icon.png";
+                                if (n.img != "") {
+                                    userImg = rootUrl + "admin/received-files/avatars/" + n.img;
+                                }
+                                userClass = "";
+                                if (localStorage.getItem("userId") == n.userId) {
+                                    userClass = "chat-our-message"
+                                    isYourMessageReload = true;
+                                }
+                                if (n.messageMedia != "") {
+                                    isMedia = true;
+                                }
+                                let message =
+                                    `
+                                                    <div class="chat-messages" id="chat-messages-${k}" onmouseover="showOptionBtn(${k}, ${n.userId})" onmouseout="hideOptionBtn(${k}, ${localStorage.getItem("userId")})">
+                                                    <div class="chat-message ${userClass}" id="message-${k}">
+                                                    <div class="message-options-container" id="message-options-container-${k}">
+                                                    <div class="message-options-btn-box">
+                                                    <i class="uil uil-ellipsis-v message-options-btn" id="message-options-btn-${k}" onclick="showMessagesOptions('${rootUrl}',${k},${id}, ${n.userId}, ${isMedia})"></i>
+                                                    </div>
+                                                    </div>
+                                                    <div class="message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${n.userId}, ${k}, ${isYourMessageReload})" onmouseout="hideMiniProfile()">
+                                                    <img src="${userImg}" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent('${rootUrl}',${n.userId})" id="message-id-${k}">
+                                                    </div>
+                                                    <div class="message" id="message-text-${k}">${n.message}</div>
+                                                    </div>
+                                                    </div>
+                                                    `
+                                if (k < 98) {
+                                    k++
+                                }
+                                messagesId.push(n.msgId);
+                                y = n.msgId;
+                                let r = 0;
+                                let m = 0;
+                                for (let i = 128512; i <= 129488; i++) {
+
+                                    if (r == 10) {
+                                        m++;
+                                        r = 0;
                                     }
 
+                                    let emojiCode = "&#" + i;
+                                    let pattern = new RegExp(`\€[${m}][${r}]`, "g");
 
-                                    oldMessageElement.innerHTML = newMessageChat;
+                                    message = message.replace(pattern, emojiCode);
+                                    if (i == 128567) {
+                                        i = 128576;
+                                    }
+                                    if (i == 128580) {
+                                        i = 129295;
+                                    }
+                                    if (i == 129301) {
+                                        i = 129311;
+                                    }
+                                    if (i == 129317) {
+                                        i = 129318
+                                    }
+                                    if (i == 129327) {
+                                        i = 129487;
+                                    }
+                                    r++;
+
                                 }
+
+                                message = message.replace(/%DOMAIN%/gi, `${rootUrl}`);
+                                document.getElementById("chat-messages-box").innerHTML += message;
+
+                                chatBox.scrollTop = 9999999;
                             }
                         }
-                    }
-                    reloadChats.chatMessage.forEach(changeActualMessages);
-
-
-                    if (reloadChats.chatMessage.length > k) {
-                        chatsLength = reloadChats.chatMessage.length;
-                        for (let s = k; s < chatsLength; s++) {
-
-                            isYourMessageReload = false;
-                            isMedia = false;
-                            userImg = rootUrl + "img/" + "403024_avatar_boy_male_user_young_icon.png"
-                            if (reloadChats.chatMessage[k].img != "") {
-                                userImg = rootUrl + "admin/received-files/avatars/" + reloadChats.chatMessage[k].img;
-                            }
-                            userClass = "";
-                            if (localStorage.getItem("userId") == reloadChats.chatMessage[k].userId) {
-                                userClass = "chat-our-message"
-                                isYourMessageReload = true;
-                            }
-                            if (reloadChats.chatMessage[k].messageMedia != "") {
-                                isMedia = true;
-                            }
-                            let message =
-                                `
-                                            <div class="chat-messages" id="chat-messages-${k}" onmouseover="showOptionBtn(${k}, ${reloadChats.chatMessage[k].userId})" onmouseout="hideOptionBtn(${k}, ${localStorage.getItem("userId")})">
-                                            <div class="chat-message ${userClass}" id="message-${k}">
-                                            <div class="message-options-container" id="message-options-container-${k}">
-                                            <div class="message-options-btn-box">
-                                            <i class="uil uil-ellipsis-v message-options-btn" id="message-options-btn-${k}" onclick="showMessagesOptions('${rootUrl}',${k},${id}, ${reloadChats.chatMessage[k].userId}, ${isMedia})"></i>
-                                            </div>
-                                            </div>
-                                            <div class="message-img-box open-user-profile" id="message-img-box-${k}" onmouseover="showMiniProfile('${rootUrl}',${reloadChats.chatMessage[k].userId}, ${k}, ${isYourMessageReload})" onmouseout="hideMiniProfile()">
-                                            <img src="${userImg}" alt="" class="message-img img-circle" onclick="showUserProfileInnerEvent('${rootUrl}',${reloadChats.chatMessage[k].userId})" id="message-id-${k}">
-                                            </div>
-                                            <div class="message" id="message-text-${k}">${reloadChats.chatMessage[k].message}</div>
-                                            </div>
-                                            </div>
-                                            `
-                            k++;
-
-                            let r = 0;
-                            let m = 0;
-                            for (let i = 128512; i <= 129488; i++) {
-
-                                if (r == 10) {
-                                    m++;
-                                    r = 0;
-                                }
-
-                                let emojiCode = "&#" + i;
-                                let pattern = new RegExp(`\€[${m}][${r}]`, "g");
-
-                                message = message.replace(pattern, emojiCode);
-                                if (i == 128567) {
-                                    i = 128576;
-                                }
-                                if (i == 128580) {
-                                    i = 129295;
-                                }
-                                if (i == 129301) {
-                                    i = 129311;
-                                }
-                                if (i == 129317) {
-                                    i = 129318
-                                }
-                                if (i == 129327) {
-                                    i = 129487;
-                                }
-                                r++;
-
-                            }
-                            document.getElementById("chat-messages-box").innerHTML += message;
-                        }
-                        chatBox.scrollTop = 9999999;
-                    }
+                    });
                 }
             }, 100);
             setTimeout(() => {
+
                 reloadLoading.classList.remove("reload-loading-show");
             }, 150);
         },

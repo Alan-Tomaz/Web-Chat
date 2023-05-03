@@ -11,6 +11,9 @@ $postMediaStatus = 0;
 //Build the path to the chat channel
 $chatsPath =   "../admin/chat-channels/";
 
+
+$result = new stdClass();
+
 $chats = array();
 if (is_dir($chatsPath)) {
     $chatsArray = array_diff(scandir($chatsPath), array('.', '..'));
@@ -62,9 +65,15 @@ if ($postMediaStatus == 0) {
 
                     //Add the message to the array of messages and save the file
                     $chatMessage = new stdClass();
+                    if (count($chatRootObj->messages) != 0) {
+                        $lastIndex = end($chatRootObj->messages);
+                        $chatMessage->msgId =  ($lastIndex->msgId) + 1;
+                    } else {
+                        $chatMessage->msgId =  0;
+                    }
                     $chatMessage->userId = $userId;
                     $chatMessage->nickname = $user["name"];
-                    $mediaMessage = "<img src='" . ROOT_URL . "admin/received-files/chat-media/" . $mediaName . "' class='image-message' alt='Image Not Found'>";
+                    $mediaMessage = "<img src='" . "%DOMAIN%" . "admin/received-files/chat-media/" . $mediaName . "' class='image-message' alt='Image Not Found'>";
                     $chatMessage->message = $mediaMessage;
                     $chatMessage->messageMedia = $mediaName;
 
@@ -84,10 +93,12 @@ if ($postMediaStatus == 0) {
                     //If the messages array, have more than 100 messages, delete the more old message
                     if (count($chatRootObj->messages) >= 100) {
                         if ($chatRootObj->messages[99]->messageMedia != "") {
-                            unlink("../admin/received-files/chat-media/" . $chatObj->messages[99]->messageMedia);
+                            unlink("../admin/received-files/chat-media/" . $chatRootObj->messages[99]->messageMedia);
                         }
                         array_shift($chatRootObj->messages);
                     }
+
+                    $result->allMessages = $chatRootObj->messages;
 
                     //Write the modified file
                     $chatFile = fopen($chatsPath . $chats[$chatIndex], "w");
@@ -106,9 +117,15 @@ if ($postMediaStatus == 0) {
 
                         //Add the message to the array of messages and save the file
                         $chatMessage = new stdClass();
+                        if (count($chatRootObj->messages) != 0) {
+                            $lastIndex = end($chatRootObj->messages);
+                            $chatMessage->msgId =  ($lastIndex->msgId) + 1;
+                        } else {
+                            $chatMessage->msgId =  0;
+                        }
                         $chatMessage->userId = $userId;
                         $chatMessage->nickname = $user["name"];
-                        $mediaMessage = "<video class='message-video' controls><source src='" . ROOT_URL . "admin/received-files/chat-media/" . $mediaName . "' type='video/mp4'> Your browser does not support this video format</video>";
+                        $mediaMessage = "<video class='message-video' controls=''><source src='" . "%DOMAIN%" . "admin/received-files/chat-media/" . $mediaName . "' type='video/mp4'> Your browser does not support this video format</video>";
                         $chatMessage->message = $mediaMessage;
                         $chatMessage->messageMedia = $mediaName;
 
@@ -127,10 +144,12 @@ if ($postMediaStatus == 0) {
                         //If the messages array, have more than 100 messages, delete the more old message
                         if (count($chatRootObj->messages) >= 100) {
                             if ($chatRootObj->messages[99]->messageMedia != "") {
-                                unlink("../admin/received-files/chat-media/" . $chatObj->messages[99]->messageMedia);
+                                unlink("../admin/received-files/chat-media/" . $chatRootObj->messages[99]->messageMedia);
                             }
                             array_shift($chatRootObj->messages);
                         }
+
+                        $result->allMessages = $chatRootObj->messages;
 
                         //Write the modified file
                         $chatFile = fopen($chatsPath . $chats[$chatIndex], "w");
@@ -153,7 +172,6 @@ if ($postMediaStatus == 0) {
 
 
 //Pack the response into a object
-$result = new stdClass();
 if (isset($user["avatar"])) {
     if ($user["avatar"] == "") {
         $result->avatar = "img/403024_avatar_boy_male_user_young_icon.png";
