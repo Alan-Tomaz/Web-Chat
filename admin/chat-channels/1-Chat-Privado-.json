@@ -1,83 +1,73 @@
 {
-    "chatInfo": [
-        {
-            "chatId": 1,
-            "name": "Chat Privado ",
-            "description": "Chat Privado ",
-            "creationDate": "03\/05\/2023",
-            "img": "1683136734-9004812_chat_message_bubble_communication_icon.png"
-        }
-    ],
-    "messages": [
-        {
-            "msgId": 0,
-            "userId": "15",
-            "nickname": "Priscila Teixeira",
-            "message": "l",
-            "messageMedia": "",
-            "img": "1682813495-\u270e\u1770\u2506Anime Icon _.jpeg",
-            "isDeleted": false
-        },
-        {
-            "msgId": 1,
-            "userId": "17",
-            "nickname": "Pato",
-            "message": "\u2620\ufe0f\u2620\ufe0f\u2620\ufe0f",
-            "messageMedia": "",
-            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
-            "isDeleted": false
-        },
-        {
-            "msgId": 2,
-            "userId": "17",
-            "nickname": "Pato",
-            "message": "Ok",
-            "messageMedia": "",
-            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
-            "isDeleted": false
-        },
-        {
-            "msgId": 3,
-            "userId": "9",
-            "nickname": "Alan Tomaz",
-            "message": "h",
-            "messageMedia": "",
-            "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg",
-            "isDeleted": false
-        },
-        {
-            "msgId": 4,
-            "userId": "18",
-            "nickname": "Ot&aacute;vio ",
-            "message": "K",
-            "messageMedia": "",
-            "img": "1682791660-IMG-20230413-WA0013.jpg",
-            "isDeleted": false
-        },
-        {
-            "msgId": 5,
-            "userId": "17",
-            "nickname": "Pato",
-            "message": "<img src='%DOMAIN%admin\/received-files\/chat-media\/1683137020-2b9dd7787efec209d5cc265c3a687a64ea788f9dd25399bb4d07b13d20155929_1.jpg~2.jpg' class='image-message' alt='Image Not Found'>",
-            "messageMedia": "1683137020-2b9dd7787efec209d5cc265c3a687a64ea788f9dd25399bb4d07b13d20155929_1.jpg~2.jpg",
-            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg"
-        },
-        {
-            "msgId": 6,
-            "userId": "9",
-            "nickname": "Alan Tomaz",
-            "message": "<video class='message-video' controls=''><source src='%DOMAIN%admin\/received-files\/chat-media\/1683137031-mov_bbb.mp4' type='video\/mp4'> Your browser does not support this video format<\/video>",
-            "messageMedia": "1683137031-mov_bbb.mp4",
-            "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
-        },
-        {
-            "msgId": 7,
-            "userId": "17",
-            "nickname": "Pato",
-            "message": "<iframe src='https:\/\/www.youtube.com\/embed\/BJ8fVkhBpS4' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen=''><\/iframe>",
-            "messageMedia": "",
-            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
-            "isDeleted": false
-        }
-    ]
+    "chatInfo": [{
+        "chatId": 1,
+        "name": "Chat Privado ",
+        "description": "Chat Privado ",
+        "creationDate": "03\/05\/2023",
+        "img": "1683136734-9004812_chat_message_bubble_communication_icon.png"
+    }],
+    "messages": [{
+        "msgId": 0,
+        "userId": "15",
+        "nickname": "Priscila Teixeira",
+        "message": "l",
+        "messageMedia": "",
+        "img": "1682813495-\u270e\u1770\u2506Anime Icon _.jpeg",
+        "isDeleted": false
+    }, {
+        "msgId": 1,
+        "userId": "17",
+        "nickname": "Pato",
+        "message": "\u2620\ufe0f\u2620\ufe0f\u2620\ufe0f",
+        "messageMedia": "",
+        "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+        "isDeleted": false
+    }, {
+        "msgId": 2,
+        "userId": "17",
+        "nickname": "Pato",
+        "message": "Ok",
+        "messageMedia": "",
+        "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+        "isDeleted": false
+    }, {
+        "msgId": 3,
+        "userId": "9",
+        "nickname": "Alan Tomaz",
+        "message": "h",
+        "messageMedia": "",
+        "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg",
+        "isDeleted": false
+    }, {
+        "msgId": 4,
+        "userId": "18",
+        "nickname": "Ot&aacute;vio ",
+        "message": "K",
+        "messageMedia": "",
+        "img": "1682791660-IMG-20230413-WA0013.jpg",
+        "isDeleted": false
+    }, {
+        "msgId": 5,
+        "userId": "17",
+        "nickname": "Pato",
+        "message": "",
+        "messageMedia": "",
+        "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+        "isDeleted": true
+    }, {
+        "msgId": 6,
+        "userId": "9",
+        "nickname": "Alan Tomaz",
+        "message": "<video class='message-video' controls=''><source src='%DOMAIN%admin\/received-files\/chat-media\/1683137031-mov_bbb.mp4' type='video\/mp4'> Your browser does not support this video format<\/video>",
+        "messageMedia": "1683137031-mov_bbb.mp4",
+        "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg"
+    }, {
+        "msgId": 7,
+        "userId": "17",
+        "nickname": "Pato",
+        "message": "<iframe src='https:\/\/www.youtube.com\/embed\/BJ8fVkhBpS4' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen=''><\/iframe>",
+        "messageMedia": "",
+        "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+        "isDeleted": false
+    }]
 }

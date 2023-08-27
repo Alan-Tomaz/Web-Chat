@@ -1,31 +1,28 @@
 {
-    "chatInfo": [
-        {
-            "chatId": 0,
-            "name": "Public Chat",
-            "description": "Public Chat",
-            "creationDate": "29\/04\/2023",
-            "img": "1682813501-Sin_sin on Twitter.jpeg"
-        }
-    ],
-    "messages": [
-        {
+    "chatInfo": [{
+        "chatId": 0,
+        "name": "Public Chat",
+        "description": "Public Chat",
+        "creationDate": "29\/04\/2023",
+        "img": "1682813501-Sin_sin on Twitter.jpeg"
+    }],
+    "messages": [{
             "msgId": 0,
             "userId": "17",
             "nickname": "Pato",
-            "message": "Pomtooooo",
+            "message": "",
             "messageMedia": "",
             "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
-            "isDeleted": false
+            "isDeleted": true
         },
         {
             "msgId": 1,
             "userId": "9",
             "nickname": "Alan Tomaz",
-            "message": "<iframe src='https:\/\/www.youtube.com\/embed\/ZfmjOFder5Y' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen=''><\/iframe>",
+            "message": "<iframe src='' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' allowfullscreen=''><\/iframe>",
             "messageMedia": "",
             "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg",
-            "isDeleted": false
+            "isDeleted": true
         },
         {
             "msgId": 2,
@@ -129,17 +126,19 @@
             "msgId": 13,
             "userId": "17",
             "nickname": "Pato",
-            "message": "<img src='%DOMAIN%admin\/received-files\/chat-media\/1683136683-2b9dd7787efec209d5cc265c3a687a64ea788f9dd25399bb4d07b13d20155929_1.jpg~2.jpg' class='image-message' alt='Image Not Found'>",
-            "messageMedia": "1683136683-2b9dd7787efec209d5cc265c3a687a64ea788f9dd25399bb4d07b13d20155929_1.jpg~2.jpg",
-            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg"
+            "message": "",
+            "messageMedia": "",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+            "isDeleted": true
         },
         {
             "msgId": 14,
             "userId": "17",
             "nickname": "Pato",
-            "message": "<video class='message-video' controls=''><source src='%DOMAIN%admin\/received-files\/chat-media\/1683136700-ec4cfac5b594e4adb111480e7f1f60df5080b358cd88d4a111c27c32dfe328b9_1.mp4' type='video\/mp4'> Your browser does not support this video format<\/video>",
-            "messageMedia": "1683136700-ec4cfac5b594e4adb111480e7f1f60df5080b358cd88d4a111c27c32dfe328b9_1.mp4",
-            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg"
+            "message": "",
+            "messageMedia": "",
+            "img": "1682794617-06929533206286e45312ea8b50919ce2d56caebb9741e81a1d26821fda52758c_1.jpg~2.jpg",
+            "isDeleted": true
         },
         {
             "msgId": 15,
@@ -202,6 +201,69 @@
             "message": "<img src='%DOMAIN%admin\/received-files\/chat-media\/1683136869-nyan-cat-1.gif' class='image-message' alt='Image Not Found'>",
             "messageMedia": "1683136869-nyan-cat-1.gif",
             "img": "1682813495-\u270e\u1770\u2506Anime Icon _.jpeg"
+        },
+        {
+            "msgId": 22,
+            "userId": "20",
+            "nickname": "Alan",
+            "message": "",
+            "messageMedia": "",
+            "img": "1684443900-7007513_finance_calculator_accounting_business_icon.png",
+            "isDeleted": true
+        },
+        {
+            "msgId": 23,
+            "userId": "20",
+            "nickname": "Alan",
+            "message": "",
+            "messageMedia": "",
+            "img": "1684443900-7007513_finance_calculator_accounting_business_icon.png",
+            "isDeleted": true
+        },
+        {
+            "msgId": 24,
+            "userId": "20",
+            "nickname": "Alan",
+            "message": "",
+            "messageMedia": "",
+            "img": "1684443900-7007513_finance_calculator_accounting_business_icon.png",
+            "isDeleted": true
+        },
+        {
+            "msgId": 25,
+            "userId": "15",
+            "nickname": "Priscila Teixeira",
+            "message": "Lorem Ipsum",
+            "messageMedia": "",
+            "img": "1682813495-\u270e\u1770\u2506Anime Icon _.jpeg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 26,
+            "userId": "9",
+            "nickname": "Alan Tomaz",
+            "message": "Lorem Ipsum",
+            "messageMedia": "",
+            "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 27,
+            "userId": "9",
+            "nickname": "Alan Tomaz",
+            "message": "\u20ac42\u20ac33\u20ac34",
+            "messageMedia": "",
+            "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg",
+            "isDeleted": false
+        },
+        {
+            "msgId": 28,
+            "userId": "9",
+            "nickname": "Alan Tomaz",
+            "message": "<img src='https:\/\/images.unsplash.com\/photo-1604311795833-25e1d5c128c6?ixlib=rb-4.0.3\u00a5ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8OSUzQTE2fGVufDB8fDB8fA==\u00a5w=1000\u00a5q=80' class='image-message' alt='Image Not Found'>",
+            "messageMedia": "",
+            "img": "1682813479-510 Best Bleach anime art ideas _ bleach anime, bleach anime art, bleach.jpeg",
+            "isDeleted": false
         }
     ]
 }
